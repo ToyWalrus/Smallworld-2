@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Smallworld.Models.Powers
 {
     public class Heroic : Power
@@ -8,11 +10,10 @@ namespace Smallworld.Models.Powers
             StartingTokenCount = 5;
         }
 
-        public override Task OnTurnEnd(List<Region> ownedRegions)
+        public override void OnTurnEnd(List<Region> ownedRegions)
         {
             // place heroic tokens on two regions
-            // prompt player to pick two regions
-            return Task.CompletedTask; // placeholder for actual prompt
+            // prompt player to pick two regions            
         }
     }
 }

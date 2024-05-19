@@ -16,3 +16,4 @@ mono_crash.*.json
 
 # Visual Studio Code specific ignores
 /.vscode
+/.vs

@@ -1,4 +1,6 @@
-﻿namespace Smallworld.Models.Powers
+﻿using System.Collections.Generic;
+
+namespace Smallworld.Models.Powers
 {
     public abstract class Power
     {
@@ -22,15 +24,15 @@
         }
 
         public virtual void OnTurnStart() { }
-        public virtual Task OnTurnEnd(List<Region> ownedRegions) => Task.CompletedTask;
+        public virtual void OnTurnEnd(List<Region> ownedRegions) { }
 
         /// <summary>
         /// This method should be called before moving around
         /// any troops to and from regions.
         /// </summary>
         /// <param name="region">the conquered region.</param>
-        public virtual Task OnRegionConquered(Region region) => Task.CompletedTask;
+        public virtual void OnRegionConquered(Region region) { }
 
-        public override String ToString() => Name;
+        public override string ToString() => Name;
     }
 }

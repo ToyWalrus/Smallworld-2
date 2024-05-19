@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Smallworld.Models.Powers
 {
     public class Pillaging : Power
@@ -14,13 +16,12 @@ namespace Smallworld.Models.Powers
             nonEmptyRegionsConqueredThisTurn = 0;
         }
 
-        public override Task OnRegionConquered(Region region)
+        public override void OnRegionConquered(Region region)
         {
             if (region.IsOccupied)
             {
                 nonEmptyRegionsConqueredThisTurn++;
-            }
-            return Task.CompletedTask;
+            }            
         }
 
         public override int TallyPowerBonusVP(List<Region> regions)

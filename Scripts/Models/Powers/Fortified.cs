@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Smallworld.Models.Powers
 {
     public class Fortified : Power
@@ -12,14 +14,15 @@ namespace Smallworld.Models.Powers
             numFortsBuilt = 0;
         }
 
-        public override Task OnTurnEnd(List<Region> ownedRegions)
+        public override void OnTurnEnd(List<Region> ownedRegions)
         {
-            if (numFortsBuilt == 6) return Task.CompletedTask;
+            if (numFortsBuilt == 6) return;
             // place 1 new fort in region with no forts
             // prompt player to pick region
             // if fort was placed,
             //  numFortsBuilt += 1;
-            return Task.CompletedTask; // placeholder for prompt task
+            
+            // placeholder for prompt task
         }
 
         public override int TallyPowerBonusVP(List<Region> regions)

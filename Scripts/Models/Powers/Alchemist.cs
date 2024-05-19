@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Smallworld.Models.Powers
 {
     public class Alchemist : Power

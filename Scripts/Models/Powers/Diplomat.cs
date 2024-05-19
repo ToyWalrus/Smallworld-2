@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Smallworld.Models.Powers
 {
     public class Diplomat : Power
@@ -10,19 +12,19 @@ namespace Smallworld.Models.Powers
             _racesAttacked = new List<RacePower>();
         }
 
-        public override Task OnRegionConquered(Region region)
+        public override void OnRegionConquered(Region region)
         {
             if (region.IsOccupied && region.OccupiedBy != _racePower)
             {
                 _racesAttacked.Add(region.OccupiedBy);
             }
-            return Task.CompletedTask;
+
         }
 
-        public override Task OnTurnEnd(List<Region> ownedRegions)
+        public override void OnTurnEnd(List<Region> ownedRegions)
         {
             // prompt player to choose one he didn't attack
-            return Task.CompletedTask; // placeholder for prompt
+
         }
     }
 }
