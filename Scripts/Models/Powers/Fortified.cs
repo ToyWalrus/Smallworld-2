@@ -1,0 +1,34 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Smallworld.Models.Powers
+{
+    class Fortified : Power
+    {
+        private int numFortsBuilt;
+        private const int MAX_FORTS = 6;
+
+        public Fortified()
+        {
+            Name = "Fortified";
+            StartingTokenCount = 3;
+            numFortsBuilt = 0;
+        }
+
+        public override Task OnTurnEnd(List<Region> ownedRegions)
+        {
+            if (numFortsBuilt == 6) return Task.CompletedTask;
+            // place 1 new fort in region with no forts
+            // prompt player to pick region
+            // if fort was placed,
+            //  numFortsBuilt += 1;
+            return Task.CompletedTask; // placeholder for prompt task
+        }
+
+        public override int TallyPowerBonusVP(List<Region> regions)
+        {
+            if (_racePower.IsInDecline) return 0;
+            return numFortsBuilt;
+        }
+    }
+}
