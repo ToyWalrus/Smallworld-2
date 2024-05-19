@@ -24,7 +24,7 @@ namespace Smallworld.Models.Powers
                 // need to take dragon token from previous region too
                 region.AddToken(Token.Dragon);
                 hasUsedDragonTokenThisRound = true;
-                return -10;
+                return 100;
 
                 // if didn't use dragon token, return 0
             }

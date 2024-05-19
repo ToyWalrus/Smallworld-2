@@ -72,8 +72,7 @@ namespace Smallworld.Models
         {
             int raceCostReduction = Race.GetRegionConquerCostReduction(region);
             int powerCostReduction = Power.GetRegionConquerCostReduction(region);
-            // race and power cost reductions will be either 0 or negative, so we need to add instead of subtract
-            return Math.Max(1, region.GetBaseConquerCost() + raceCostReduction + powerCostReduction);
+            return Math.Max(1, region.GetBaseConquerCost() - raceCostReduction - powerCostReduction);
         }
 
         public void EnterDecline()

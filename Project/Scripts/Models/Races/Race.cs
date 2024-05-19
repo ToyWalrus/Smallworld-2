@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Smallworld.Models.Races
 {
@@ -21,8 +20,8 @@ namespace Smallworld.Models.Races
         }
 
         public virtual void OnTurnStart() { }
-        public virtual Task OnTurnEnd() => Task.CompletedTask;
-        public virtual Task OnRegionConquered(Region region) => Task.CompletedTask;
+        public virtual void OnTurnEnd() { }
+        public virtual void OnRegionConquered(Region region) { }
         public virtual int TallyRaceBonusVP(List<Region> regions) => 0;
         public virtual int GetRegionConquerCostReduction(Region region) => 0;
         public virtual void EnterDecline()

@@ -10,7 +10,7 @@ namespace Smallworld.Models.Powers
 
         public override int GetRegionConquerCostReduction(Region region)
         {
-            return -1;
+            return 1;
         }
     }
 }

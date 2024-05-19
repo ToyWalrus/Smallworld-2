@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Smallworld.Models.Races
+﻿namespace Smallworld.Models.Races
 {
     public class Troll : Race
     {
@@ -11,10 +9,9 @@ namespace Smallworld.Models.Races
             MaxTokens = 10;
         }
 
-        public override Task OnRegionConquered(Region region)
+        public override void OnRegionConquered(Region region)
         {
             region.AddToken(Token.TrollLair);
-            return Task.CompletedTask;
         }
     }
 }

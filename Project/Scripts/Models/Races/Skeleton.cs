@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Smallworld.Models.Races
+﻿namespace Smallworld.Models.Races
 {
     public class Skeleton : Race
     {
@@ -18,20 +16,18 @@ namespace Smallworld.Models.Races
             nonEmptyRegionsConqueredThisTurn = 0;
         }
 
-        public override Task OnTurnEnd()
+        public override void OnTurnEnd()
         {
             // get extra troops based on nonEmptyRegionsConqueredThisTurn / 2
             // but no more than MaxTokens
-            return Task.CompletedTask;
         }
 
-        public override Task OnRegionConquered(Region region)
+        public override void OnRegionConquered(Region region)
         {
             if (region.IsOccupied)
             {
                 nonEmptyRegionsConqueredThisTurn++;
             }
-            return Task.CompletedTask;
         }
 
     }

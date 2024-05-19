@@ -12,7 +12,7 @@ namespace Smallworld.Models.Powers
         {
             if (region.Type == RegionType.Hill || region.Type == RegionType.Farmland)
             {
-                return -1;
+                return 1;
             }
             return 0;
         }

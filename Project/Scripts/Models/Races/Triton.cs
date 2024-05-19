@@ -14,7 +14,7 @@
             if (region.IsAdjacentTo(RegionType.Sea) ||
                 region.IsAdjacentTo(RegionType.Lake))
             {
-                return -1;
+                return 1;
             }
             return 0;
         }

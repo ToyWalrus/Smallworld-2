@@ -16,7 +16,7 @@
                 if (adjacent.Type == RegionType.Mountain &&
                     _racePower.GetOwnedRegions().Contains(adjacent))
                 {
-                    return -1;
+                    return 1;
                 }
             }
             return 0;

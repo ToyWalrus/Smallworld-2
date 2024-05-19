@@ -13,7 +13,7 @@ namespace Smallworld.Models.Powers
             if (region.Attribute == RegionAttribute.Underworld ||
                 region.SecondAttribute == RegionAttribute.Underworld)
             {
-                return -1;
+                return 1;
             }
             return 0;
         }
