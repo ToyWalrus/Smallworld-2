@@ -1,6 +1,6 @@
 namespace Smallworld.Models.Powers
 {
-    class Underworld : Power
+    public class Underworld : Power
     {
         public Underworld()
         {

@@ -14,7 +14,8 @@ namespace Smallworld.Models
         public Power Power { get; private set; }
         public int AvailableTokenCount { get; private set; }
         public bool IsInDecline { get => Race.IsInDecline; }
-        private List<Region> ownedRegions;
+
+        private List<Region> _ownedRegions;
 
         public RacePower(Race race, Power power)
         {
@@ -28,7 +29,7 @@ namespace Smallworld.Models
             Race.SetRacePower(this);
             Power.SetRacePower(this);
             AvailableTokenCount = Race.StartingTokenCount + Power.StartingTokenCount;
-            ownedRegions = new List<Region>();
+            _ownedRegions = new List<Region>();
         }
 
         public void OnTurnStart()
@@ -40,7 +41,7 @@ namespace Smallworld.Models
         public void OnTurnEnd()
         {
             Race.OnTurnEnd();
-            Power.OnTurnEnd(ownedRegions);
+            Power.OnTurnEnd(_ownedRegions);
         }
 
         public void OnNewRegionConquered(Region region, int cost)
@@ -48,7 +49,7 @@ namespace Smallworld.Models
             Race.OnRegionConquered(region);
             Power.OnRegionConquered(region);
             AvailableTokenCount = Math.Max(0, AvailableTokenCount - cost);
-            ownedRegions.Add(region);
+            _ownedRegions.Add(region);
         }
 
         public void OnWasConquered(Region region, int troopReimbursement)
@@ -57,13 +58,13 @@ namespace Smallworld.Models
             {
                 AvailableTokenCount += troopReimbursement;
             }
-            ownedRegions.Remove(region);
+            _ownedRegions.Remove(region);
         }
 
         public int TallyBonusVP()
         {
-            int raceVP = Race.TallyRaceBonusVP(ownedRegions);
-            int powerVP = Power.TallyPowerBonusVP(ownedRegions);
+            int raceVP = Race.TallyRaceBonusVP(_ownedRegions);
+            int powerVP = Power.TallyPowerBonusVP(_ownedRegions);
             return raceVP + powerVP;
         }
 
@@ -126,13 +127,13 @@ namespace Smallworld.Models
             return isRegionAdjacent && !regionIsSeaOrLake;
         }
 
-        public List<Region> GetOwnedRegions() => new(ownedRegions);
+        public List<Region> GetOwnedRegions() => new(_ownedRegions);
 
         private bool IsRegionAdjacent(Region region)
         {
             bool hasUnderworldAccess = false;
 
-            foreach (Region owned in ownedRegions)
+            foreach (Region owned in _ownedRegions)
             {
                 if (owned.AdjacentTo.Contains(region))
                 {

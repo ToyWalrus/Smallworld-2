@@ -1,11 +1,11 @@
 namespace Smallworld.Models.Powers
 {
-  class Spirit : Power
-  {
-    public Spirit()
+    public class Spirit : Power
     {
-      Name = "Spirit";
-      StartingTokenCount = 5;
+        public Spirit()
+        {
+            Name = "Spirit";
+            StartingTokenCount = 5;
+        }
     }
-  }
 }

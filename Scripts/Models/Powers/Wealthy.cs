@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Smallworld.Models.Powers
 {
-    class Wealthy : Power
+    public class Wealthy : Power
     {
         private bool haveCollectedBonus;
         private const int BONUS_AMOUNT = 7;

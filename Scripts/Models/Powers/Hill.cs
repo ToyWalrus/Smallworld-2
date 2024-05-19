@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace Smallworld.Models.Powers
 {
-    class Hill : Power
+    public class Hill : Power
     {
         public Hill()
         {

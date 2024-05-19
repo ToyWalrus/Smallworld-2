@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace Smallworld.Models.Powers
 {
-    class Swamp : Power
+    public class Swamp : Power
     {
         public Swamp()
         {

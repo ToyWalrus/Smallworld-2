@@ -1,18 +1,16 @@
-using System.Collections.Generic;
-
 namespace Smallworld.Models.Powers
 {
-  class Alchemist : Power
-  {
-    public Alchemist()
+    public class Alchemist : Power
     {
-      Name = "Alchemist";
-      StartingTokenCount = 4;
-    }
+        public Alchemist()
+        {
+            Name = "Alchemist";
+            StartingTokenCount = 4;
+        }
 
-    public override int TallyPowerBonusVP(List<Region> regions)
-    {
-      return 2;
+        public override int TallyPowerBonusVP(List<Region> regions)
+        {
+            return 2;
+        }
     }
-  }
 }

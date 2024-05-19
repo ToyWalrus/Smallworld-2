@@ -1,16 +1,16 @@
 namespace Smallworld.Models.Powers
 {
-  class Commando : Power
-  {
-    public Commando()
+    public class Commando : Power
     {
-      Name = "Commando";
-      StartingTokenCount = 4;
-    }
+        public Commando()
+        {
+            Name = "Commando";
+            StartingTokenCount = 4;
+        }
 
-    public override int GetRegionConquerCostReduction(Region region)
-    {
-      return -1;
+        public override int GetRegionConquerCostReduction(Region region)
+        {
+            return -1;
+        }
     }
-  }
 }

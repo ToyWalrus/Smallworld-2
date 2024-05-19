@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace Smallworld.Models.Powers
 {
-    class DragonMaster : Power
+    public class DragonMaster : Power
     {
         private bool hasUsedDragonTokenThisRound;
         public DragonMaster()

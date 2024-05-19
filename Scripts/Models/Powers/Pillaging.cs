@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Smallworld.Models.Powers
 {
-    class Pillaging : Power
+    public class Pillaging : Power
     {
         private int nonEmptyRegionsConqueredThisTurn;
         public Pillaging()

@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Smallworld.Models.Powers
 {
-    class Fortified : Power
+    public class Fortified : Power
     {
         private int numFortsBuilt;
         private const int MAX_FORTS = 6;

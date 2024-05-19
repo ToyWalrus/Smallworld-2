@@ -1,11 +1,11 @@
 namespace Smallworld.Models.Powers
 {
-  class Seafaring : Power
-  {
-    public Seafaring()
+    public class Seafaring : Power
     {
-      Name = "Seafaring";
-      StartingTokenCount = 5;
+        public Seafaring()
+        {
+            Name = "Seafaring";
+            StartingTokenCount = 5;
+        }
     }
-  }
 }

@@ -1,23 +1,20 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Smallworld.Models.Powers
 {
-    class Diplomat : Power
+    public class Diplomat : Power
     {
-        private List<RacePower> racesAttacked;
+        private List<RacePower> _racesAttacked;
         public Diplomat()
         {
             Name = "Diplomatic";
             StartingTokenCount = 5;
-            racesAttacked = new List<RacePower>();
+            _racesAttacked = new List<RacePower>();
         }
 
         public override Task OnRegionConquered(Region region)
         {
-            if (region.IsOccupiedByOpponent)
+            if (region.IsOccupied && region.OccupiedBy != _racePower)
             {
-                racesAttacked.Add(region.OccupiedBy);
+                _racesAttacked.Add(region.OccupiedBy);
             }
             return Task.CompletedTask;
         }

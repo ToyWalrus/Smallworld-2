@@ -1,11 +1,11 @@
 namespace Smallworld.Models.Powers
 {
-  class Flying : Power
-  {
-    public Flying()
+    public class Flying : Power
     {
-      Name = "Flying";
-      StartingTokenCount = 5;
+        public Flying()
+        {
+            Name = "Flying";
+            StartingTokenCount = 5;
+        }
     }
-  }
 }

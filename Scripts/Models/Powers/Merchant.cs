@@ -1,19 +1,17 @@
-using System.Collections.Generic;
-
 namespace Smallworld.Models.Powers
 {
-  class Merchant : Power
-  {
-    public Merchant()
+    public class Merchant : Power
     {
-      Name = "Merchant";
-      StartingTokenCount = 2;
-    }
+        public Merchant()
+        {
+            Name = "Merchant";
+            StartingTokenCount = 2;
+        }
 
-    public override int TallyPowerBonusVP(List<Region> regions)
-    {
-      // 1 bonus VP for each region occupied
-      return regions.Count;
+        public override int TallyPowerBonusVP(List<Region> regions)
+        {
+            // 1 bonus VP for each region occupied
+            return regions.Count;
+        }
     }
-  }
 }

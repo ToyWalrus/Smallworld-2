@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Smallworld.Models.Powers
+﻿namespace Smallworld.Models.Powers
 {
     public abstract class Power
     {
-        public String Name { get; protected set; }
+        public string Name { get; protected set; }
         public int StartingTokenCount { get; protected set; }
         protected RacePower _racePower;
 
