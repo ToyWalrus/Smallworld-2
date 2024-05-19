@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+
 namespace Smallworld.Models.Races
 {
     public class Orc : Race
@@ -18,13 +18,12 @@ namespace Smallworld.Models.Races
             nonEmptyRegionsConqueredThisTurn = 0;
         }
 
-        public override Task OnRegionConquered(Region region)
+        public override void OnRegionConquered(Region region)
         {
             if (region.IsOccupied)
             {
                 nonEmptyRegionsConqueredThisTurn++;
             }
-            return Task.CompletedTask;
         }
 
         public override int TallyRaceBonusVP(List<Region> regions)

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Smallworld.Models.Races
+﻿namespace Smallworld.Models.Races
 {
     public class Halfling : Race
     {
@@ -14,14 +12,13 @@ namespace Smallworld.Models.Races
             totalRegionsConquered = 0;
         }
 
-        public override Task OnRegionConquered(Region region)
+        public override void OnRegionConquered(Region region)
         {
             if (totalRegionsConquered < 2)
             {
                 region.AddToken(Token.HoleInTheGround);
             }
             totalRegionsConquered++;
-            return Task.CompletedTask;
         }
     }
 }
