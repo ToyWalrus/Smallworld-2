@@ -1,4 +1,6 @@
-﻿namespace Smallworld.Models.Races
+﻿using System.Linq;
+
+namespace Smallworld.Models.Races
 {
     public class Giant : Race
     {
@@ -11,15 +13,7 @@
 
         public override int GetRegionConquerCostReduction(Region region)
         {
-            foreach (Region adjacent in region.AdjacentTo)
-            {
-                if (adjacent.Type == RegionType.Mountain &&
-                    _racePower.GetOwnedRegions().Contains(adjacent))
-                {
-                    return 1;
-                }
-            }
-            return 0;
+            return region.AdjacentTo.Exists(adjacent => adjacent.Type == RegionType.Mountain) ? 1 : 0;
         }
     }
 }

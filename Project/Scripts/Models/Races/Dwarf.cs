@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Smallworld.Models.Races
 {
@@ -13,15 +14,7 @@ namespace Smallworld.Models.Races
 
         public override int TallyRaceBonusVP(List<Region> regions)
         {
-            int totalMines = 0;
-            foreach (Region region in regions)
-            {
-                if (region.HasAttribute(RegionAttribute.Mine))
-                {
-                    totalMines++;
-                }
-            }
-            return totalMines;
+            return regions.Count(region => region.HasAttribute(RegionAttribute.Mine));
         }
     }
 }

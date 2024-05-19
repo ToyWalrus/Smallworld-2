@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+
 namespace Smallworld.Models.Races
 {
     public class Human : Race
@@ -13,15 +15,7 @@ namespace Smallworld.Models.Races
         public override int TallyRaceBonusVP(List<Region> regions)
         {
             if (IsInDecline) return 0;
-            int total = 0;
-            foreach (Region region in regions)
-            {
-                if (region.Type == RegionType.Farmland)
-                {
-                    total++;
-                }
-            }
-            return total;
+            return regions.Count(region => region.Type == RegionType.Farmland);
         }
     }
 }

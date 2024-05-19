@@ -10,12 +10,7 @@ namespace Smallworld.Models.Powers
 
         public override int GetRegionConquerCostReduction(Region region)
         {
-            if (region.Attribute == RegionAttribute.Underworld ||
-                region.SecondAttribute == RegionAttribute.Underworld)
-            {
-                return 1;
-            }
-            return 0;
+            return region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0;
         }
     }
 }

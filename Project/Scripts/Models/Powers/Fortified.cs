@@ -16,12 +16,12 @@ namespace Smallworld.Models.Powers
 
         public override void OnTurnEnd(List<Region> ownedRegions)
         {
-            if (numFortsBuilt == 6) return;
+            if (numFortsBuilt == MAX_FORTS) return;
             // place 1 new fort in region with no forts
             // prompt player to pick region
             // if fort was placed,
             //  numFortsBuilt += 1;
-            
+
             // placeholder for prompt task
         }
 
