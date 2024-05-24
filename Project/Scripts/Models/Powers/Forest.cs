@@ -13,7 +13,7 @@ namespace Smallworld.Models.Powers
 
         public override int TallyPowerBonusVP(List<Region> regions)
         {
-            return regions.Count(region => region.Type == RegionType.Forest);
+            return IsInDecline ? 0 : regions.Count(region => region.Type == RegionType.Forest);
         }
     }
 }

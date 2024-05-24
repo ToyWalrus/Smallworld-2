@@ -10,10 +10,14 @@ namespace Smallworld.Models.Powers
             StartingTokenCount = 5;
         }
 
-        public override void OnTurnEnd(List<Region> ownedRegions)
+        public override List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
         {
-            // place heroic tokens on two regions
-            // prompt player to pick two regions            
+            foreach (var region in ownedRegions)
+            {
+                region.RemoveAllTokensOfType(Token.Heroic);
+            }
+
+            return new() { Token.Heroic, Token.Heroic };
         }
     }
 }

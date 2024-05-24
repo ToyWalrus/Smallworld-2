@@ -10,10 +10,10 @@ namespace Smallworld.Models.Powers
             StartingTokenCount = 2;
         }
 
-        public override int TallyPowerBonusVP(List<Region> regions)
+        public override int TallyPowerBonusVP(List<Region> ownedRegions)
         {
             // 1 bonus VP for each region occupied
-            return regions.Count;
+            return IsInDecline ? 0 : ownedRegions.Count;
         }
     }
 }

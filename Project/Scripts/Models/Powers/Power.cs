@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Smallworld.Models.Powers
 {
@@ -6,7 +6,13 @@ namespace Smallworld.Models.Powers
     {
         public string Name { get; protected set; }
         public int StartingTokenCount { get; protected set; }
+        public bool IsInDecline { get; protected set; }
         protected RacePower _racePower;
+
+        public Power()
+        {
+            IsInDecline = false;
+        }
 
         public void SetRacePower(RacePower rp)
         {
@@ -24,6 +30,11 @@ namespace Smallworld.Models.Powers
         /// </summary>
         /// <param name="region">the conquered region.</param>
         public virtual void OnRegionConquered(Region region) { }
+
+        public virtual void EnterDecline()
+        {
+            IsInDecline = true;
+        }
 
         public override string ToString() => Name;
     }

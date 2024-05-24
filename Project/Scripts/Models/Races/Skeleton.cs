@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Smallworld.Models.Races
 {
@@ -18,12 +19,14 @@ namespace Smallworld.Models.Races
             nonEmptyRegionsConqueredThisTurn = 0;
         }
 
-        public override int GetTroopRedeploymentCount(List<Region> ownedRegions)
+        public override List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
         {
             // Get extra troops based on nonEmptyRegionsConqueredThisTurn / 2
             // but no more than MaxTokens
-            var baseRedeploymentCount = base.GetTroopRedeploymentCount(ownedRegions);
-            return System.Math.Min(MaxTokens, baseRedeploymentCount + (int)System.Math.Floor(nonEmptyRegionsConqueredThisTurn / 2.0));
+            var baseRedeployment = base.GetRedeploymentTokens(ownedRegions);
+            var newCount = System.Math.Min(MaxTokens, baseRedeployment.Count + (int)System.Math.Floor(nonEmptyRegionsConqueredThisTurn / 2.0));
+
+            return Enumerable.Repeat(Token.Race, newCount).ToList();
         }
 
         public override void OnRegionConquered(Region region)

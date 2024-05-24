@@ -1,34 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Smallworld.Models.Powers
 {
     public class Fortified : Power
     {
-        private int numFortsBuilt;
         private const int MAX_FORTS = 6;
 
         public Fortified()
         {
             Name = "Fortified";
             StartingTokenCount = 3;
-            numFortsBuilt = 0;
         }
 
-        public override void OnTurnEnd(List<Region> ownedRegions)
+        public override List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
         {
-            if (numFortsBuilt == MAX_FORTS) return;
-            // place 1 new fort in region with no forts
-            // prompt player to pick region
-            // if fort was placed,
-            //  numFortsBuilt += 1;
+            if (ownedRegions.Count(region => region.HasToken(Token.Fortress)) >= MAX_FORTS) return new();
 
-            // placeholder for prompt task
+            var regionsWithNoFort = ownedRegions.Where(region => !region.HasToken(Token.Fortress));
+            if (!regionsWithNoFort.Any()) return new();
+
+            // TODO: prompt player which region to place fort in
+
+            return new() { Token.Fortress };
         }
 
-        public override int TallyPowerBonusVP(List<Region> regions)
+        public override int TallyPowerBonusVP(List<Region> ownedRegions)
         {
-            if (_racePower.IsInDecline) return 0;
-            return numFortsBuilt;
+            if (IsInDecline) return 0;
+            return ownedRegions.Count(region => region.HasToken(Token.Fortress));
         }
     }
 }

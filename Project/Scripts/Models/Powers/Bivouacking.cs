@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Smallworld.Models.Powers
 {
@@ -10,9 +11,14 @@ namespace Smallworld.Models.Powers
             StartingTokenCount = 5;
         }
 
-        public override void OnTurnEnd(List<Region> ownedRegions)
+        public override List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
         {
-            // prompt user where to put encampments            
+            foreach (var region in ownedRegions)
+            {
+                region.RemoveAllTokensOfType(Token.Encampment);
+            }
+
+            return Enumerable.Repeat(Token.Encampment, 5).ToList();
         }
     }
 }

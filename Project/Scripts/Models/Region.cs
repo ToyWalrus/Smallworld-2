@@ -53,12 +53,12 @@ namespace Smallworld.Models
             count = 1;
             if (HasToken(Token.Encampment))
             {
-                count = _tokens.Where((t) => t == Token.Encampment).Count();
+                count = _tokens.Count((t) => t == Token.Encampment);
                 return Token.Encampment;
             }
             if (HasToken(Token.Fortress))
             {
-                count = _tokens.Where((t) => t == Token.Fortress).Count();
+                count = _tokens.Count((t) => t == Token.Fortress);
                 return Token.Fortress;
             }
             if (HasToken(Token.TrollLair))
@@ -73,9 +73,9 @@ namespace Smallworld.Models
             {
                 return Token.HoleInTheGround;
             }
-            if (HasToken(Token.Hero))
+            if (HasToken(Token.Heroic))
             {
-                return Token.Hero;
+                return Token.Heroic;
             }
             count = 0;
             return Token.None;
@@ -86,7 +86,7 @@ namespace Smallworld.Models
             return _tokens.Exists((token) =>
                 token == Token.Dragon ||
                 token == Token.HoleInTheGround ||
-                token == Token.Hero);
+                token == Token.Heroic);
         }
 
         /// <summary>
@@ -171,6 +171,11 @@ namespace Smallworld.Models
         public bool HasToken(Token token) => _tokens.Exists((t) => t == token);
         public void AddToken(Token token) => _tokens.Add(token);
         public void RemoveAllTokensOfType(Token tokenType) => _tokens.RemoveAll((t) => t == tokenType);
+
+        public bool IsAdjacentTo(Region region)
+        {
+            return AdjacentTo.Contains(region);
+        }
 
         public bool IsAdjacentTo(RegionType type)
         {

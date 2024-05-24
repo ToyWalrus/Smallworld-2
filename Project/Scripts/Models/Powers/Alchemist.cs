@@ -12,7 +12,7 @@ namespace Smallworld.Models.Powers
 
         public override int TallyPowerBonusVP(List<Region> regions)
         {
-            return 2;
+            return IsInDecline ? 0 : 2;
         }
     }
 }

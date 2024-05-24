@@ -78,6 +78,7 @@ namespace Smallworld.Models
         public void EnterDecline()
         {
             Race.EnterDecline();
+            Power.EnterDecline();
         }
 
         public bool IsValidConquerRegion(Region region, bool isFirstConquest, out string reason)

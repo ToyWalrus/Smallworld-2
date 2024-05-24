@@ -26,12 +26,14 @@ namespace Smallworld.Models.Races
         public virtual void OnRegionConquered(Region region) { }
         public virtual int GetRegionConquerCostReduction(Region region) => 0;
         public virtual int TallyRaceBonusVP(List<Region> ownedRegions) => 0;
-        public virtual int GetTroopRedeploymentCount(List<Region> ownedRegions)
+        public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
         {
             var totalRaceTokens = ownedRegions.Sum(r => r.NumRaceTokens);
 
             // Need to leave at least one token in each region
-            return System.Math.Max(0, totalRaceTokens - ownedRegions.Count);
+            var length = System.Math.Max(0, totalRaceTokens - ownedRegions.Count);
+
+            return Enumerable.Repeat(Token.Race, length).ToList();
         }
         public virtual void EnterDecline()
         {

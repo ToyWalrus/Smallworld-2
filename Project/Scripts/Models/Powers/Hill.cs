@@ -11,9 +11,9 @@ namespace Smallworld.Models.Powers
             StartingTokenCount = 4;
         }
 
-        public override int TallyPowerBonusVP(List<Region> regions)
+        public override int TallyPowerBonusVP(List<Region> ownedRegions)
         {
-            return regions.Count(region => region.Type == RegionType.Hill);
+            return IsInDecline ? 0 : ownedRegions.Count(region => region.Type == RegionType.Hill);
         }
     }
 }

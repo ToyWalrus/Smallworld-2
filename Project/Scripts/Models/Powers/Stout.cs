@@ -12,7 +12,7 @@ namespace Smallworld.Models.Powers
 
         public override void OnTurnEnd(List<Region> ownedRegions)
         {
-            // prompt user whether to enter decline
+            // TODO: prompt user whether to enter decline
             // if yes,
             // _racePower.EnterDecline();
 

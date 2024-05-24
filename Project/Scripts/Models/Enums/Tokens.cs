@@ -23,7 +23,7 @@ namespace Smallworld.Models
         HoleInTheGround,
 
         // 2 tokens
-        Hero,
+        Heroic,
 
         // 1 token
         Dragon,

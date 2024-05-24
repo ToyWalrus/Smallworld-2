@@ -21,14 +21,13 @@ namespace Smallworld.Models.Powers
         {
             if (hasUsedDragonTokenThisRound) return 0;
 
-            // if using dragon token, only costs one.
-            // prompt player whether to use dragon token
+            // TODO: prompt player whether to use dragon token
 
             hasUsedDragonTokenThisRound = true;
             region.AddToken(Token.Dragon);
             regionWithDragon = region;
 
-            return 100; // just a big reduction number
+            return int.MaxValue;
         }
     }
 }
