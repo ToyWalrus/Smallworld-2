@@ -3,6 +3,8 @@ namespace Smallworld.Models.Powers
     public class DragonMaster : Power
     {
         private bool hasUsedDragonTokenThisRound;
+        private Region regionWithDragon;
+
         public DragonMaster()
         {
             Name = "Dragon master";
@@ -12,23 +14,21 @@ namespace Smallworld.Models.Powers
         public override void OnTurnStart()
         {
             hasUsedDragonTokenThisRound = false;
+            regionWithDragon?.RemoveAllTokensOfType(Token.Dragon);
         }
 
         public override int GetRegionConquerCostReduction(Region region)
         {
-            if (!hasUsedDragonTokenThisRound)
-            {
-                // if using dragon token, only costs one.
-                // prompt player whether to use dragon token
+            if (hasUsedDragonTokenThisRound) return 0;
 
-                // need to take dragon token from previous region too
-                region.AddToken(Token.Dragon);
-                hasUsedDragonTokenThisRound = true;
-                return 100;
+            // if using dragon token, only costs one.
+            // prompt player whether to use dragon token
 
-                // if didn't use dragon token, return 0
-            }
-            return 0;
+            hasUsedDragonTokenThisRound = true;
+            region.AddToken(Token.Dragon);
+            regionWithDragon = region;
+
+            return 100; // just a big reduction number
         }
     }
 }

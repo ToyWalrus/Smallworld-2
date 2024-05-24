@@ -4,12 +4,18 @@ namespace Smallworld.Models.Powers
 {
     public class Diplomat : Power
     {
-        private List<RacePower> _racesAttacked;
+        private readonly List<RacePower> _racesAttacked;
+
         public Diplomat()
         {
             Name = "Diplomatic";
             StartingTokenCount = 5;
             _racesAttacked = new List<RacePower>();
+        }
+
+        public override void OnTurnStart()
+        {
+            _racesAttacked.Clear();
         }
 
         public override void OnRegionConquered(Region region)
@@ -24,7 +30,6 @@ namespace Smallworld.Models.Powers
         public override void OnTurnEnd(List<Region> ownedRegions)
         {
             // prompt player to choose one he didn't attack
-
         }
     }
 }

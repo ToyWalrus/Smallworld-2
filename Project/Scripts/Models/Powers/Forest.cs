@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Smallworld.Models.Powers
 {
@@ -12,15 +13,7 @@ namespace Smallworld.Models.Powers
 
         public override int TallyPowerBonusVP(List<Region> regions)
         {
-            int forestsOwned = 0;
-            foreach (Region region in regions)
-            {
-                if (region.Type == RegionType.Forest)
-                {
-                    forestsOwned++;
-                }
-            }
-            return forestsOwned;
+            return regions.Count(region => region.Type == RegionType.Forest);
         }
     }
 }
