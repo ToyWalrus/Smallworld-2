@@ -76,7 +76,7 @@ namespace Smallworld.Models
             Power.EnterDecline();
         }
 
-        public (bool, string) IsValidConquerRegion(Region region, bool isFirstConquest)
+        public (bool, string) IsValidConquerRegion(Region region)
         {
 
             if (region.OccupiedBy == this)
@@ -84,8 +84,8 @@ namespace Smallworld.Models
                 return (false, "Region is already occupied by you");
             }
 
-            var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region, isFirstConquest);
-            var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region, isFirstConquest);
+            var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region);
+            var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region);
 
             // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
             if (

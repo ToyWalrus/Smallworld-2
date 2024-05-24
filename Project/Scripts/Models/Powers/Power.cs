@@ -19,9 +19,9 @@ namespace Smallworld.Models.Powers
         public virtual int TallyPowerBonusVP(List<Region> regions) => 0;
         public virtual int GetRegionConquerCostReduction(Region region) => 0;
         public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions) => new();
-        public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region, bool isFirstConquest)
+        public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
         {
-            return region.GetInvalidConquerReasons(ownedRegions, isFirstConquest);
+            return region.GetInvalidConquerReasons(ownedRegions);
         }
 
         /// <summary>

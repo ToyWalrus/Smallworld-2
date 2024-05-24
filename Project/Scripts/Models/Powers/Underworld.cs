@@ -16,9 +16,9 @@ namespace Smallworld.Models.Powers
             return region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0;
         }
 
-        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region, bool isFirstConquest)
+        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
         {
-            var reasons = region.GetInvalidConquerReasons(ownedRegions, isFirstConquest);
+            var reasons = region.GetInvalidConquerReasons(ownedRegions);
             if (
                 reasons.Contains(InvalidConquerReason.NotAdjacent) &&
                 ownedRegions.Any(r => r.HasAttribute(RegionAttribute.Underworld)) &&

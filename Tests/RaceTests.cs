@@ -61,8 +61,8 @@ public class RaceTests
         var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var unconnectedBorderRegion = new Region(RegionType.Farmland, RegionAttribute.None, true);
 
-        Assert.AreEqual(halfling.GetInvalidConquerReasons([], region, true).Count, 0);
-        Assert.AreNotEqual(halfling.GetInvalidConquerReasons([region], unconnectedBorderRegion, false).Count, 0); // Not first conquest, not connected
+        Assert.AreEqual(halfling.GetInvalidConquerReasons([], region).Count, 0);
+        Assert.AreNotEqual(halfling.GetInvalidConquerReasons([region], unconnectedBorderRegion).Count, 0); // Not first conquest, not connected
     }
 
     [TestMethod]

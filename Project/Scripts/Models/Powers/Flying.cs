@@ -10,9 +10,9 @@ namespace Smallworld.Models.Powers
             StartingTokenCount = 5;
         }
 
-        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region, bool isFirstConquest)
+        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
         {
-            var reasons = region.GetInvalidConquerReasons(ownedRegions, isFirstConquest);
+            var reasons = region.GetInvalidConquerReasons(ownedRegions);
             reasons.Remove(InvalidConquerReason.NotAdjacent);
             reasons.Remove(InvalidConquerReason.NotBorder);
             return reasons;

@@ -185,8 +185,9 @@ namespace Smallworld.Models
         /// <summary>
         /// Returns the reasons why a region cannot be conquered. If the list is empty, the region can be conquered.
         /// </summary>
-        public List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> playerOwnedRegions, bool isFirstConquest)
+        public List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> playerOwnedRegions)
         {
+            var isFirstConquest = playerOwnedRegions.Count == 0;
             var reasons = new List<InvalidConquerReason>();
 
             if (IsImmune())
@@ -194,8 +195,7 @@ namespace Smallworld.Models
                 reasons.Add(InvalidConquerReason.RegionImmune);
             }
 
-            // On first conquest the player won't have any regions
-            if (!playerOwnedRegions.Any(r => IsAdjacentTo(r)) && !isFirstConquest)
+            if (playerOwnedRegions.Count > 0 && !playerOwnedRegions.Any(r => IsAdjacentTo(r)))
             {
                 reasons.Add(InvalidConquerReason.NotAdjacent);
             }

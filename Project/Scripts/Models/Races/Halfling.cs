@@ -24,9 +24,10 @@ namespace Smallworld.Models.Races
             totalRegionsConquered++;
         }
 
-        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region, bool isFirstConquest)
+        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
         {
-            var reasons = region.GetInvalidConquerReasons(ownedRegions, isFirstConquest);
+            var isFirstConquest = ownedRegions.Count == 0;
+            var reasons = region.GetInvalidConquerReasons(ownedRegions);
             if (isFirstConquest)
             {
                 reasons.Remove(InvalidConquerReason.NotBorder);

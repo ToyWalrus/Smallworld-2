@@ -20,9 +20,9 @@ namespace Smallworld.Models.Races
         public virtual void OnRegionConquered(Region region) { }
         public virtual int GetRegionConquerCostReduction(Region region) => 0;
         public virtual int TallyRaceBonusVP(List<Region> ownedRegions) => 0;
-        public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region, bool isFirstConquest)
+        public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
         {
-            return region.GetInvalidConquerReasons(ownedRegions, isFirstConquest);
+            return region.GetInvalidConquerReasons(ownedRegions);
         }
 
         public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions)

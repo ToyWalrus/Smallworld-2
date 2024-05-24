@@ -102,10 +102,10 @@ public class PowerTests
         var region3 = new Region(RegionType.Sea, RegionAttribute.None, true);
         var region4 = new Region(RegionType.Lake, RegionAttribute.None, false);
 
-        Assert.AreEqual(flying.GetInvalidConquerReasons([], region1, false).Count, 0);
-        Assert.AreEqual(flying.GetInvalidConquerReasons([], region2, false).Count, 0);
-        Assert.AreNotEqual(flying.GetInvalidConquerReasons([], region3, false).Count, 0); // Cannot conquer sea regions
-        Assert.AreNotEqual(flying.GetInvalidConquerReasons([], region4, false).Count, 0); // Cannot conquer lake regions
+        Assert.AreEqual(flying.GetInvalidConquerReasons([region1], region1).Count, 0);
+        Assert.AreEqual(flying.GetInvalidConquerReasons([region1], region2).Count, 0);
+        Assert.AreNotEqual(flying.GetInvalidConquerReasons([region1], region3).Count, 0); // Cannot conquer sea regions
+        Assert.AreNotEqual(flying.GetInvalidConquerReasons([region1], region4).Count, 0); // Cannot conquer lake regions
     }
 
     [TestMethod]
@@ -276,8 +276,8 @@ public class PowerTests
 
         region1.SetAdjacentRegions([region2, region3, region4]);
 
-        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region1, false).Contains(InvalidConquerReason.SeaOrLake));
-        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region2, false).Contains(InvalidConquerReason.SeaOrLake));
+        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region1).Contains(InvalidConquerReason.SeaOrLake));
+        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region2).Contains(InvalidConquerReason.SeaOrLake));
     }
 
     // TODO: come back when confirmation is implemented
