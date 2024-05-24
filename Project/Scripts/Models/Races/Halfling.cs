@@ -1,4 +1,7 @@
-﻿namespace Smallworld.Models.Races
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Smallworld.Models.Races
 {
     public class Halfling : Race
     {
@@ -19,6 +22,16 @@
                 region.AddToken(Token.HoleInTheGround);
             }
             totalRegionsConquered++;
+        }
+
+        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region, bool isFirstConquest)
+        {
+            var reasons = region.GetInvalidConquerReasons(ownedRegions, isFirstConquest);
+            if (isFirstConquest)
+            {
+                reasons.Remove(InvalidConquerReason.NotBorder);
+            }
+            return reasons;
         }
     }
 }

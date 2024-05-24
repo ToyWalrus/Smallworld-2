@@ -10,7 +10,7 @@ namespace Smallworld.Models.Powers
             StartingTokenCount = 4;
         }
 
-        public override void OnTurnEnd(List<Region> ownedRegions)
+        public override void OnTurnEnd()
         {
             // TODO: prompt user whether to enter decline
             // if yes,

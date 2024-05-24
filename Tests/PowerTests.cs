@@ -94,6 +94,21 @@ public class PowerTests
     }
 
     [TestMethod]
+    public void Flying_GetInvalidConquerReasons_ReturnsReasonsWithoutBorderOrAdjacentRestriction()
+    {
+        var flying = new Flying();
+        var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
+        var region2 = new Region(RegionType.Mountain, RegionAttribute.None, false);
+        var region3 = new Region(RegionType.Sea, RegionAttribute.None, true);
+        var region4 = new Region(RegionType.Lake, RegionAttribute.None, false);
+
+        Assert.AreEqual(flying.GetInvalidConquerReasons([], region1, false).Count, 0);
+        Assert.AreEqual(flying.GetInvalidConquerReasons([], region2, false).Count, 0);
+        Assert.AreNotEqual(flying.GetInvalidConquerReasons([], region3, false).Count, 0); // Cannot conquer sea regions
+        Assert.AreNotEqual(flying.GetInvalidConquerReasons([], region4, false).Count, 0); // Cannot conquer lake regions
+    }
+
+    [TestMethod]
     public void Forest_TallyPowerBonusVP_ReturnsOnePerForestRegionWhenNotInDecline()
     {
         var forest = new Forest();
@@ -247,6 +262,22 @@ public class PowerTests
         pillaging.OnTurnStart();
 
         Assert.AreEqual(pillaging.TallyPowerBonusVP(list), 0);
+    }
+
+    [TestMethod]
+    public void Seafaring_GetInvalidConquerReasons_ReturnsReasonsWithoutSeaOrLakeRestriction()
+    {
+        var seafaring = new Seafaring();
+        var region1 = new Region(RegionType.Sea, RegionAttribute.None, false);
+        var region2 = new Region(RegionType.Lake, RegionAttribute.None, false);
+        var region3 = new Region(RegionType.Farmland, RegionAttribute.None, false);
+        var region4 = new Region(RegionType.Mountain, RegionAttribute.None, false);
+        var ownedRegions = new List<Region> { region1, region4 };
+
+        region1.SetAdjacentRegions([region2, region3, region4]);
+
+        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region1, false).Contains(InvalidConquerReason.SeaOrLake));
+        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region2, false).Contains(InvalidConquerReason.SeaOrLake));
     }
 
     // TODO: come back when confirmation is implemented

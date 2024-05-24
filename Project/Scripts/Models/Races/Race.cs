@@ -9,16 +9,10 @@ namespace Smallworld.Models.Races
         public int MaxTokens { get; protected set; }
         public int StartingTokenCount { get; protected set; }
         public bool IsInDecline { get; protected set; }
-        // protected RacePower _racePower;
 
         public Race()
         {
             IsInDecline = false;
-        }
-
-        public void SetRacePower(RacePower data)
-        {
-            // _racePower = data;
         }
 
         public virtual void OnTurnStart() { }
@@ -26,6 +20,11 @@ namespace Smallworld.Models.Races
         public virtual void OnRegionConquered(Region region) { }
         public virtual int GetRegionConquerCostReduction(Region region) => 0;
         public virtual int TallyRaceBonusVP(List<Region> ownedRegions) => 0;
+        public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region, bool isFirstConquest)
+        {
+            return region.GetInvalidConquerReasons(ownedRegions, isFirstConquest);
+        }
+
         public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
         {
             var totalRaceTokens = ownedRegions.Sum(r => r.NumRaceTokens);
@@ -35,6 +34,7 @@ namespace Smallworld.Models.Races
 
             return Enumerable.Repeat(Token.Race, length).ToList();
         }
+
         public virtual void EnterDecline()
         {
             IsInDecline = true;

@@ -5,6 +5,14 @@ using Smallworld.Utils;
 
 namespace Smallworld.Models
 {
+    public enum InvalidConquerReason
+    {
+        NotBorder,
+        SeaOrLake,
+        NotAdjacent,
+        RegionImmune,
+    }
+
     public class Region
     {
         public RegionType Type { get; private set; }
@@ -12,12 +20,12 @@ namespace Smallworld.Models
         public RegionAttribute SecondAttribute { get; private set; }
 
         public bool IsBorder { get; set; }
-        public bool IsOccupied => OccupiedBy != null || _tokens.Exists((t) => t == Token.LostTribe);
+        public bool IsOccupied => OccupiedBy != null || HasToken(Token.LostTribe);
         public RacePower OccupiedBy { get; private set; }
         public List<Region> AdjacentTo { get; private set; }
-        public int NumRaceTokens => _tokens.Count(t => t == Token.Race);
+        public int NumRaceTokens => tokens.Count(t => t == Token.Race);
 
-        private readonly List<Token> _tokens;
+        private readonly List<Token> tokens;
 
         public Region(RegionType type, RegionAttribute attribute, bool isBorder, RegionAttribute secondAttr = RegionAttribute.None)
         {
@@ -26,11 +34,13 @@ namespace Smallworld.Models
             SecondAttribute = secondAttr;
             IsBorder = isBorder;
             OccupiedBy = null;
-            _tokens = new List<Token>();
+            AdjacentTo = new();
+
+            tokens = new();
 
             if (type == RegionType.Mountain)
             {
-                _tokens.Add(Token.Mountain);
+                tokens.Add(Token.Mountain);
             }
         }
 
@@ -53,12 +63,12 @@ namespace Smallworld.Models
             count = 1;
             if (HasToken(Token.Encampment))
             {
-                count = _tokens.Count((t) => t == Token.Encampment);
+                count = tokens.Count((t) => t == Token.Encampment);
                 return Token.Encampment;
             }
             if (HasToken(Token.Fortress))
             {
-                count = _tokens.Count((t) => t == Token.Fortress);
+                count = tokens.Count((t) => t == Token.Fortress);
                 return Token.Fortress;
             }
             if (HasToken(Token.TrollLair))
@@ -83,7 +93,7 @@ namespace Smallworld.Models
 
         public bool IsImmune()
         {
-            return _tokens.Exists((token) =>
+            return tokens.Exists((token) =>
                 token == Token.Dragon ||
                 token == Token.HoleInTheGround ||
                 token == Token.Heroic);
@@ -98,7 +108,7 @@ namespace Smallworld.Models
         public int GetBaseConquerCost()
         {
             int baseCost = 2;
-            return baseCost + _tokens.Count;
+            return baseCost + tokens.Count;
         }
 
         /// <summary>
@@ -116,7 +126,7 @@ namespace Smallworld.Models
             }
 
             int troopReimbursement = 0;
-            if (IsOccupied && OccupiedBy != null)
+            if (OccupiedBy != null)
             {
                 if (OccupiedBy.IsInDecline && OccupiedBy.Race is not Ghoul)
                 {
@@ -138,7 +148,7 @@ namespace Smallworld.Models
 
             for (int i = 0; i < numRaceTokens; ++i)
             {
-                _tokens.Add(Token.Race);
+                tokens.Add(Token.Race);
             }
 
             return troopReimbursement;
@@ -148,18 +158,18 @@ namespace Smallworld.Models
         {
             for (int i = 0; i < numRaceTokens; ++i)
             {
-                _tokens.Add(Token.Race);
+                tokens.Add(Token.Race);
             }
         }
 
         public void Abandon()
         {
             OccupiedBy = null;
-            _tokens.Clear();
+            tokens.Clear();
 
             if (Type == RegionType.Mountain)
             {
-                _tokens.Add(Token.Mountain);
+                tokens.Add(Token.Mountain);
             }
         }
 
@@ -168,9 +178,40 @@ namespace Smallworld.Models
         /// this region. (Number of race tokens minus 1)
         /// </summary>    
         public int GetExcessTroops() => System.Math.Max(0, NumRaceTokens - 1);
-        public bool HasToken(Token token) => _tokens.Exists((t) => t == token);
-        public void AddToken(Token token) => _tokens.Add(token);
-        public void RemoveAllTokensOfType(Token tokenType) => _tokens.RemoveAll((t) => t == tokenType);
+        public bool HasToken(Token token) => tokens.Exists((t) => t == token);
+        public void AddToken(Token token) => tokens.Add(token);
+        public void RemoveAllTokensOfType(Token tokenType) => tokens.RemoveAll((t) => t == tokenType);
+
+        /// <summary>
+        /// Returns the reasons why a region cannot be conquered. If the list is empty, the region can be conquered.
+        /// </summary>
+        public List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> playerOwnedRegions, bool isFirstConquest)
+        {
+            var reasons = new List<InvalidConquerReason>();
+
+            if (IsImmune())
+            {
+                reasons.Add(InvalidConquerReason.RegionImmune);
+            }
+
+            // On first conquest the player won't have any regions
+            if (!playerOwnedRegions.Any(r => IsAdjacentTo(r)) && !isFirstConquest)
+            {
+                reasons.Add(InvalidConquerReason.NotAdjacent);
+            }
+
+            if (isFirstConquest && !IsBorder)
+            {
+                reasons.Add(InvalidConquerReason.NotBorder);
+            }
+
+            if (Type == RegionType.Sea || Type == RegionType.Lake)
+            {
+                reasons.Add(InvalidConquerReason.SeaOrLake);
+            }
+
+            return reasons;
+        }
 
         public bool IsAdjacentTo(Region region)
         {
@@ -199,25 +240,6 @@ namespace Smallworld.Models
                 }
             }
             return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Region region &&
-                Type == region.Type &&
-                Attribute == region.Attribute &&
-                SecondAttribute == region.SecondAttribute &&
-                IsBorder == region.IsBorder;
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = -612506139;
-            hashCode = hashCode * -1521134295 + Type.GetHashCode();
-            hashCode = hashCode * -1521134295 + Attribute.GetHashCode();
-            hashCode = hashCode * -1521134295 + SecondAttribute.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsBorder.GetHashCode();
-            return hashCode;
         }
     }
 }

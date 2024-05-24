@@ -3,6 +3,7 @@ using Smallworld.Models.Races;
 using Smallworld.Models.Powers;
 
 using Math = System.Math;
+using System.Linq;
 
 namespace Smallworld.Models
 {
@@ -15,21 +16,14 @@ namespace Smallworld.Models
         public int AvailableTokenCount { get; private set; }
         public bool IsInDecline { get => Race.IsInDecline; }
 
-        private List<Region> _ownedRegions;
+        private readonly List<Region> ownedRegions;
 
         public RacePower(Race race, Power power)
         {
             Race = race;
             Power = power;
-            Setup();
-        }
-
-        private void Setup()
-        {
-            Race.SetRacePower(this);
-            Power.SetRacePower(this);
             AvailableTokenCount = Race.StartingTokenCount + Power.StartingTokenCount;
-            _ownedRegions = new List<Region>();
+            ownedRegions = new();
         }
 
         public void OnTurnStart()
@@ -41,7 +35,7 @@ namespace Smallworld.Models
         public void OnTurnEnd()
         {
             Race.OnTurnEnd();
-            Power.OnTurnEnd(_ownedRegions);
+            Power.OnTurnEnd();
         }
 
         public void OnNewRegionConquered(Region region, int cost)
@@ -49,22 +43,23 @@ namespace Smallworld.Models
             Race.OnRegionConquered(region);
             Power.OnRegionConquered(region);
             AvailableTokenCount = Math.Max(0, AvailableTokenCount - cost);
-            _ownedRegions.Add(region);
+            ownedRegions.Add(region);
         }
 
         public void OnWasConquered(Region region, int troopReimbursement)
         {
+            // TODO: should find a way to not have to check for Ghoul here?
             if (!IsInDecline || Race is Ghoul)
             {
                 AvailableTokenCount += troopReimbursement;
             }
-            _ownedRegions.Remove(region);
+            ownedRegions.Remove(region);
         }
 
         public int TallyBonusVP()
         {
-            int raceVP = Race.TallyRaceBonusVP(_ownedRegions);
-            int powerVP = Power.TallyPowerBonusVP(_ownedRegions);
+            int raceVP = Race.TallyRaceBonusVP(ownedRegions);
+            int powerVP = Power.TallyPowerBonusVP(ownedRegions);
             return raceVP + powerVP;
         }
 
@@ -81,76 +76,52 @@ namespace Smallworld.Models
             Power.EnterDecline();
         }
 
-        public bool IsValidConquerRegion(Region region, bool isFirstConquest, out string reason)
+        public (bool, string) IsValidConquerRegion(Region region, bool isFirstConquest)
         {
-            reason = null;
-            if (region.IsImmune())
+
+            if (region.OccupiedBy == this)
             {
-                reason = "Region immune";
-                return false;
+                return (false, "Region is already occupied by you");
             }
 
-            bool regionIsSeaOrLake = region.Type == RegionType.Sea || region.Type == RegionType.Lake;
-            bool isSeafaring = Power is Seafaring;
-            bool isRegionAdjacent = IsRegionAdjacent(region);
+            var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region, isFirstConquest);
+            var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region, isFirstConquest);
 
-            if (Power is Flying && !regionIsSeaOrLake)
+            // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
+            if (
+                !invalidRaceConquerReasons.Any() ||
+                !invalidPowerConquerReasons.Any()
+            )
             {
-                return true;
+                return (true, "");
             }
 
-            if (isFirstConquest)
+            var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
+
+            string reason = "| ";
+            foreach (var currentReason in reasons)
             {
-                if (Race is Halfling && (!regionIsSeaOrLake || isSeafaring))
+                switch (currentReason)
                 {
-                    return true;
-                }
-                if (region.IsBorder && (!regionIsSeaOrLake || isSeafaring))
-                {
-                    return true;
+                    case InvalidConquerReason.NotAdjacent:
+                        reason += "Region is not adjacent to any of your regions | ";
+                        break;
+                    case InvalidConquerReason.SeaOrLake:
+                        reason += "Region is a sea or lake | ";
+                        break;
+                    case InvalidConquerReason.NotBorder:
+                        reason += "First conquest must happen on a border region | ";
+                        break;
+                    case InvalidConquerReason.RegionImmune:
+                        reason += "Region is immune to conquest | ";
+                        break;
                 }
             }
 
-            if (regionIsSeaOrLake && isSeafaring && isRegionAdjacent)
-            {
-                return true;
-            }
-
-            if (!isRegionAdjacent)
-            {
-                reason = "Non-adjacent region";
-            }
-            if (regionIsSeaOrLake)
-            {
-                reason += " or is sea or lake";
-            }
-            return isRegionAdjacent && !regionIsSeaOrLake;
+            return (false, reason.Trim());
         }
 
-        public List<Region> GetOwnedRegions() => new(_ownedRegions);
-
-        private bool IsRegionAdjacent(Region region)
-        {
-            bool hasUnderworldAccess = false;
-
-            foreach (Region owned in _ownedRegions)
-            {
-                if (owned.AdjacentTo.Contains(region))
-                {
-                    return true;
-                }
-                if (owned.Attribute == RegionAttribute.Underworld ||
-                    owned.SecondAttribute == RegionAttribute.Underworld)
-                {
-                    hasUnderworldAccess = true;
-                }
-            }
-
-            return Power is Underworld &&
-                hasUnderworldAccess &&
-                (region.Attribute == RegionAttribute.Underworld ||
-                region.SecondAttribute == RegionAttribute.Underworld);
-        }
+        public List<Region> GetOwnedRegions() => new(ownedRegions);
 
         public bool HasEnoughTokensToConquer(Region region)
         {

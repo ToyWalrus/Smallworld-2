@@ -20,14 +20,14 @@ namespace Smallworld.Models.Powers
 
         public override void OnRegionConquered(Region region)
         {
-            if (region.IsOccupied && region.OccupiedBy != _racePower)
+            if (region.IsOccupied)
             {
                 _racesAttacked.Add(region.OccupiedBy);
             }
 
         }
 
-        public override void OnTurnEnd(List<Region> ownedRegions)
+        public override void OnTurnEnd()
         {
             // prompt player to choose one he didn't attack
         }

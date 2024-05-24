@@ -55,6 +55,17 @@ public class RaceTests
     }
 
     [TestMethod]
+    public void Halfling_GetInvalidConquerReasons_ReturnsTrueIfRegionIsNotBorderAndIsTheFirstConquest()
+    {
+        var halfling = new Halfling();
+        var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
+        var unconnectedBorderRegion = new Region(RegionType.Farmland, RegionAttribute.None, true);
+
+        Assert.AreEqual(halfling.GetInvalidConquerReasons([], region, true).Count, 0);
+        Assert.AreNotEqual(halfling.GetInvalidConquerReasons([region], unconnectedBorderRegion, false).Count, 0); // Not first conquest, not connected
+    }
+
+    [TestMethod]
     public void Halfling_OnRegionConquered_AddsHoleInTheGroundTokenToRegionIfLessThanTwoRegionsConquered()
     {
         var halfling = new Halfling();
