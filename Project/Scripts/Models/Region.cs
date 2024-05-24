@@ -116,7 +116,7 @@ namespace Smallworld.Models
             }
 
             int troopReimbursement = 0;
-            if (IsOccupied)
+            if (IsOccupied && OccupiedBy != null)
             {
                 if (OccupiedBy.IsInDecline && OccupiedBy.Race is not Ghoul)
                 {
