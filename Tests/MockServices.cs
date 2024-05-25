@@ -7,9 +7,16 @@ namespace Tests;
 
 internal class ConfirmationMock : IConfirmation
 {
+    private bool shouldConfirm = true;
+
+    public void SetShouldConfirm(bool shouldConfirm)
+    {
+        this.shouldConfirm = shouldConfirm;
+    }
+
     public Task<bool> ConfirmAsync(string message, string title = "Confirm", string confirmLabel = "Yes", string cancelLabel = "No")
     {
-        return Task.FromResult(true);
+        return Task.FromResult(shouldConfirm);
     }
 }
 

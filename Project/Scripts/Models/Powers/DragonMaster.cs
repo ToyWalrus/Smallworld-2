@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Smallworld.Models.Powers;
 
 public class DragonMaster : Power
@@ -17,11 +19,12 @@ public class DragonMaster : Power
         regionWithDragon?.RemoveAllTokensOfType(Token.Dragon);
     }
 
-    public override int GetRegionConquerCostReduction(Region region)
+    public async override Task<int> GetRegionConquerCostReduction(Region region)
     {
         if (hasUsedDragonTokenThisRound) return 0;
 
-        // TODO: prompt player whether to use dragon token
+        var confirmed = await Confirmation.ConfirmAsync("Do you want to use the dragon token to conquer this region?");
+        if (!confirmed) return 0;
 
         hasUsedDragonTokenThisRound = true;
         region.AddToken(Token.Dragon);

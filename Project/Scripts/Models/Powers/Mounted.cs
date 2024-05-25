@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Smallworld.Models.Powers;
 
 public class Mounted : Power
@@ -8,12 +10,12 @@ public class Mounted : Power
         StartingTokenCount = 5;
     }
 
-    public override int GetRegionConquerCostReduction(Region region)
+    public override Task<int> GetRegionConquerCostReduction(Region region)
     {
         if (region.Type == RegionType.Hill || region.Type == RegionType.Farmland)
         {
-            return 1;
+            return Task.FromResult(1);
         }
-        return 0;
+        return Task.FromResult(0);
     }
 }

@@ -4,6 +4,7 @@ using Smallworld.Models.Powers;
 using System.Linq;
 
 using Math = System.Math;
+using System.Threading.Tasks;
 
 namespace Smallworld.Models;
 
@@ -63,10 +64,10 @@ public class RacePower
         return raceVP + powerVP;
     }
 
-    public int GetFinalRegionConquerCost(Region region)
+    public async Task<int> GetFinalRegionConquerCost(Region region)
     {
         int raceCostReduction = Race.GetRegionConquerCostReduction(region);
-        int powerCostReduction = Power.GetRegionConquerCostReduction(region);
+        int powerCostReduction = await Power.GetRegionConquerCostReduction(region);
         return Math.Max(1, region.GetBaseConquerCost() - raceCostReduction - powerCostReduction);
     }
 
@@ -123,9 +124,9 @@ public class RacePower
 
     public List<Region> GetOwnedRegions() => new(ownedRegions);
 
-    public bool HasEnoughTokensToConquer(Region region)
+    public async Task<bool> HasEnoughTokensToConquer(Region region)
     {
-        return AvailableTokenCount >= GetFinalRegionConquerCost(region);
+        return AvailableTokenCount >= await GetFinalRegionConquerCost(region);
     }
 
     public static bool operator ==(RacePower left, RacePower right)

@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Smallworld.Models.Powers;
 
 public class Commando : Power
@@ -8,8 +10,8 @@ public class Commando : Power
         StartingTokenCount = 4;
     }
 
-    public override int GetRegionConquerCostReduction(Region region)
+    public override Task<int> GetRegionConquerCostReduction(Region region)
     {
-        return 1;
+        return Task.FromResult(1);
     }
 }

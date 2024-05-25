@@ -10,7 +10,8 @@ namespace Tests;
 public class PowerTests
 {
 
-    static private readonly IRollDice rollDiceMock = new RollDiceMock(0);
+    static private readonly RollDiceMock rollDiceMock = new RollDiceMock(0);
+    static private readonly ConfirmationMock confirmationMock = new ConfirmationMock();
     static private IModelFactory<Power> pFactory = null!;
 
     [ClassInitialize]
@@ -19,8 +20,8 @@ public class PowerTests
         var serviceCollection = new ServiceCollection();
 
         serviceCollection
-            .AddTransient<IConfirmation, ConfirmationMock>()
-            .AddTransient<IRollDice, RollDiceMock>(_ => (RollDiceMock)rollDiceMock)
+            .AddTransient<IConfirmation, ConfirmationMock>(_ => confirmationMock)
+            .AddTransient<IRollDice, RollDiceMock>(_ => rollDiceMock)
             .AddTransient<ISelection<Region>, SelectionMock<Region>>(_ => new SelectionMock<Region>(new Region(RegionType.Farmland, RegionAttribute.None, false)))
             .AddTransient<ISelection<Player>, SelectionMock<Player>>(_ => new SelectionMock<Player>(new Player("test")))
             .AddTransient<IModelFactory<Power>, PowerFactory>();
@@ -47,20 +48,26 @@ public class PowerTests
         Assert.AreEqual(alchemist.TallyPowerBonusVP([region1, region2, region3]), 0);
     }
 
-    // TODO: come back when dice rolling is implemented
-    [TestMethod, Ignore]
+    [TestMethod]
     public void Berserk_GetRegionConquerCostReduction_ReturnsTheRollOfTheDie()
     {
-        var berserk = new Berserk();
+        var berserk = pFactory.Create<Berserk>();
         var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
 
-        Assert.AreEqual(berserk.GetRegionConquerCostReduction(region), 0);
+        rollDiceMock.SetValue(0);
+        Assert.AreEqual(berserk.GetRegionConquerCostReduction(region).Result, 0);
+
+        rollDiceMock.SetValue(1);
+        Assert.AreEqual(berserk.GetRegionConquerCostReduction(region).Result, 1);
+
+        rollDiceMock.SetValue(3);
+        Assert.AreEqual(berserk.GetRegionConquerCostReduction(region).Result, 3);
     }
 
     [TestMethod]
     public void Bivouacking_GetRedeploymentTokens_Returns5EncampmentTokensAndRemovesEncampmentsFromOwnedRegions()
     {
-        var bivouacking = new Bivouacking();
+        var bivouacking = pFactory.Create<Bivouacking>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         region1.AddToken(Token.Encampment);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);
@@ -79,12 +86,12 @@ public class PowerTests
     [TestMethod]
     public void Commando_GetRegionConquerCostReduction_Returns1()
     {
-        var commando = new Commando();
+        var commando = pFactory.Create<Commando>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Swamp, RegionAttribute.Magic, true);
 
-        Assert.AreEqual(commando.GetRegionConquerCostReduction(region1), 1);
-        Assert.AreEqual(commando.GetRegionConquerCostReduction(region2), 1);
+        Assert.AreEqual(commando.GetRegionConquerCostReduction(region1).Result, 1);
+        Assert.AreEqual(commando.GetRegionConquerCostReduction(region2).Result, 1);
     }
 
     // TODO: come back when player-picking is implemented
@@ -93,33 +100,45 @@ public class PowerTests
     {
     }
 
-    // TODO: come back when confirmation is implemented
-    [TestMethod, Ignore]
+    [TestMethod]
     public void DragonMaster_GetRegionConquerCostReduction_ReturnsVeryHighNumberWhenChosingToPlaceDragon()
     {
-        var dragonMaster = new DragonMaster();
+        var dragonMaster = pFactory.Create<DragonMaster>();
         var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
 
-        Assert.AreEqual(dragonMaster.GetRegionConquerCostReduction(region), int.MaxValue);
+        confirmationMock.SetShouldConfirm(true);
+
+        Assert.AreEqual(dragonMaster.GetRegionConquerCostReduction(region).Result, int.MaxValue);
     }
 
     [TestMethod]
-    public void DragonMaster_GetRegionConquerCostReduction_Returns0IfAlreadyUsedDragon()
+    public void DragonMaster_GetRegionConquerCostReduction_Returns0IfNotConfirmed()
     {
-        var dragonMaster = new DragonMaster();
+        var dragonMaster = pFactory.Create<DragonMaster>();
+        var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
+
+        confirmationMock.SetShouldConfirm(false);
+
+        Assert.AreEqual(dragonMaster.GetRegionConquerCostReduction(region).Result, 0);
+    }
+
+    [TestMethod]
+    public async void DragonMaster_GetRegionConquerCostReduction_Returns0IfAlreadyUsedDragon()
+    {
+        var dragonMaster = pFactory.Create<DragonMaster>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);
 
         // use the dragon token
-        dragonMaster.GetRegionConquerCostReduction(region1);
+        await dragonMaster.GetRegionConquerCostReduction(region1);
 
-        Assert.AreEqual(dragonMaster.GetRegionConquerCostReduction(region2), 0);
+        Assert.AreEqual(dragonMaster.GetRegionConquerCostReduction(region2).Result, 0);
     }
 
     [TestMethod]
     public void Flying_GetInvalidConquerReasons_ReturnsReasonsWithoutBorderOrAdjacentRestriction()
     {
-        var flying = new Flying();
+        var flying = pFactory.Create<Flying>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Mountain, RegionAttribute.None, false);
         var region3 = new Region(RegionType.Sea, RegionAttribute.None, true);
@@ -134,7 +153,7 @@ public class PowerTests
     [TestMethod]
     public void Forest_TallyPowerBonusVP_ReturnsOnePerForestRegionWhenNotInDecline()
     {
-        var forest = new Forest();
+        var forest = pFactory.Create<Forest>();
         var region1 = new Region(RegionType.Forest, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Forest, RegionAttribute.None, false);
         var region3 = new Region(RegionType.Swamp, RegionAttribute.None, false);
@@ -150,7 +169,7 @@ public class PowerTests
     [TestMethod]
     public void Fortified_GetRedeploymentTokens_Returns1FortressTokenIfLessThanMaxFortsBuilt()
     {
-        var fortified = new Fortified();
+        var fortified = pFactory.Create<Fortified>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         region1.AddToken(Token.Fortress);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);
@@ -165,7 +184,7 @@ public class PowerTests
     [TestMethod]
     public void Fortified_GetRedeploymentTokens_ReturnsNoneIfAllRegionsHaveFortressToken()
     {
-        var fortified = new Fortified();
+        var fortified = pFactory.Create<Fortified>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         region1.AddToken(Token.Fortress);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);
@@ -177,7 +196,7 @@ public class PowerTests
     [TestMethod]
     public void Fortified_GetRedeploymentTokens_ReturnsNoneIfMaxFortsBuilt()
     {
-        var fortified = new Fortified();
+        var fortified = pFactory.Create<Fortified>();
         var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
         region.AddToken(Token.Fortress);
 
@@ -187,7 +206,7 @@ public class PowerTests
     [TestMethod]
     public void Fortified_TallyPowerBonusVP_ReturnsNumberOfFortressTokensOwnedWhenNotInDecline()
     {
-        var fortified = new Fortified();
+        var fortified = pFactory.Create<Fortified>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         region1.AddToken(Token.Fortress);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);
@@ -205,7 +224,7 @@ public class PowerTests
     [TestMethod]
     public void Heroic_GetRedeploymentTokens_ReturnsTwoHeroicTokensAndRemovesAllHeroicTokensFromOwnedRegions()
     {
-        var heroic = new Heroic();
+        var heroic = pFactory.Create<Heroic>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         region1.AddToken(Token.Heroic);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);
@@ -222,7 +241,7 @@ public class PowerTests
     [TestMethod]
     public void Hill_TallyPowerBonusVP_ReturnsOnePerHillRegionWhenNotInDecline()
     {
-        var hill = new Hill();
+        var hill = pFactory.Create<Hill>();
         var region1 = new Region(RegionType.Hill, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Hill, RegionAttribute.None, false);
         var region3 = new Region(RegionType.Swamp, RegionAttribute.None, false);
@@ -238,7 +257,7 @@ public class PowerTests
     [TestMethod]
     public void Merchant_TallyPowerBonusVP_ReturnsOnePerRegionOwnedWhenNotInDecline()
     {
-        var merchant = new Merchant();
+        var merchant = pFactory.Create<Merchant>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Forest, RegionAttribute.Magic, false);
         var region3 = new Region(RegionType.Swamp, RegionAttribute.Underworld, true);
@@ -254,20 +273,20 @@ public class PowerTests
     [TestMethod]
     public void Mounted_GetRegionConquerCostReduction_Returns1ForHillsAndFarmland()
     {
-        var mounted = new Mounted();
+        var mounted = pFactory.Create<Mounted>();
         var farmlandRegion = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var hillRegion = new Region(RegionType.Hill, RegionAttribute.None, true);
         var otherRegion = new Region(RegionType.Swamp, RegionAttribute.None, false);
 
-        Assert.AreEqual(mounted.GetRegionConquerCostReduction(farmlandRegion), 1);
-        Assert.AreEqual(mounted.GetRegionConquerCostReduction(hillRegion), 1);
-        Assert.AreEqual(mounted.GetRegionConquerCostReduction(otherRegion), 0);
+        Assert.AreEqual(mounted.GetRegionConquerCostReduction(farmlandRegion).Result, 1);
+        Assert.AreEqual(mounted.GetRegionConquerCostReduction(hillRegion).Result, 1);
+        Assert.AreEqual(mounted.GetRegionConquerCostReduction(otherRegion).Result, 0);
     }
 
     [TestMethod]
     public void Pillaging_TallyPowerBonusVP_ReturnsOnePerOccupiedRegionConqueredThisTurn()
     {
-        var pillaging = new Pillaging();
+        var pillaging = pFactory.Create<Pillaging>();
 
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         region1.AddToken(Token.LostTribe);
@@ -290,7 +309,7 @@ public class PowerTests
     [TestMethod]
     public void Seafaring_GetInvalidConquerReasons_ReturnsReasonsWithoutSeaOrLakeRestriction()
     {
-        var seafaring = new Seafaring();
+        var seafaring = pFactory.Create<Seafaring>();
         var region1 = new Region(RegionType.Sea, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Lake, RegionAttribute.None, false);
         var region3 = new Region(RegionType.Farmland, RegionAttribute.None, false);
@@ -312,7 +331,7 @@ public class PowerTests
     [TestMethod]
     public void Swamp_TallyPowerBonusVP_ReturnsOnePerSwampRegionWhenNotInDecline()
     {
-        var swamp = new Swamp();
+        var swamp = pFactory.Create<Swamp>();
         var region1 = new Region(RegionType.Swamp, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Swamp, RegionAttribute.None, false);
         var region3 = new Region(RegionType.Forest, RegionAttribute.None, false);
@@ -328,18 +347,18 @@ public class PowerTests
     [TestMethod]
     public void Underworld_GetRegionConquerCostReduction_Returns1ForUnderworldRegions()
     {
-        var underworld = new Underworld();
+        var underworld = pFactory.Create<Underworld>();
         var underworldRegion = new Region(RegionType.Farmland, RegionAttribute.Underworld, false);
         var otherRegion = new Region(RegionType.Farmland, RegionAttribute.None, false);
 
-        Assert.AreEqual(underworld.GetRegionConquerCostReduction(underworldRegion), 1);
-        Assert.AreEqual(underworld.GetRegionConquerCostReduction(otherRegion), 0);
+        Assert.AreEqual(underworld.GetRegionConquerCostReduction(underworldRegion).Result, 1);
+        Assert.AreEqual(underworld.GetRegionConquerCostReduction(otherRegion).Result, 0);
     }
 
     [TestMethod]
     public void Wealthy_TallyPowerBonusVP_Returns7Once()
     {
-        var wealthy = new Wealthy();
+        var wealthy = pFactory.Create<Wealthy>();
 
         Assert.AreEqual(wealthy.TallyPowerBonusVP([]), 7);
         Assert.AreEqual(wealthy.TallyPowerBonusVP([]), 0);

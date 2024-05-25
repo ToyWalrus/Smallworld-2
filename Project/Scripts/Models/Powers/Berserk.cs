@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Smallworld.Models.Powers;
 
 public class Berserk : Power
@@ -8,9 +10,8 @@ public class Berserk : Power
         StartingTokenCount = 4;
     }
 
-    public override int GetRegionConquerCostReduction(Region region)
+    public override Task<int> GetRegionConquerCostReduction(Region region)
     {
-        // roll die
-        return 0;
+        return DiceRoller.RollDiceAsync(CustomProbabilityDice.Reinforcement);
     }
 }

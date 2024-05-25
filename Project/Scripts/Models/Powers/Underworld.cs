@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Smallworld.Models.Powers;
 
@@ -11,9 +12,9 @@ public class Underworld : Power
         StartingTokenCount = 5;
     }
 
-    public override int GetRegionConquerCostReduction(Region region)
+    public override Task<int> GetRegionConquerCostReduction(Region region)
     {
-        return region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0;
+        return Task.FromResult(region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0);
     }
 
     public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
