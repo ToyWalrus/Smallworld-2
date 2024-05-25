@@ -1,12 +1,11 @@
-﻿namespace Smallworld.Models.Races
+﻿namespace Smallworld.Models.Races;
+
+public class Amazon : Race
 {
-    public class Amazon : Race
+    public Amazon() : base()
     {
-        public Amazon() : base()
-        {
-            Name = "Amazons";
-            StartingTokenCount = 6;
-            MaxTokens = 15;
-        }
+        Name = "Amazons";
+        StartingTokenCount = 6;
+        MaxTokens = 15;
     }
 }

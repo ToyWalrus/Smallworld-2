@@ -1,12 +1,11 @@
-﻿namespace Smallworld.Models.Races
+﻿namespace Smallworld.Models.Races;
+
+public class Sorcerer : Race
 {
-    public class Sorcerer : Race
+    public Sorcerer() : base()
     {
-        public Sorcerer() : base()
-        {
-            Name = "Sorcerers";
-            StartingTokenCount = 5;
-            MaxTokens = 18;
-        }
+        Name = "Sorcerers";
+        StartingTokenCount = 5;
+        MaxTokens = 18;
     }
 }

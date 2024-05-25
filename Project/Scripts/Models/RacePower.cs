@@ -1,161 +1,160 @@
 ﻿using System.Collections.Generic;
 using Smallworld.Models.Races;
 using Smallworld.Models.Powers;
-
-using Math = System.Math;
 using System.Linq;
 
-namespace Smallworld.Models
+using Math = System.Math;
+
+namespace Smallworld.Models;
+
+public class RacePower
 {
-    public class RacePower
+    public string Name => $"The {Power.Name} {Race.Name}";
+
+    public Race Race { get; private set; }
+    public Power Power { get; private set; }
+    public int AvailableTokenCount { get; private set; }
+    public bool IsInDecline { get => Race.IsInDecline; }
+
+    private readonly List<Region> ownedRegions;
+
+    public RacePower(Race race, Power power)
     {
-        public string Name => $"The {Power.Name} {Race.Name}";
+        Race = race;
+        Power = power;
+        AvailableTokenCount = Race.StartingTokenCount + Power.StartingTokenCount;
+        ownedRegions = new();
+    }
 
-        public Race Race { get; private set; }
-        public Power Power { get; private set; }
-        public int AvailableTokenCount { get; private set; }
-        public bool IsInDecline { get => Race.IsInDecline; }
+    public void OnTurnStart()
+    {
+        Race.OnTurnStart();
+        Power.OnTurnStart();
+    }
 
-        private readonly List<Region> ownedRegions;
+    public void OnTurnEnd()
+    {
+        Race.OnTurnEnd();
+        Power.OnTurnEnd();
+    }
 
-        public RacePower(Race race, Power power)
+    public void OnNewRegionConquered(Region region, int cost)
+    {
+        Race.OnRegionConquered(region);
+        Power.OnRegionConquered(region);
+        AvailableTokenCount = Math.Max(0, AvailableTokenCount - cost);
+        ownedRegions.Add(region);
+    }
+
+    public void OnWasConquered(Region region, int troopReimbursement)
+    {
+        // TODO: should find a way to not have to check for Ghoul here?
+        if (!IsInDecline || Race is Ghoul)
         {
-            Race = race;
-            Power = power;
-            AvailableTokenCount = Race.StartingTokenCount + Power.StartingTokenCount;
-            ownedRegions = new();
+            AvailableTokenCount += troopReimbursement;
+        }
+        ownedRegions.Remove(region);
+    }
+
+    public int TallyBonusVP()
+    {
+        int raceVP = Race.TallyRaceBonusVP(ownedRegions);
+        int powerVP = Power.TallyPowerBonusVP(ownedRegions);
+        return raceVP + powerVP;
+    }
+
+    public int GetFinalRegionConquerCost(Region region)
+    {
+        int raceCostReduction = Race.GetRegionConquerCostReduction(region);
+        int powerCostReduction = Power.GetRegionConquerCostReduction(region);
+        return Math.Max(1, region.GetBaseConquerCost() - raceCostReduction - powerCostReduction);
+    }
+
+    public void EnterDecline()
+    {
+        Race.EnterDecline();
+        Power.EnterDecline();
+    }
+
+    public (bool, string) IsValidConquerRegion(Region region)
+    {
+
+        if (region.OccupiedBy == this)
+        {
+            return (false, "Region is already occupied by you");
         }
 
-        public void OnTurnStart()
+        var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region);
+        var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region);
+
+        // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
+        if (
+            !invalidRaceConquerReasons.Any() ||
+            !invalidPowerConquerReasons.Any()
+        )
         {
-            Race.OnTurnStart();
-            Power.OnTurnStart();
+            return (true, "");
         }
 
-        public void OnTurnEnd()
-        {
-            Race.OnTurnEnd();
-            Power.OnTurnEnd();
-        }
+        var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
 
-        public void OnNewRegionConquered(Region region, int cost)
+        string reason = "| ";
+        foreach (var currentReason in reasons)
         {
-            Race.OnRegionConquered(region);
-            Power.OnRegionConquered(region);
-            AvailableTokenCount = Math.Max(0, AvailableTokenCount - cost);
-            ownedRegions.Add(region);
-        }
-
-        public void OnWasConquered(Region region, int troopReimbursement)
-        {
-            // TODO: should find a way to not have to check for Ghoul here?
-            if (!IsInDecline || Race is Ghoul)
+            switch (currentReason)
             {
-                AvailableTokenCount += troopReimbursement;
+                case InvalidConquerReason.NotAdjacent:
+                    reason += "Region is not adjacent to any of your regions | ";
+                    break;
+                case InvalidConquerReason.SeaOrLake:
+                    reason += "Region is a sea or lake | ";
+                    break;
+                case InvalidConquerReason.NotBorder:
+                    reason += "First conquest must happen on a border region | ";
+                    break;
+                case InvalidConquerReason.RegionImmune:
+                    reason += "Region is immune to conquest | ";
+                    break;
             }
-            ownedRegions.Remove(region);
         }
 
-        public int TallyBonusVP()
+        return (false, reason.Trim());
+    }
+
+    public List<Region> GetOwnedRegions() => new(ownedRegions);
+
+    public bool HasEnoughTokensToConquer(Region region)
+    {
+        return AvailableTokenCount >= GetFinalRegionConquerCost(region);
+    }
+
+    public static bool operator ==(RacePower left, RacePower right)
+    {
+        if (left is null)
         {
-            int raceVP = Race.TallyRaceBonusVP(ownedRegions);
-            int powerVP = Power.TallyPowerBonusVP(ownedRegions);
-            return raceVP + powerVP;
+            return right is null;
         }
 
-        public int GetFinalRegionConquerCost(Region region)
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(RacePower left, RacePower right)
+    {
+        return !(left == right);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is RacePower other)
         {
-            int raceCostReduction = Race.GetRegionConquerCostReduction(region);
-            int powerCostReduction = Power.GetRegionConquerCostReduction(region);
-            return Math.Max(1, region.GetBaseConquerCost() - raceCostReduction - powerCostReduction);
+            return Name == other.Name;
         }
 
-        public void EnterDecline()
-        {
-            Race.EnterDecline();
-            Power.EnterDecline();
-        }
+        return false;
+    }
 
-        public (bool, string) IsValidConquerRegion(Region region)
-        {
-
-            if (region.OccupiedBy == this)
-            {
-                return (false, "Region is already occupied by you");
-            }
-
-            var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region);
-            var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region);
-
-            // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
-            if (
-                !invalidRaceConquerReasons.Any() ||
-                !invalidPowerConquerReasons.Any()
-            )
-            {
-                return (true, "");
-            }
-
-            var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
-
-            string reason = "| ";
-            foreach (var currentReason in reasons)
-            {
-                switch (currentReason)
-                {
-                    case InvalidConquerReason.NotAdjacent:
-                        reason += "Region is not adjacent to any of your regions | ";
-                        break;
-                    case InvalidConquerReason.SeaOrLake:
-                        reason += "Region is a sea or lake | ";
-                        break;
-                    case InvalidConquerReason.NotBorder:
-                        reason += "First conquest must happen on a border region | ";
-                        break;
-                    case InvalidConquerReason.RegionImmune:
-                        reason += "Region is immune to conquest | ";
-                        break;
-                }
-            }
-
-            return (false, reason.Trim());
-        }
-
-        public List<Region> GetOwnedRegions() => new(ownedRegions);
-
-        public bool HasEnoughTokensToConquer(Region region)
-        {
-            return AvailableTokenCount >= GetFinalRegionConquerCost(region);
-        }
-
-        public static bool operator ==(RacePower left, RacePower right)
-        {
-            if (left is null)
-            {
-                return right is null;
-            }
-
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(RacePower left, RacePower right)
-        {
-            return !(left == right);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is RacePower other)
-            {
-                return Name == other.Name;
-            }
-
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return Name != null ? Name.GetHashCode() : 0;
-        }
+    public override int GetHashCode()
+    {
+        return Name != null ? Name.GetHashCode() : 0;
     }
 }

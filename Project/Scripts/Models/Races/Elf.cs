@@ -1,12 +1,11 @@
-﻿namespace Smallworld.Models.Races
+﻿namespace Smallworld.Models.Races;
+
+public class Elf : Race
 {
-    public class Elf : Race
+    public Elf() : base()
     {
-        public Elf() : base()
-        {
-            Name = "Elves";
-            StartingTokenCount = 6;
-            MaxTokens = 11;
-        }
+        Name = "Elves";
+        StartingTokenCount = 6;
+        MaxTokens = 11;
     }
 }

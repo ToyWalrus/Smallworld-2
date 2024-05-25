@@ -1,12 +1,11 @@
-﻿namespace Smallworld.Models.Races
+﻿namespace Smallworld.Models.Races;
+
+public class Ratmen : Race
 {
-    public class Ratmen : Race
+    public Ratmen() : base()
     {
-        public Ratmen() : base()
-        {
-            Name = "Ratmen";
-            StartingTokenCount = 8;
-            MaxTokens = 13;
-        }
+        Name = "Ratmen";
+        StartingTokenCount = 8;
+        MaxTokens = 13;
     }
 }

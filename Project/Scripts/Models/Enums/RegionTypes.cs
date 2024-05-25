@@ -1,13 +1,12 @@
-namespace Smallworld.Models
+namespace Smallworld.Models;
+
+public enum RegionType
 {
-    public enum RegionType
-    {
-        Sea,
-        Hill,
-        Lake,
-        Swamp,
-        Forest,
-        Farmland,
-        Mountain,
-    }
+    Sea,
+    Hill,
+    Lake,
+    Swamp,
+    Forest,
+    Farmland,
+    Mountain,
 }

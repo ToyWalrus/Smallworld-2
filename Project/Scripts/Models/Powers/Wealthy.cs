@@ -1,26 +1,25 @@
 using System.Collections.Generic;
 
-namespace Smallworld.Models.Powers
-{
-    public class Wealthy : Power
-    {
-        private bool haveCollectedBonus;
-        private const int BONUS_AMOUNT = 7;
-        public Wealthy()
-        {
-            Name = "Wealthy";
-            StartingTokenCount = 4;
-            haveCollectedBonus = false;
-        }
+namespace Smallworld.Models.Powers;
 
-        public override int TallyPowerBonusVP(List<Region> regions)
+public class Wealthy : Power
+{
+    private bool haveCollectedBonus;
+    private const int BONUS_AMOUNT = 7;
+    public Wealthy()
+    {
+        Name = "Wealthy";
+        StartingTokenCount = 4;
+        haveCollectedBonus = false;
+    }
+
+    public override int TallyPowerBonusVP(List<Region> regions)
+    {
+        if (!haveCollectedBonus)
         {
-            if (!haveCollectedBonus)
-            {
-                haveCollectedBonus = true;
-                return BONUS_AMOUNT;
-            }
-            return 0;
+            haveCollectedBonus = true;
+            return BONUS_AMOUNT;
         }
+        return 0;
     }
 }

@@ -1,34 +1,33 @@
-namespace Smallworld.Models
+namespace Smallworld.Models;
+
+public enum Token
 {
-    public enum Token
-    {
-        None,
+    None,
 
-        // variable number of tokens
-        Race,
+    // variable number of tokens
+    Race,
 
-        // 10 tokens
-        TrollLair,
+    // 10 tokens
+    TrollLair,
 
-        // 6 tokens
-        Fortress,
+    // 6 tokens
+    Fortress,
 
-        // 9 tokens
-        Mountain,
+    // 9 tokens
+    Mountain,
 
-        // 5 tokens
-        Encampment,
+    // 5 tokens
+    Encampment,
 
-        // 2 tokens
-        HoleInTheGround,
+    // 2 tokens
+    HoleInTheGround,
 
-        // 2 tokens
-        Heroic,
+    // 2 tokens
+    Heroic,
 
-        // 1 token
-        Dragon,
+    // 1 token
+    Dragon,
 
-        // 18 tokens
-        LostTribe
-    }
+    // 18 tokens
+    LostTribe
 }

@@ -1,38 +1,36 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
-namespace Smallworld.Models.Races
+namespace Smallworld.Models.Races;
+
+public class Halfling : Race
 {
-    public class Halfling : Race
+    private int totalRegionsConquered;
+
+    public Halfling() : base()
     {
-        private int totalRegionsConquered;
+        Name = "Halflings";
+        StartingTokenCount = 6;
+        MaxTokens = 11;
+        totalRegionsConquered = 0;
+    }
 
-        public Halfling() : base()
+    public override void OnRegionConquered(Region region)
+    {
+        if (totalRegionsConquered < 2)
         {
-            Name = "Halflings";
-            StartingTokenCount = 6;
-            MaxTokens = 11;
-            totalRegionsConquered = 0;
+            region.AddToken(Token.HoleInTheGround);
         }
+        totalRegionsConquered++;
+    }
 
-        public override void OnRegionConquered(Region region)
+    public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
+    {
+        var isFirstConquest = ownedRegions.Count == 0;
+        var reasons = region.GetInvalidConquerReasons(ownedRegions);
+        if (isFirstConquest)
         {
-            if (totalRegionsConquered < 2)
-            {
-                region.AddToken(Token.HoleInTheGround);
-            }
-            totalRegionsConquered++;
+            reasons.Remove(InvalidConquerReason.NotBorder);
         }
-
-        public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
-        {
-            var isFirstConquest = ownedRegions.Count == 0;
-            var reasons = region.GetInvalidConquerReasons(ownedRegions);
-            if (isFirstConquest)
-            {
-                reasons.Remove(InvalidConquerReason.NotBorder);
-            }
-            return reasons;
-        }
+        return reasons;
     }
 }

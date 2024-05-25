@@ -1,32 +1,31 @@
 using System.Collections.Generic;
 
-namespace Smallworld.Models.Powers
+namespace Smallworld.Models.Powers;
+
+public class Pillaging : Power
 {
-    public class Pillaging : Power
+    private int nonEmptyRegionsConqueredThisTurn;
+    public Pillaging()
     {
-        private int nonEmptyRegionsConqueredThisTurn;
-        public Pillaging()
-        {
-            Name = "Pillaging";
-            StartingTokenCount = 5;
-        }
+        Name = "Pillaging";
+        StartingTokenCount = 5;
+    }
 
-        public override void OnTurnStart()
-        {
-            nonEmptyRegionsConqueredThisTurn = 0;
-        }
+    public override void OnTurnStart()
+    {
+        nonEmptyRegionsConqueredThisTurn = 0;
+    }
 
-        public override void OnRegionConquered(Region region)
+    public override void OnRegionConquered(Region region)
+    {
+        if (region.IsOccupied)
         {
-            if (region.IsOccupied)
-            {
-                nonEmptyRegionsConqueredThisTurn++;
-            }            
+            nonEmptyRegionsConqueredThisTurn++;
         }
+    }
 
-        public override int TallyPowerBonusVP(List<Region> regions)
-        {
-            return nonEmptyRegionsConqueredThisTurn;
-        }
+    public override int TallyPowerBonusVP(List<Region> regions)
+    {
+        return nonEmptyRegionsConqueredThisTurn;
     }
 }

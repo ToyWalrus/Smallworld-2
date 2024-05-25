@@ -1,10 +1,9 @@
-namespace Smallworld.Models
+namespace Smallworld.Models;
+
+public enum RegionAttribute
 {
-      public enum RegionAttribute
-      {
-            None,
-            Mine,
-            Magic,
-            Underworld,
-      }
+      None,
+      Mine,
+      Magic,
+      Underworld,
 }

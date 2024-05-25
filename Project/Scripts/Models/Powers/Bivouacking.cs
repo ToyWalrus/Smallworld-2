@@ -1,24 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Smallworld.Models.Powers
+namespace Smallworld.Models.Powers;
+
+public class Bivouacking : Power
 {
-    public class Bivouacking : Power
+    public Bivouacking()
     {
-        public Bivouacking()
+        Name = "Bivouacking";
+        StartingTokenCount = 5;
+    }
+
+    public override List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
+    {
+        foreach (var region in ownedRegions)
         {
-            Name = "Bivouacking";
-            StartingTokenCount = 5;
+            region.RemoveAllTokensOfType(Token.Encampment);
         }
 
-        public override List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
-        {
-            foreach (var region in ownedRegions)
-            {
-                region.RemoveAllTokensOfType(Token.Encampment);
-            }
-
-            return Enumerable.Repeat(Token.Encampment, 5).ToList();
-        }
+        return Enumerable.Repeat(Token.Encampment, 5).ToList();
     }
 }
