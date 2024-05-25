@@ -1,4 +1,6 @@
-﻿using Smallworld.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Smallworld.IO;
+using Smallworld.Models;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;
 
@@ -7,10 +9,31 @@ namespace Tests;
 [TestClass]
 public class PowerTests
 {
+
+    static private readonly IRollDice rollDiceMock = new RollDiceMock(0);
+    static private IModelFactory<Power> pFactory = null!;
+
+    [ClassInitialize]
+    static public void Init(TestContext _)
+    {
+        var serviceCollection = new ServiceCollection();
+
+        serviceCollection
+            .AddTransient<IConfirmation, ConfirmationMock>()
+            .AddTransient<IRollDice, RollDiceMock>(_ => (RollDiceMock)rollDiceMock)
+            .AddTransient<ISelection<Region>, SelectionMock<Region>>(_ => new SelectionMock<Region>(new Region(RegionType.Farmland, RegionAttribute.None, false)))
+            .AddTransient<ISelection<Player>, SelectionMock<Player>>(_ => new SelectionMock<Player>(new Player("test")))
+            .AddTransient<IModelFactory<Power>, PowerFactory>();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+
+        pFactory = serviceProvider.GetService<IModelFactory<Power>>()!;
+    }
+
     [TestMethod]
     public void Alchemist_TallyPowerBonusVP_ReturnsTwo()
     {
-        var alchemist = new Alchemist();
+        var alchemist = pFactory.Create<Alchemist>();
 
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Smallworld.IO;
 
 namespace Smallworld.Models.Powers;
 
@@ -7,6 +8,11 @@ public abstract class Power
     public string Name { get; protected set; }
     public int StartingTokenCount { get; protected set; }
     public bool IsInDecline { get; protected set; }
+
+    public IConfirmation Confirmation { protected get; set; }
+    public ISelection<Region> RegionSelection { protected get; set; }
+    public ISelection<Player> PlayerSelection { protected get; set; }
+    public IRollDice DiceRoller { protected get; set; }
 
     public Power()
     {

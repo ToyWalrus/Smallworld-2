@@ -6,6 +6,7 @@ namespace Smallworld.Models;
 
 public interface IDice
 {
+    public int Value { get; }
     int Roll();
 }
 
