@@ -20,8 +20,6 @@ public class Fortified : Power
         var regionsWithNoFort = ownedRegions.Where(region => !region.HasToken(Token.Fortress));
         if (!regionsWithNoFort.Any()) return new();
 
-        // TODO: prompt player which region to place fort in
-
         return new() { Token.Fortress };
     }
 

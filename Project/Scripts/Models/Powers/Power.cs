@@ -11,17 +11,24 @@ public abstract class Power
     public bool IsInDecline { get; protected set; }
 
     public IConfirmation Confirmation { protected get; set; }
-    public ISelection<Region> RegionSelection { protected get; set; }
     public ISelection<Player> PlayerSelection { protected get; set; }
     public IRollDice DiceRoller { protected get; set; }
+
+    protected RacePower racePower;
 
     public Power()
     {
         IsInDecline = false;
     }
 
+    // Not great -- tightly couples this to RacePower. Should find another way (only used by Stout power)
+    public void SetRacePower(RacePower racePower)
+    {
+        this.racePower = racePower;
+    }
+
     public virtual void OnTurnStart() { }
-    public virtual void OnTurnEnd() { }
+    public virtual Task OnTurnEnd() => Task.CompletedTask;
     public virtual int TallyPowerBonusVP(List<Region> regions) => 0;
     public virtual Task<int> GetRegionConquerCostReduction(Region region) => Task.FromResult(0);
     public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions) => new();

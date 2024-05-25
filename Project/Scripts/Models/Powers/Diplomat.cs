@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Smallworld.Models.Powers;
 
@@ -27,8 +28,13 @@ public class Diplomat : Power
 
     }
 
-    public override void OnTurnEnd()
+    public override Task OnTurnEnd()
     {
-        // prompt player to choose one he didn't attack
+        // TODO: Need to have a list of all players, then remove the races attacked from the list
+        // var selected = await PlayerSelection.SelectAsync(_racesAttacked);
+
+        // TODO: Also need a way to enforce the "no attacking" rule
+
+        return Task.CompletedTask;
     }
 }

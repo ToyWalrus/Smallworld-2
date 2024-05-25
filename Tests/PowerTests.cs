@@ -2,7 +2,6 @@
 using Smallworld.IO;
 using Smallworld.Models;
 using Smallworld.Models.Powers;
-using Smallworld.Models.Races;
 
 namespace Tests;
 
@@ -10,8 +9,8 @@ namespace Tests;
 public class PowerTests
 {
 
-    static private readonly RollDiceMock rollDiceMock = new RollDiceMock(0);
-    static private readonly ConfirmationMock confirmationMock = new ConfirmationMock();
+    static private readonly RollDiceMock rollDiceMock = new(0);
+    static private readonly ConfirmationMock confirmationMock = new();
     static private IModelFactory<Power> pFactory = null!;
 
     [ClassInitialize]
@@ -22,7 +21,6 @@ public class PowerTests
         serviceCollection
             .AddTransient<IConfirmation, ConfirmationMock>(_ => confirmationMock)
             .AddTransient<IRollDice, RollDiceMock>(_ => rollDiceMock)
-            .AddTransient<ISelection<Region>, SelectionMock<Region>>(_ => new SelectionMock<Region>(new Region(RegionType.Farmland, RegionAttribute.None, false)))
             .AddTransient<ISelection<Player>, SelectionMock<Player>>(_ => new SelectionMock<Player>(new Player("test")))
             .AddTransient<IModelFactory<Power>, PowerFactory>();
 
@@ -322,10 +320,32 @@ public class PowerTests
         Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region2).Contains(InvalidConquerReason.SeaOrLake));
     }
 
-    // TODO: come back when confirmation is implemented
-    [TestMethod, Ignore]
-    public void Stout_OnTurnEnd_CanEnterDecline()
+    [TestMethod]
+    public async void Stout_OnTurnEnd_CanEnterDecline()
     {
+        var stout = pFactory.Create<Stout>();
+
+        confirmationMock.SetShouldConfirm(true);
+
+        Assert.IsFalse(stout.IsInDecline);
+
+        await stout.OnTurnEnd();
+
+        Assert.IsTrue(stout.IsInDecline);
+    }
+
+    [TestMethod]
+    public async void Stout_OnTurnEnd_CanChooseNotToEnterDecline()
+    {
+        var stout = pFactory.Create<Stout>();
+
+        confirmationMock.SetShouldConfirm(false);
+
+        Assert.IsFalse(stout.IsInDecline);
+
+        await stout.OnTurnEnd();
+
+        Assert.IsFalse(stout.IsInDecline);
     }
 
     [TestMethod]

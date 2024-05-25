@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Smallworld.IO;
+﻿using Smallworld.IO;
 using Smallworld.Models;
 
 namespace Tests;

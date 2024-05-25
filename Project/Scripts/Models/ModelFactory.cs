@@ -23,7 +23,6 @@ public class PowerFactory : IModelFactory<Power>
     {
         var newPower = Activator.CreateInstance<T>();
         newPower.Confirmation = _serviceProvider.GetRequiredService<IConfirmation>();
-        newPower.RegionSelection = _serviceProvider.GetRequiredService<ISelection<Region>>();
         newPower.PlayerSelection = _serviceProvider.GetRequiredService<ISelection<Player>>();
         newPower.DiceRoller = _serviceProvider.GetRequiredService<IRollDice>();
         return newPower;

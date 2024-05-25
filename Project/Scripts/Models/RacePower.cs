@@ -25,6 +25,8 @@ public class RacePower
         Power = power;
         AvailableTokenCount = Race.StartingTokenCount + Power.StartingTokenCount;
         ownedRegions = new();
+
+        Power.SetRacePower(this);
     }
 
     public void OnTurnStart()
@@ -33,10 +35,10 @@ public class RacePower
         Power.OnTurnStart();
     }
 
-    public void OnTurnEnd()
+    public async Task OnTurnEnd()
     {
         Race.OnTurnEnd();
-        Power.OnTurnEnd();
+        await Power.OnTurnEnd();
     }
 
     public void OnNewRegionConquered(Region region, int cost)

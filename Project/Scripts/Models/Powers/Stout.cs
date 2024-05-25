@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Smallworld.Models.Powers;
 
 public class Stout : Power
@@ -8,12 +10,12 @@ public class Stout : Power
         StartingTokenCount = 4;
     }
 
-    public override void OnTurnEnd()
+    public override async Task OnTurnEnd()
     {
-        // TODO: prompt user whether to enter decline
-        // if yes,
-        // _racePower.EnterDecline();
-
-        // only placeholder task for now
+        var confirmed = await Confirmation.ConfirmAsync("Would you like to enter decline?");
+        if (confirmed)
+        {
+            racePower.EnterDecline();
+        }
     }
 }
