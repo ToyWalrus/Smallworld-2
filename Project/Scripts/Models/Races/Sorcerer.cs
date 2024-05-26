@@ -8,4 +8,6 @@ public class Sorcerer : Race
         StartingTokenCount = 5;
         MaxTokens = 18;
     }
+
+    // TODO: prompt player to select a region to place a sorcerer token
 }
