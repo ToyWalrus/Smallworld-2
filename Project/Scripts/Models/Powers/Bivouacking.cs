@@ -20,4 +20,12 @@ public class Bivouacking : Power
 
         return Enumerable.Repeat(Token.Encampment, 5).ToList();
     }
+
+    protected override void OnEnterDecline(List<Region> ownedRegions)
+    {
+        foreach (var region in ownedRegions)
+        {
+            region.RemoveAllTokensOfType(Token.Encampment);
+        }
+    }
 }

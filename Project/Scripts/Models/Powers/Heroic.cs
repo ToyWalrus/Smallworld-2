@@ -19,4 +19,12 @@ public class Heroic : Power
 
         return new() { Token.Heroic, Token.Heroic };
     }
+
+    protected override void OnEnterDecline(List<Region> ownedRegions)
+    {
+        foreach (var region in ownedRegions)
+        {
+            region.RemoveAllTokensOfType(Token.Heroic);
+        }
+    }
 }

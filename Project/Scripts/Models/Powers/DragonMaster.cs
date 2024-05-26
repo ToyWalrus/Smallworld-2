@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Smallworld.Models.Powers;
@@ -31,5 +32,10 @@ public class DragonMaster : Power
         regionWithDragon = region;
 
         return int.MaxValue;
+    }
+
+    protected override void OnEnterDecline(List<Region> ownedRegions)
+    {
+        regionWithDragon?.RemoveAllTokensOfType(Token.Dragon);
     }
 }

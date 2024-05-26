@@ -47,7 +47,10 @@ public abstract class Power
     public virtual void EnterDecline()
     {
         IsInDecline = true;
+        OnEnterDecline(racePower.GetOwnedRegions());
     }
+
+    protected virtual void OnEnterDecline(List<Region> ownedRegions) { }
 
     public override string ToString() => Name;
 }
