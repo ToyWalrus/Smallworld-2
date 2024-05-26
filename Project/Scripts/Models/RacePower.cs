@@ -77,6 +77,24 @@ public class RacePower
     {
         Race.EnterDecline();
         Power.EnterDecline();
+
+        if (Race.IsInDecline && Power.IsInDecline)
+        {
+            AvailableTokenCount = 0;
+            foreach (var region in ownedRegions)
+            {
+                region.ClearExcessRaceTokens();
+            }
+        }
+    }
+
+    public void AbandonAllRegions()
+    {
+        foreach (var region in ownedRegions)
+        {
+            region.Abandon();
+        }
+        ownedRegions.Clear();
     }
 
     public (bool, string) IsValidConquerRegion(Region region)

@@ -173,11 +173,21 @@ public class Region
         }
     }
 
+    public void ClearExcessRaceTokens()
+    {
+        var excess = GetExcessRaceTokens();
+        while (excess > 0)
+        {
+            tokens.Remove(Token.Race);
+            excess--;
+        }
+    }
+
     /// <summary>
     /// Returns the number of troops available for conquesting from
     /// this region. (Number of race tokens minus 1)
     /// </summary>    
-    public int GetExcessTroops() => System.Math.Max(0, NumRaceTokens - 1);
+    public int GetExcessRaceTokens() => System.Math.Max(0, NumRaceTokens - 1);
     public bool HasToken(Token token) => tokens.Exists((t) => t == token);
     public void AddToken(Token token) => tokens.Add(token);
     public void RemoveAllTokensOfType(Token tokenType) => tokens.RemoveAll((t) => t == tokenType);

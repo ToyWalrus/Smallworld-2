@@ -8,22 +8,12 @@ using Smallworld.Utils;
 
 namespace Smallworld.Models;
 
-public interface IGame
-{
-    List<Player> Players { get; }
-    List<Region> Regions { get; }
-    List<RacePower> AvailableRacePowers { get; }
-
-    void AddPlayer(Player player);
-    void SetRegions(List<Region> regions);
-    RacePower GenerateNewRacePower(bool unused);
-}
-
-public class Game : IGame
+public class Game
 {
     public List<Player> Players { get; private set; }
     public List<Region> Regions { get; private set; }
     public List<RacePower> AvailableRacePowers { get; private set; }
+    public int NumRounds { get; set; } = 10;
 
     private readonly HashSet<Type> usedPowers = new();
     private readonly HashSet<Type> usedRaces = new();
