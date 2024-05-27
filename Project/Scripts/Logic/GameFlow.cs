@@ -64,11 +64,7 @@ public class GameFlow
 
         InitPlayerFlows(serviceProvider);
 
-        // Set numRounds outside the loop, just in case for some reason it changes
-        // during the game (not expected but whatever, no harm no foul)
-        int numRounds = Game.NumRounds;
-
-        for (round = 1; round <= numRounds; round++)
+        for (round = 1; round <= Game.NumRounds; round++)
         {
             await StartRound();
         }

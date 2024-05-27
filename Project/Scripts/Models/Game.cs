@@ -8,19 +8,31 @@ using Smallworld.Utils;
 
 namespace Smallworld.Models;
 
-public class Game
+public interface IGame
+{
+    List<Player> Players { get; }
+    List<Region> Regions { get; }
+    List<RacePower> AvailableRacePowers { get; }
+    int NumRounds { get; }
+
+    void AddPlayer(Player player);
+    void SetRegions(List<Region> regions);
+    void SetAvailableRacePowers(List<RacePower> racePowers);
+}
+
+public class Game : IGame
 {
     public List<Player> Players { get; private set; }
     public List<Region> Regions { get; private set; }
     public List<RacePower> AvailableRacePowers { get; private set; }
-    public int NumRounds { get; set; } = 10;
+    public int NumRounds { get; }
 
     private readonly HashSet<Type> usedPowers = new();
     private readonly HashSet<Type> usedRaces = new();
 
     private static IServiceProvider serviceProvider;
 
-    public Game(IServiceProvider serviceProvider)
+    public Game(IServiceProvider serviceProvider, int numRounds = 10)
     {
         Game.serviceProvider ??= serviceProvider;
         InitializePowersAndRaces();
@@ -28,6 +40,7 @@ public class Game
         Players = new List<Player>();
         Regions = new List<Region>();
         AvailableRacePowers = new List<RacePower>();
+        NumRounds = numRounds;
     }
 
     public void AddPlayer(Player player)
