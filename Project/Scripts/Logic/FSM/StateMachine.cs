@@ -4,7 +4,7 @@ using Smallworld.Events;
 
 namespace Smallworld.Logic.FSM;
 
-public class FSM
+public class StateMachine
 {
     public delegate void ChangeTurnHandler(GamePlayer prevPlayer);
     public ChangeTurnHandler OnChangeTurn;
@@ -14,7 +14,7 @@ public class FSM
     public IEventAggregator EventAggregator => serviceProvider.GetRequiredService<IEventAggregator>();
     public readonly IServiceProvider serviceProvider;
 
-    public FSM(IServiceProvider serviceProvider)
+    public StateMachine(IServiceProvider serviceProvider)
     {
         this.serviceProvider = serviceProvider;
     }

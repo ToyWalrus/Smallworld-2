@@ -11,9 +11,9 @@ public abstract class State
 
     protected IEventAggregator EventAggregator => _stateMachine.EventAggregator;
 
-    private readonly FSM _stateMachine;
+    private readonly StateMachine _stateMachine;
 
-    public State(FSM stateMachine)
+    public State(StateMachine stateMachine)
     {
         _stateMachine = stateMachine;
     }

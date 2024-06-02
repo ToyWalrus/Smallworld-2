@@ -9,7 +9,7 @@ public class TurnStartState : State
 {
     public override string Name => "Turn start";
 
-    public TurnStartState(FSM stateMachine) : base(stateMachine) { }
+    public TurnStartState(StateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {

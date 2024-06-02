@@ -12,7 +12,7 @@ public class TurnPlayState : State
 
     private bool canEnterDecline = true;
 
-    public TurnPlayState(FSM stateMachine) : base(stateMachine) { }
+    public TurnPlayState(StateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
