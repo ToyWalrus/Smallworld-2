@@ -112,23 +112,24 @@ public class Region
     }
 
     /// <summary>
-    /// Sets a new RacePower in control of this region.
+    /// Sets a new RacePower in control of this region. Calls the OnWasConquered for the previous occupier
+    /// and the OnNewRegionConquered for the new occupier.
     /// </summary>
     /// <param name="racePower">the new occupying race</param>
-    /// <param name="numRaceTokens">the amount of tokens used to conquer this region</param>
-    /// <returns>The number of reimbursible troops</returns>
-    public int Conquer(RacePower racePower, int numRaceTokens)
+    /// <param name="conqueringTokenCount">the amount of tokens used to conquer this region</param>
+    public void Conquer(RacePower racePower, int conqueringTokenCount)
     {
         if (OccupiedBy == racePower)
         {
             Logger.LogMessage($"Region was already conquered by {racePower.Name}");
-            return 0;
+            return;
         }
 
-        int troopReimbursement = 0;
         if (OccupiedBy != null)
         {
-            if (OccupiedBy.IsInDecline && OccupiedBy.Race is not Ghoul)
+            int troopReimbursement;
+
+            if (OccupiedBy.IsInDecline)
             {
                 troopReimbursement = 0;
             }
@@ -140,18 +141,17 @@ public class Region
             {
                 troopReimbursement = NumRaceTokens - 1;
             }
+
+            OccupiedBy.OnWasConquered(this, troopReimbursement);
         }
 
         OccupiedBy = racePower;
+
         RemoveAllTokensOfType(Token.LostTribe);
         RemoveAllTokensOfType(Token.Race);
+        tokens.AddRange(Enumerable.Repeat(Token.Race, conqueringTokenCount));
 
-        for (int i = 0; i < numRaceTokens; ++i)
-        {
-            tokens.Add(Token.Race);
-        }
-
-        return troopReimbursement;
+        OccupiedBy.OnNewRegionConquered(this, conqueringTokenCount);
     }
 
     public void Reinforce(int numRaceTokens)

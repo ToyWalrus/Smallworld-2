@@ -28,4 +28,9 @@ public abstract class State
     }
 
     protected T GetRequiredService<T>() => _stateMachine.serviceProvider.GetRequiredService<T>();
+
+    protected void ChangeTurn()
+    {
+        _stateMachine.OnChangeTurn?.Invoke(CurrentPlayer);
+    }
 }

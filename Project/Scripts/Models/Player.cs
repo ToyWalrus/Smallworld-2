@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Smallworld.Models;
 
@@ -29,5 +30,22 @@ public class Player
     public void RemoveRacePower(RacePower racePower)
     {
         racePowers.Remove(racePower);
+    }
+
+    public void EnterDecline()
+    {
+        var alreadyInDecline = racePowers.Where(rp => rp.IsInDecline);
+        racePowers.ForEach(rp => rp.EnterDecline());
+
+        foreach (var rp in alreadyInDecline)
+        {
+            rp.AbandonAllRegions();
+            RemoveRacePower(rp);
+        }
+    }
+
+    public int TallyVP()
+    {
+        return racePowers.Sum(rp => rp.TallyVP());
     }
 }

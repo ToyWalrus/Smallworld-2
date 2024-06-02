@@ -120,9 +120,6 @@ public class PlayerFlow
 
     private void ScorePoints()
     {
-        var ownedRegions = Player.RacePowers.Sum(rp => rp.GetOwnedRegions().Count);
-        var bonusPoints = Player.RacePowers.Sum(rp => rp.TallyBonusVP());
-        Player.AddScore(ownedRegions + bonusPoints);
     }
 
     private IEnumerable<RacePower> ActiveRacePowers => Player.RacePowers.Where(rp => !rp.IsInDecline);

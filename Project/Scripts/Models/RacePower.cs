@@ -51,7 +51,6 @@ public class RacePower
 
     public void OnWasConquered(Region region, int troopReimbursement)
     {
-        // TODO: should find a way to not have to check for Ghoul here?
         if (!IsInDecline || Race is Ghoul)
         {
             AvailableTokenCount += troopReimbursement;
@@ -59,11 +58,11 @@ public class RacePower
         ownedRegions.Remove(region);
     }
 
-    public int TallyBonusVP()
+    public int TallyVP()
     {
         int raceVP = Race.TallyRaceBonusVP(ownedRegions);
         int powerVP = Power.TallyPowerBonusVP(ownedRegions);
-        return raceVP + powerVP;
+        return raceVP + powerVP + ownedRegions.Count;
     }
 
     public async Task<int> GetFinalRegionConquerCost(Region region)

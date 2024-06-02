@@ -7,6 +7,7 @@ public class UIInteractionEvent : IEvent
         Confirm,
         RollDice,
         EndTurn,
+        EnterDecline,
         NewPlayer
     }
 
@@ -35,6 +36,9 @@ public class UIInteractionEvent : IEvent
                 break;
             case Types.NewPlayer:
                 str += " (New player)";
+                break;
+            case Types.EnterDecline:
+                str += " (Enter decline)";
                 break;
         }
 

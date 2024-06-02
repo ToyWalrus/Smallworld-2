@@ -6,6 +6,9 @@ namespace Smallworld.Logic.FSM;
 
 public class FSM
 {
+    public delegate void ChangeTurnHandler(GamePlayer prevPlayer);
+    public ChangeTurnHandler OnChangeTurn;
+
     public State CurrentState { get; private set; }
     public GamePlayer CurrentPlayer { get; private set; }
     public IEventAggregator EventAggregator => serviceProvider.GetRequiredService<IEventAggregator>();
