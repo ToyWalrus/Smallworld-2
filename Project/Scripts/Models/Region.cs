@@ -15,6 +15,7 @@ public enum InvalidConquerReason
 
 public class Region
 {
+    public string Name { get; set; }
     public RegionType Type { get; private set; }
     public RegionAttribute Attribute { get; private set; }
     public RegionAttribute SecondAttribute { get; private set; }
@@ -250,5 +251,46 @@ public class Region
             }
         }
         return false;
+    }
+
+    override public string ToString()
+    {
+        if (Name != null) return Name;
+
+        var str = GetRegionAttributeString(Attribute) + GetRegionAttributeString(SecondAttribute);
+        switch (Type)
+        {
+            case RegionType.Forest:
+                str += " Forest";
+                break;
+            case RegionType.Hill:
+                str += " Hill";
+                break;
+            case RegionType.Mountain:
+                str += " Mountain";
+                break;
+            case RegionType.Swamp:
+                str += " Swamp";
+                break;
+            case RegionType.Sea:
+                str += " Sea";
+                break;
+            case RegionType.Lake:
+                str += " Lake";
+                break;
+        }
+
+        return str.Trim();
+    }
+
+    private static string GetRegionAttributeString(RegionAttribute attr)
+    {
+        return attr switch
+        {
+            RegionAttribute.Underworld => " Underworld",
+            RegionAttribute.Magic => " Magic",
+            RegionAttribute.Mine => " Mine",
+            _ => "",
+        };
     }
 }

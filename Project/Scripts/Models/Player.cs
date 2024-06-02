@@ -6,7 +6,7 @@ namespace Smallworld.Models;
 public class Player
 {
     public string Name { get; set; }
-    public int Score { get; set; }
+    public int Score { get; private set; }
     public List<RacePower> RacePowers => new(racePowers);
 
     private readonly List<RacePower> racePowers = new();

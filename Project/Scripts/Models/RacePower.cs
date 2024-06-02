@@ -15,7 +15,7 @@ public class RacePower
     public Race Race { get; private set; }
     public Power Power { get; private set; }
     public int AvailableTokenCount { get; private set; }
-    public bool IsInDecline { get => Race.IsInDecline; }
+    public bool IsInDecline { get => Race.IsInDecline && Power.IsInDecline; }
 
     private readonly List<Region> ownedRegions;
 
@@ -77,7 +77,7 @@ public class RacePower
         Race.EnterDecline();
         Power.EnterDecline();
 
-        if (Race.IsInDecline && Power.IsInDecline)
+        if (IsInDecline)
         {
             AvailableTokenCount = 0;
             foreach (var region in ownedRegions)
@@ -101,22 +101,18 @@ public class RacePower
 
         if (region.OccupiedBy == this)
         {
-            return (false, "Region is already occupied by you");
+            return (false, "Region is already occupied by this RacePower");
         }
 
         var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region);
         var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region);
+        var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
 
         // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
-        if (
-            !invalidRaceConquerReasons.Any() ||
-            !invalidPowerConquerReasons.Any()
-        )
+        if (!reasons.Any())
         {
             return (true, "");
         }
-
-        var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
 
         string reason = "| ";
         foreach (var currentReason in reasons)
@@ -124,7 +120,7 @@ public class RacePower
             switch (currentReason)
             {
                 case InvalidConquerReason.NotAdjacent:
-                    reason += "Region is not adjacent to any of your regions | ";
+                    reason += "Region is not adjacent to any owned regions | ";
                     break;
                 case InvalidConquerReason.SeaOrLake:
                     reason += "Region is a sea or lake | ";
@@ -142,11 +138,6 @@ public class RacePower
     }
 
     public List<Region> GetOwnedRegions() => new(ownedRegions);
-
-    public async Task<bool> HasEnoughTokensToConquer(Region region)
-    {
-        return AvailableTokenCount >= await GetFinalRegionConquerCost(region);
-    }
 
     public static bool operator ==(RacePower left, RacePower right)
     {

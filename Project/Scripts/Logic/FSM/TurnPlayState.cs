@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Smallworld.Events;
 using Smallworld.Models.Powers;
+using Smallworld.Utils;
 
 namespace Smallworld.Logic.FSM;
 
@@ -32,6 +33,12 @@ public class TurnPlayState : State
         if (racePowerToUse != null)
         {
             var numTokensToUse = await racePowerToUse.GetFinalRegionConquerCost(e.Region);
+            if (racePowerToUse.AvailableTokenCount < numTokensToUse)
+            {
+                Logger.LogMessage($"Not enough tokens to conquer region: {e.Region}");
+                return;
+            }
+
             e.Region.Conquer(racePowerToUse, numTokensToUse);
             canEnterDecline = CurrentPlayer.ActiveRacePowers.Any(rp => rp.Power is Stout && !rp.IsInDecline);
         }
