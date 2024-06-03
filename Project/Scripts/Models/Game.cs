@@ -20,7 +20,7 @@ public interface IGame
     void SetAvailableRacePowers(List<RacePower> racePowers);
 }
 
-public class Game : IGame
+public partial class Game : IGame
 {
     public List<Player> Players { get; private set; }
     public List<Region> Regions { get; private set; }
