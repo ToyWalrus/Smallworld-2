@@ -11,7 +11,7 @@ public interface IConfirmation
 
 public interface IRollDice
 {
-    Task<int> RollDiceAsync(IDice dice);
+    Task<int> RollDiceAsync();
 }
 
 public interface ISelection<T>

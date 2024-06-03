@@ -32,7 +32,7 @@ internal class RollDiceMock : IRollDice
         this.value = value;
     }
 
-    public Task<int> RollDiceAsync(IDice dice)
+    public Task<int> RollDiceAsync()
     {
         return Task.FromResult(value);
     }

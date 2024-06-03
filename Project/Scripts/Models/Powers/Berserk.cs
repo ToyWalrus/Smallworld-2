@@ -12,6 +12,6 @@ public class Berserk : Power
 
     public override Task<int> GetRegionConquerCostReduction(Region region)
     {
-        return DiceRoller.RollDiceAsync(CustomProbabilityDice.Reinforcement);
+        return DiceRoller.RollDiceAsync();
     }
 }
