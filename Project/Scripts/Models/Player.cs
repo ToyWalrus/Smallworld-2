@@ -48,4 +48,9 @@ public class Player
     {
         return racePowers.Sum(rp => rp.TallyVP());
     }
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }
