@@ -5,6 +5,7 @@ public class UIInteractionEvent : IEvent
     public enum Types
     {
         Confirm,
+        Cancel,
         RollDice,
         EndTurn,
         EnterDecline,
@@ -27,6 +28,9 @@ public class UIInteractionEvent : IEvent
         {
             case Types.Confirm:
                 str += " (Confirm)";
+                break;
+            case Types.Cancel:
+                str += " (Cancel)";
                 break;
             case Types.RollDice:
                 str += " (Roll dice)";

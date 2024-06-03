@@ -13,7 +13,7 @@ public class GameFlow
 {
     public Game Game { get; private set; }
     private StateMachine stateMachine;
-    private List<GamePlayer> players;
+    private List<GamePlayer> players = new();
     private int round = 0;
 
     public GameFlow() { }
