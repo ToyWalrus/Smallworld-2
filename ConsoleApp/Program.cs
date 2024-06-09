@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Smallworld.Events;
 using Smallworld.IO;
+using Smallworld.Logic;
+using Smallworld.Logic.FSM;
 using Smallworld.Models;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;
@@ -13,39 +15,114 @@ namespace ConsoleApp;
 
 internal class Program
 {
+    private static IServiceProvider _serviceProvider;
+    private static IEventAggregator EventAggregator => _serviceProvider.GetRequiredService<IEventAggregator>();
+    private static GameFlow gameFlow;
+
     public static void Main(string[] args)
     {
         Logger.SetType<AnsiLogger>();
 
-        var serviceProvider = ConfigureServices();
-        var game = serviceProvider.GetRequiredService<IGame>();
-
         // http://www.figlet.org/
         AnsiConsole.Write(new FigletText("Smallworld").Centered().Color(Color.Silver));
+        var numPlayers = 0;
+        do
+        {
+            numPlayers = AnsiConsole.Ask<int>("How many players? (2-4)");
+        } while (numPlayers < 2 || numPlayers > 4);
 
-        // if (!AnsiConsole.Confirm("Start game?"))
-        // {
-        //     return;
-        // }
+        AnsiConsole.Clear();
+        AnsiConsole.Write(new FigletText("Smallworld").Centered().Color(Color.Silver));
 
-        var playerTable = GameRenderer.GetPlayerTable(game);
-        var gamePanel = new Panel(GameRenderer.GetAvailableRacePowers(game)).NoBorder();
-        var inputPanel = new Panel(Align.Center(new Markup("[bold]Input panel[/]"))).NoBorder();
+        _serviceProvider = ConfigureServices(numPlayers);
+        SetupListeners();
 
-        AnsiConsole.Write(GameRenderer.GetConsoleLayout(playerTable, gamePanel, inputPanel));
+        gameFlow = new GameFlow();
+        gameFlow.StartGame(_serviceProvider);
+
+        while (!gameFlow.IsEnded)
+        {
+            Thread.Sleep(2000);
+        }
     }
 
-    private static ServiceProvider ConfigureServices()
+    private static void SetupListeners()
+    {
+        EventAggregator.Subscribe<ChangeStateEvent>(OnChangeState);
+        EventAggregator.Subscribe<RegionConqueredEvent>(OnRegionConquered);
+        EventAggregator.Subscribe<ChangeTurnEvent>(e => AnsiConsole.MarkupLine($"[bold]{e.NewPlayer.Name}[/]'s turn"));
+    }
+
+    private static void OnRegionConquered(RegionConqueredEvent e)
+    {
+        AnsiConsole.MarkupLine($"[bold]{e.Region.Name}[/] conquered by [bold]{e.Conqueror.Name}[/]");
+        ShowInitialTurnUI(false);
+    }
+
+    private static void OnChangeState(ChangeStateEvent e)
+    {
+        AnsiConsole.MarkupLine($"[bold]{e.NewState.Name}[/]");
+
+        if (e.NewState is TurnPlayState)
+        {
+            ShowInitialTurnUI(true);
+        }
+    }
+
+    private static void ShowInitialTurnUI(bool canEnterDecline)
+    {
+        string choice = "";
+        do
+        {
+
+            choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("What would you like to do?")
+                    .PageSize(3)
+                    .AddChoices(["Conquer", "Enter decline", "End turn"])
+                );
+
+            if (choice == "Enter decline")
+            {
+                if (!canEnterDecline)
+                {
+                    choice = "";
+                }
+                else
+                {
+                    EventAggregator.Publish(new UIInteractionEvent(UIInteractionEvent.Types.EnterDecline));
+                }
+            }
+            else if (choice == "End turn")
+            {
+                EventAggregator.Publish(new UIInteractionEvent(UIInteractionEvent.Types.EndTurn));
+            }
+            else if (choice == "Conquer")
+            {
+                ConquerPhase();
+            }
+        } while (choice == "");
+    }
+
+    private static void ConquerPhase()
+    {
+        var allRegions = gameFlow.Game.Regions;
+        var conquerable = allRegions.Where(r => gameFlow.CurrentPlayer.CanConquerRegion(r)).ToList();
+
+        _serviceProvider.GetRequiredService<ISelection<SWRegion>>().SelectAsync(conquerable);
+    }
+
+    private static ServiceProvider ConfigureServices(int numPlayers)
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<IGame, Game>((serviceProvider) => Game.GetPresetGame(serviceProvider));
+        services.AddSingleton<IGame, Game>((serviceProvider) => Game.GetPresetGame(serviceProvider, numPlayers));
         services.AddSingleton<IRollDice, DiceRoller>((serviceProvider) => new DiceRoller(serviceProvider, CustomProbabilityDice.Reinforcement));
+        services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddTransient<IConfirmation, Confirmation>();
         services.AddTransient<ISelection<SWRegion>, RegionSelection>();
         services.AddTransient<ISelection<RacePower>, RacePowerSelection>();
         services.AddTransient<ISelection<Player>, PlayerSelection>();
-        services.AddTransient<IEventAggregator, EventAggregator>();
         services.AddTransient<IModelFactory<Power>, PowerFactory>();
         services.AddTransient<IModelFactory<Race>, RaceFactory>();
 

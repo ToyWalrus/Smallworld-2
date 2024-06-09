@@ -26,8 +26,12 @@ public class StateMachine
 
     public void ChangeState(State newState)
     {
+        var oldState = CurrentState;
+
         CurrentState?.Exit();
         CurrentState = newState;
         CurrentState.Enter();
+
+        EventAggregator.Publish(new ChangeStateEvent(oldState, CurrentState));
     }
 }

@@ -41,6 +41,8 @@ public class TurnPlayState : State
 
             e.Region.Conquer(racePowerToUse, numTokensToUse);
             canEnterDecline = CurrentPlayer.ActiveRacePowers.Any(rp => rp.Power is Stout && !rp.IsInDecline);
+
+            EventAggregator.Publish(new RegionConqueredEvent(e.Region, CurrentPlayer.Player));
         }
     }
 

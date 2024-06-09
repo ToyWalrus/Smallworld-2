@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Smallworld.Events;
 using Smallworld.Logic.FSM;
 using Smallworld.Models;
 using Smallworld.Utils;
@@ -11,24 +13,30 @@ namespace Smallworld.Logic;
 
 public class GameFlow
 {
-    public Game Game { get; private set; }
+    public IGame Game { get; private set; }
+    public GamePlayer CurrentPlayer => stateMachine.CurrentPlayer;
+    public bool IsEnded => round >= Game.NumRounds;
     private StateMachine stateMachine;
     private List<GamePlayer> players = new();
     private int round = 0;
+    private IServiceProvider _serviceProvider;
 
     public GameFlow() { }
-    public GameFlow(Game game)
+    public GameFlow(IGame game)
     {
         Game = game;
     }
 
-    public void SetGame(Game game)
+    public void SetGame(IGame game)
     {
         Game = game;
     }
 
     public void StartGame(IServiceProvider serviceProvider)
     {
+        _serviceProvider = serviceProvider;
+        Game = Game ?? serviceProvider.GetRequiredService<IGame>();
+
         if (Game == null)
         {
             Logger.LogError("Game not set, cannot start game");
@@ -69,5 +77,7 @@ public class GameFlow
         }
 
         stateMachine.SetCurrentPlayer(players[newPlayerIndex]);
+
+        _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new ChangeTurnEvent(players[newPlayerIndex]));
     }
 }

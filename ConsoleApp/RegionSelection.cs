@@ -36,7 +36,7 @@ internal class RegionSelection : ISelection<SWRegion>
     {
         var str = $"[{GetRegionStringColor(region)}]{region.Name}[/]";
 
-        if (region.IsOccupied)
+        if (region.OccupiedBy != null)
         {
             str += $" [red](Occupied by {region.OccupiedBy.Name})[/]";
         } else if (region.HasToken(Token.LostTribe))

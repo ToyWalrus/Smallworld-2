@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Smallworld.Events;
 using Smallworld.IO;
@@ -13,6 +14,8 @@ public class TurnStartState : State
 
     public override void Enter()
     {
+        EventAggregator.Subscribe<RacePowerSelectEvent>(OnRacePowerSelected);
+
         // If the player did not enter decline last turn and has active
         // racepowers, we can skip this state and go directly to TurnPlayState.
         if (!CurrentPlayer.DidEnterDeclineLastTurn && CurrentPlayer.ActiveRacePowers.Any())
@@ -21,7 +24,6 @@ public class TurnStartState : State
         }
         else
         {
-            EventAggregator.Subscribe<RacePowerSelectEvent>(OnRacePowerSelected);
             SetReadyToSelectRacePower();
         }
     }
