@@ -56,72 +56,63 @@ internal class Program
 
     private static void OnChangeTurn(ChangeTurnEvent e)
     {
+        AnsiConsole.Clear();
+        AnsiConsole.Write(new Rule($"{e.NewPlayer.Name}'s turn").Justify(Justify.Center));
         regionsConquered.Clear();
     }
 
     private static void OnRegionConquered(RegionConqueredEvent e)
     {
-        AnsiConsole.MarkupLine($"[bold]{e.Region.Name}[/] conquered by [bold]{e.Conqueror.Name}[/]");
-        ShowInitialTurnUI(false);
+        regionsConquered.Add(e.Region);
+        PlayerTurnStep(false);
     }
 
     private static void OnChangeState(ChangeStateEvent e)
     {
-        AnsiConsole.MarkupLine($"[bold]{e.NewState.Name}[/]");
-
         if (e.NewState is TurnPlayState)
         {
-            ShowInitialTurnUI(true);
+            PlayerTurnStep(true);
         }
     }
 
-    private static void ShowInitialTurnUI(bool canEnterDecline)
+    private static void PlayerTurnStep(bool canEnterDecline)
     {
-        string choice = "";
-        do
+
+        GameRenderer.RenderPlayerTurnStep(gameFlow.Game, gameFlow.CurrentPlayer, regionsConquered);
+
+        var choices = new List<string> { "Conquer", "End turn" };
+        if (canEnterDecline)
         {
-            GameRenderer.RenderPlayerTurnStep(gameFlow.Game, gameFlow.CurrentPlayer, regionsConquered);
+            choices.Insert(1, "Enter decline");
+        }
 
-            choice = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("What would you like to do?")
-                    .PageSize(3)
-                    .AddChoices(["Conquer", "Enter decline", "End turn"])
-                );
+        var choice = AnsiConsole.Prompt(
+             new SelectionPrompt<string>()
+                 .Title("What would you like to do?")
+                 .PageSize(3)
+                 .AddChoices(choices)
+             );
 
-            if (choice == "Enter decline")
-            {
-                if (!canEnterDecline)
-                {
-                    choice = "";
-                }
-                else
-                {
-                    EventAggregator.Publish(new UIInteractionEvent(UIInteractionEvent.Types.EnterDecline));
-                }
-            }
-            else if (choice == "End turn")
-            {
-                EventAggregator.Publish(new UIInteractionEvent(UIInteractionEvent.Types.EndTurn));
-            }
-            else if (choice == "Conquer")
-            {
-                ConquerPhase();
-            }
-        } while (choice == "");
+        if (choice == "Enter decline")
+        {
+            EventAggregator.Publish(UIInteractionEvent.EnterDecline);
+        }
+        else if (choice == "End turn")
+        {
+            EventAggregator.Publish(UIInteractionEvent.EndTurn);
+        }
+        else
+        {
+            ConquerPhase();
+        }
     }
 
-    private static async void ConquerPhase()
+    private static void ConquerPhase()
     {
         var allRegions = gameFlow.Game.Regions;
-        var conquerable = allRegions.Where(r => gameFlow.CurrentPlayer.CanConquerRegion(r)).ToList();
+        var conquerable = allRegions.Where(gameFlow.CurrentPlayer.CanConquerRegion).ToList();
 
-        var region = await _serviceProvider.GetRequiredService<ISelection<SWRegion>>().SelectAsync(conquerable);
-
-        if (region != null)
-        {
-            regionsConquered.Add(region);
-        }
+        _serviceProvider.GetRequiredService<ISelection<SWRegion>>().SelectAsync(conquerable);
     }
 
     private static ServiceProvider ConfigureServices(int numPlayers)

@@ -22,7 +22,7 @@ internal class RacePowerSelection : ISelection<RacePower>
                 .Title("Select a RacePower")
                 .PageSize(10)
                 .AddChoices(items)
-                .UseConverter(rp => rp.Name)
+                .UseConverter(rp => $"[{MarkupHelper.GetRaceStringColor(rp.Race)}]{rp.Name}[/]")
          ));
 
         _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new RacePowerSelectEvent(choice, null));

@@ -77,7 +77,12 @@ internal class GameRenderer
         {
             rows.Add(
                 new Padder(
-                    new Markup(MarkupHelper.RegionToMarkupString(region, false, false)),
+                    new Markup(MarkupHelper.RegionToMarkupString(
+                        region,
+                        showOccupiedBy: false,
+                        showConquerCost: false,
+                        showNumRaceTokens: true
+                    )),
                     rowPadding
                 )
             );
@@ -140,13 +145,15 @@ internal class GameRenderer
         );
 
         // Start the lines indicating player's actions
-        AnsiConsole.WriteLine();
-        AnsiConsole.Write(new Rule($"{currentPlayer.Name}'s turn"));
-        AnsiConsole.WriteLine();
+        AnsiConsole.Write(new Padder(new Rule($"{currentPlayer.Name}'s turn"), new(2, 1)));
 
         foreach (var region in conqueredRegions)
         {
-            AnsiConsole.MarkupLine($"[bold]{region.Name}[/] conquered by [bold]{region.OccupiedBy.Name}[/]");
+            AnsiConsole.MarkupLine($"[bold {
+                    MarkupHelper.GetRegionStringColor(region)
+                }]{region.Name}[/] conquered by [bold {
+                    MarkupHelper.GetRaceStringColor(region.OccupiedBy.Race)
+                }]{region.OccupiedBy.Name}[/]");
         }
     }
 }

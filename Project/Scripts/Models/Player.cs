@@ -34,7 +34,7 @@ public class Player
 
     public void EnterDecline()
     {
-        var alreadyInDecline = racePowers.Where(rp => rp.IsInDecline);
+        var alreadyInDecline = new List<RacePower>(racePowers.Where(rp => rp.IsInDecline));
         racePowers.ForEach(rp => rp.EnterDecline());
 
         foreach (var rp in alreadyInDecline)

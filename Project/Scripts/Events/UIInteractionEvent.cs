@@ -48,4 +48,10 @@ public class UIInteractionEvent : IEvent
 
         return str;
     }
+
+    public static readonly UIInteractionEvent Confirm = new(Types.Confirm);
+    public static readonly UIInteractionEvent Cancel = new(Types.Cancel);
+    public static readonly UIInteractionEvent RollDice = new(Types.RollDice);
+    public static readonly UIInteractionEvent EndTurn = new(Types.EndTurn);
+    public static readonly UIInteractionEvent EnterDecline = new(Types.EnterDecline);
 }

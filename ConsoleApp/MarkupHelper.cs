@@ -9,10 +9,10 @@ internal class MarkupHelper
 
     public static string RegionToMarkupString(SWRegion region)
     {
-        return RegionToMarkupString(region, true, true);
+        return RegionToMarkupString(region, true, true, false);
     }
 
-    public static string RegionToMarkupString(SWRegion region, bool showOccupiedBy, bool showConquerCost)
+    public static string RegionToMarkupString(SWRegion region, bool showOccupiedBy, bool showConquerCost, bool showNumRaceTokens)
     {
         var str = $"[{GetRegionStringColor(region)}]{region.Name}[/]";
 
@@ -31,6 +31,11 @@ internal class MarkupHelper
         if (showConquerCost)
         {
             str += $" [white][[{region.GetBaseConquerCost()}]][/]";
+        }
+
+        if (showNumRaceTokens)
+        {
+            str += $" [grey][[{region.NumRaceTokens}]][/]";
         }
 
         return str;
@@ -69,6 +74,8 @@ internal class MarkupHelper
                 return "rosybrown";
             case "elves":
                 return "lime";
+            case "ghouls":
+                return "darkslategray3";
             case "giants":
                 return "darkorange3_1";
             case "halflings":
