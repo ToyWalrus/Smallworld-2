@@ -109,7 +109,7 @@ public class RacePower
         var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
 
         // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
-        if (!reasons.Any())
+        if (!invalidPowerConquerReasons.Any() || !invalidRaceConquerReasons.Any())
         {
             return (true, "");
         }
