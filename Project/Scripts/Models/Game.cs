@@ -13,7 +13,6 @@ public interface IGame
     List<Player> Players { get; }
     List<Region> Regions { get; }
     List<RacePower> AvailableRacePowers { get; }
-    int CurrentPlayerIndex { get; }
     int NumRounds { get; }
 
     void AddPlayer(Player player);
@@ -26,7 +25,6 @@ public partial class Game : IGame
     public List<Player> Players { get; private set; }
     public List<Region> Regions { get; private set; }
     public List<RacePower> AvailableRacePowers { get; private set; }
-    public int CurrentPlayerIndex { get; set; }
     public int NumRounds { get; }
 
     private readonly HashSet<Type> usedPowers = new();

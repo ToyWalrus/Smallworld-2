@@ -36,7 +36,8 @@ public class EventAggregator : IEventAggregator
     {
         if (_subscribers.ContainsKey(typeof(T)))
         {
-            foreach (var subscriber in _subscribers[typeof(T)])
+            var subscriberList =  new List<Delegate>(_subscribers[typeof(T)]);
+            foreach (var subscriber in subscriberList)
             {
                 ((Action<T>)subscriber).Invoke(@event);
             }

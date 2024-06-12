@@ -18,6 +18,7 @@ internal class Program
     private static IServiceProvider _serviceProvider;
     private static IEventAggregator EventAggregator => _serviceProvider.GetRequiredService<IEventAggregator>();
     private static GameFlow gameFlow;
+    private static List<SWRegion> regionsConquered = new();
 
     public static void Main(string[] args)
     {
@@ -50,7 +51,12 @@ internal class Program
     {
         EventAggregator.Subscribe<ChangeStateEvent>(OnChangeState);
         EventAggregator.Subscribe<RegionConqueredEvent>(OnRegionConquered);
-        EventAggregator.Subscribe<ChangeTurnEvent>(e => AnsiConsole.MarkupLine($"[bold]{e.NewPlayer.Name}[/]'s turn"));
+        EventAggregator.Subscribe<ChangeTurnEvent>(OnChangeTurn);
+    }
+
+    private static void OnChangeTurn(ChangeTurnEvent e)
+    {
+        regionsConquered.Clear();
     }
 
     private static void OnRegionConquered(RegionConqueredEvent e)
@@ -74,6 +80,7 @@ internal class Program
         string choice = "";
         do
         {
+            GameRenderer.RenderPlayerTurnStep(gameFlow.Game, gameFlow.CurrentPlayer, regionsConquered);
 
             choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -104,12 +111,17 @@ internal class Program
         } while (choice == "");
     }
 
-    private static void ConquerPhase()
+    private static async void ConquerPhase()
     {
         var allRegions = gameFlow.Game.Regions;
         var conquerable = allRegions.Where(r => gameFlow.CurrentPlayer.CanConquerRegion(r)).ToList();
 
-        _serviceProvider.GetRequiredService<ISelection<SWRegion>>().SelectAsync(conquerable);
+        var region = await _serviceProvider.GetRequiredService<ISelection<SWRegion>>().SelectAsync(conquerable);
+
+        if (region != null)
+        {
+            regionsConquered.Add(region);
+        }
     }
 
     private static ServiceProvider ConfigureServices(int numPlayers)

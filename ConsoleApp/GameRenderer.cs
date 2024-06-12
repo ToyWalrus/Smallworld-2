@@ -1,6 +1,9 @@
+using Smallworld.Logic;
 using Smallworld.Models;
 using Spectre.Console;
 using Spectre.Console.Rendering;
+
+using SWRegion = Smallworld.Models.Region;
 
 namespace ConsoleApp;
 
@@ -20,7 +23,7 @@ internal class GameRenderer
         );
     }
 
-    public static Table GetPlayerTable(IGame game)
+    public static Table GetPlayerTable(IGame game, int currentPlayerIndex)
     {
         var table = new Table()
             .BorderColor(BorderColor)
@@ -32,7 +35,7 @@ internal class GameRenderer
         for (int i = 0; i < game.Players.Count; i++)
         {
             var player = game.Players[i];
-            var isActive = i == game.CurrentPlayerIndex;
+            var isActive = i == currentPlayerIndex;
             table.AddRow(
                 isActive ? "[red bold]X[/]" : "",
                 player.Name,
@@ -58,5 +61,92 @@ internal class GameRenderer
         }
 
         return new Rows(rows);
+    }
+
+    private static Rows GetRacePowerWithOwnedRegions(RacePower rp, int padding = 2)
+    {
+        var rowPadding = new Padding(padding, 0, 0, 0);
+
+        var regions = rp.GetOwnedRegions();
+        var rows = new List<IRenderable>
+        {
+            new Markup($"[{MarkupHelper.GetRaceStringColor(rp.Race)}]{rp.Name}[/] ({rp.AvailableTokenCount})")
+        };
+
+        foreach (var region in regions)
+        {
+            rows.Add(
+                new Padder(
+                    new Markup(MarkupHelper.RegionToMarkupString(region, false, false)),
+                    rowPadding
+                )
+            );
+        }
+
+        return new Rows(rows);
+    }
+
+    public static Panel GetPlayerInfo(GamePlayer currentPlayer, bool withBorder = true)
+    {
+        var padding = 2;
+        var activeRaces = currentPlayer.ActiveRacePowers;
+        var declineRaces = currentPlayer.Player.RacePowers.Where(rp => rp.IsInDecline);
+
+        var panelRows = new List<IRenderable> { new Markup($"[bold]Active race(s)[/]") };
+        var rowPadding = new Padding(padding, 0, 0, 0);
+
+        foreach (var rp in activeRaces)
+        {
+            panelRows.Add(new Padder(GetRacePowerWithOwnedRegions(rp, padding)).Padding(rowPadding));
+        }
+
+        panelRows.Add(new Text(""));
+        panelRows.Add(new Markup($"[bold]Race(s) in decline[/]"));
+
+        foreach (var rp in declineRaces)
+        {
+            panelRows.Add(new Padder(GetRacePowerWithOwnedRegions(rp, padding)).Padding(rowPadding));
+        }
+
+        var playerInfoPanel = new Panel(new Rows(panelRows))
+            .Header(new PanelHeader(currentPlayer.Name))
+            .HeaderAlignment(Justify.Center)
+            .Padding(padding, padding);
+
+        if (withBorder)
+        {
+            playerInfoPanel.RoundedBorder().BorderColor(BorderColor);
+        }
+        else
+        {
+            playerInfoPanel.NoBorder();
+        }
+
+        return playerInfoPanel;
+    }
+
+    public static void RenderPlayerTurnStep(IGame game, GamePlayer currentPlayer, List<SWRegion> conqueredRegions)
+    {
+
+        // Clear console
+        AnsiConsole.Clear();
+
+        // Render the current game status
+        AnsiConsole.Write(
+            new Columns(
+                GetPlayerTable(game, game.Players.IndexOf(currentPlayer.Player)),
+                GetPlayerInfo(currentPlayer).Expand()
+            )
+        );
+
+        // Start the lines indicating player's actions
+        AnsiConsole.WriteLine();
+        AnsiConsole.Write(new Rule($"{currentPlayer.Name}'s turn"));
+        AnsiConsole.WriteLine();
+
+        foreach (var region in conqueredRegions)
+        {
+            AnsiConsole.MarkupLine($"[bold]{region.Name}[/] conquered by [bold]{region.OccupiedBy.Name}[/]");
+        }
     }
 }
