@@ -13,11 +13,13 @@ public class Pillaging : Power
 
     public override void OnTurnStart()
     {
+        base.OnTurnStart();
         nonEmptyRegionsConqueredThisTurn = 0;
     }
 
     public override void OnRegionConquered(Region region)
     {
+        base.OnRegionConquered(region);
         if (region.IsOccupied)
         {
             nonEmptyRegionsConqueredThisTurn++;

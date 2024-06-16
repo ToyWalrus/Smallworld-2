@@ -12,6 +12,6 @@ public class Commando : Power
 
     public override Task<int> GetRegionConquerCostReduction(Region region)
     {
-        return Task.FromResult(1);
+        return DiceRoller.RollDiceAsync();
     }
 }

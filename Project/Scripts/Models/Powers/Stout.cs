@@ -18,4 +18,6 @@ public class Stout : Power
             racePower.EnterDecline();
         }
     }
+
+    public override bool CanEnterDecline() => !IsInDecline;
 }

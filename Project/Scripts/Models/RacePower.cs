@@ -29,6 +29,11 @@ public class RacePower
         Power.SetRacePower(this);
     }
 
+    public bool CanEnterDecline()
+    {
+        return Race.CanEnterDecline() || Power.CanEnterDecline();
+    }
+
     public void OnTurnStart()
     {
         Race.OnTurnStart();

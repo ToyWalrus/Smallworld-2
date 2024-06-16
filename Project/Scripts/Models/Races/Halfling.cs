@@ -16,6 +16,7 @@ public class Halfling : Race
 
     public override void OnRegionConquered(Region region)
     {
+        base.OnRegionConquered(region);
         if (totalRegionsConquered < 2)
         {
             region.AddToken(Token.HoleInTheGround);

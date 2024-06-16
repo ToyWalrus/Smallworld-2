@@ -16,6 +16,7 @@ public class Skeleton : Race
 
     public override void OnTurnStart()
     {
+        base.OnTurnStart();
         nonEmptyRegionsConqueredThisTurn = 0;
     }
 
@@ -31,6 +32,7 @@ public class Skeleton : Race
 
     public override void OnRegionConquered(Region region)
     {
+        base.OnRegionConquered(region);
         if (region.IsOccupied)
         {
             nonEmptyRegionsConqueredThisTurn++;
