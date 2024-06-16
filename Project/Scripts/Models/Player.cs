@@ -25,11 +25,13 @@ public class Player
     public void AddRacePower(RacePower racePower)
     {
         racePowers.Add(racePower);
+        racePower.SetOwner(this);
     }
 
     public void RemoveRacePower(RacePower racePower)
     {
         racePowers.Remove(racePower);
+        racePower.SetOwner(null);
     }
 
     public void EnterDecline()

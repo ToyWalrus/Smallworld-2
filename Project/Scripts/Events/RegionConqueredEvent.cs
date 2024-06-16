@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Smallworld.Models;
+﻿using Smallworld.Models;
 
 namespace Smallworld.Events;
 
@@ -11,11 +6,10 @@ public class RegionConqueredEvent:IEvent
 {
     public string Name => "Region conquered";
     public Region Region { get; private set; }
-    public Player Conqueror { get; private set; }
+    public Player Conqueror => Region.OccupiedBy.Owner;
 
-    public RegionConqueredEvent(Region region, Player conqueror)
+    public RegionConqueredEvent(Region region)
     {
         Region = region;
-        Conqueror = conqueror;
     }
 }

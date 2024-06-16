@@ -1,8 +1,5 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Smallworld.Events;
-using Smallworld.Models.Powers;
-using Smallworld.Utils;
 
 namespace Smallworld.Logic.FSM;
 
@@ -10,15 +7,23 @@ public class TurnPlayState : State
 {
     public override string Name => "Turn play";
 
-    private bool canEnterDecline = true;
+    public bool CanEnterDecline => CurrentPlayer.ActiveRacePowers.Any(rp => rp.CanEnterDecline());
+    public bool IsFirstTurn { get; private set; }
 
-    public TurnPlayState(StateMachine stateMachine) : base(stateMachine) { }
+    public TurnPlayState(StateMachine stateMachine, bool isFirstTurn = false) : base(stateMachine)
+    {
+        IsFirstTurn = isFirstTurn;
+    }
 
     public override void Enter()
     {
         EventAggregator.Subscribe<RegionSelectEvent>(OnRegionSelected);
         EventAggregator.Subscribe<UIInteractionEvent>(OnUIInteraction);
-        StartRacePowerTurns();
+
+        if (IsFirstTurn)
+        {
+            StartRacePowerTurns();
+        }
     }
 
     public override void Exit()
@@ -27,23 +32,9 @@ public class TurnPlayState : State
         EventAggregator.Unsubscribe<UIInteractionEvent>(OnUIInteraction);
     }
 
-    private async void OnRegionSelected(RegionSelectEvent e)
+    private void OnRegionSelected(RegionSelectEvent e)
     {
-        var racePowerToUse = CurrentPlayer.ActiveRacePowers.FirstOrDefault(rp => rp.IsValidConquerRegion(e.Region).Item1);
-        if (racePowerToUse != null)
-        {
-            var numTokensToUse = await racePowerToUse.GetFinalRegionConquerCost(e.Region);
-            if (racePowerToUse.AvailableTokenCount < numTokensToUse)
-            {
-                Logger.LogMessage($"Not enough tokens to conquer region: {e.Region}");
-                return;
-            }
-
-            e.Region.Conquer(racePowerToUse, numTokensToUse);
-            canEnterDecline = CurrentPlayer.ActiveRacePowers.Any(rp => rp.Power is Stout && !rp.IsInDecline);
-
-            EventAggregator.Publish(new RegionConqueredEvent(e.Region, CurrentPlayer.Player));
-        }
+        ChangeState<ConquerState>(e.Region);
     }
 
     private void StartRacePowerTurns()
@@ -54,32 +45,19 @@ public class TurnPlayState : State
         }
     }
 
-    private async void OnUIInteraction(UIInteractionEvent e)
+    private void OnUIInteraction(UIInteractionEvent e)
     {
         switch (e.InteractionType)
         {
             case UIInteractionEvent.Types.EndTurn:
-                ChangeTurn();
-                ChangeState<TurnStartState>();
+                ChangeState<ReinforceState>();
                 break;
             case UIInteractionEvent.Types.EnterDecline:
-                if (!canEnterDecline) return;
+                if (!CanEnterDecline)
+                    return;
                 CurrentPlayer.EnterDecline();
-                await EndRacePowerTurns();
-                ChangeTurn();
-                ChangeState<TurnStartState>();
+                ChangeState<TurnEndState>();
                 break;
-
         }
-    }
-
-    private async Task EndRacePowerTurns()
-    {
-        foreach (var rp in CurrentPlayer.ActiveRacePowers)
-        {
-            await rp.OnTurnEnd();
-        }
-
-        CurrentPlayer.TallyVP();
     }
 }

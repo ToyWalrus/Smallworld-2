@@ -12,6 +12,7 @@ public class RacePower
 {
     public string Name => $"The {Power.Name} {Race.Name}";
 
+    public Player Owner { get; private set; }
     public Race Race { get; private set; }
     public Power Power { get; private set; }
     public int AvailableTokenCount { get; private set; }
@@ -27,6 +28,11 @@ public class RacePower
         ownedRegions = new();
 
         Power.SetRacePower(this);
+    }
+
+    public void SetOwner(Player owner)
+    {
+        Owner = owner;
     }
 
     public bool CanEnterDecline()

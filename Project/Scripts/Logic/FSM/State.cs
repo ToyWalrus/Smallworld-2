@@ -18,12 +18,12 @@ public abstract class State
         _stateMachine = stateMachine;
     }
 
-    public abstract void Enter();
-    public abstract void Exit();
+    public virtual void Enter() { }
+    public virtual void Exit() { }
 
-    protected void ChangeState<T>() where T : State
+    protected void ChangeState<T>(params object[] args) where T : State
     {
-        var newState = (T)Activator.CreateInstance(typeof(T), _stateMachine);
+        var newState = (T) Activator.CreateInstance(typeof(T), _stateMachine, args);
         _stateMachine.ChangeState(newState);
     }
 

@@ -6,12 +6,11 @@ public class RacePowerSelectEvent : IEvent
 {
     public string Name => "RacePower selected";
     public RacePower RacePower { get; }
-    public Player OwningPlayer { get; }
+    public Player OwningPlayer => RacePower.Owner;
 
-    public RacePowerSelectEvent(RacePower racePower, Player owner)
+    public RacePowerSelectEvent(RacePower racePower)
     {
         RacePower = racePower;
-        OwningPlayer = owner;
     }
 
     public override string ToString() => $"{Name} ({RacePower.Name})";
