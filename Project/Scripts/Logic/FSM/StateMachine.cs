@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Smallworld.Events;
+using Smallworld.Utils;
 
 namespace Smallworld.Logic.FSM;
 
@@ -30,8 +31,9 @@ public class StateMachine
 
         CurrentState?.Exit();
         CurrentState = newState;
-        CurrentState.Enter();
-
+        
         EventAggregator.Publish(new ChangeStateEvent(oldState, CurrentState));
+
+        CurrentState.Enter();
     }
 }

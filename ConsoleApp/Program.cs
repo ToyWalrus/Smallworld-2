@@ -17,7 +17,8 @@ internal class Program
 {
     private static IServiceProvider _serviceProvider;
     private static IEventAggregator EventAggregator => _serviceProvider.GetRequiredService<IEventAggregator>();
-    private static GameFlow gameFlow;
+    private static GameFlow _gameFlow;
+    private static IGame _game => _gameFlow.Game;
     private static List<SWRegion> regionsConquered = new();
 
     public static void Main(string[] args)
@@ -33,15 +34,14 @@ internal class Program
         } while (numPlayers < 2 || numPlayers > 4);
 
         AnsiConsole.Clear();
-        AnsiConsole.Write(new FigletText("Smallworld").Centered().Color(Color.Silver));
 
         _serviceProvider = ConfigureServices(numPlayers);
         SetupListeners();
 
-        gameFlow = new GameFlow();
-        gameFlow.StartGame(_serviceProvider);
+        _gameFlow = new GameFlow();
+        _gameFlow.StartGame(_serviceProvider);
 
-        while (!gameFlow.IsEnded)
+        while (!_gameFlow.IsEnded)
         {
             Thread.Sleep(2000);
         }
@@ -67,18 +67,25 @@ internal class Program
         PlayerTurnStep(false);
     }
 
-    private static void OnChangeState(ChangeStateEvent e)
+    private static async void OnChangeState(ChangeStateEvent e)
     {
         if (e.NewState is TurnPlayState)
         {
             PlayerTurnStep(true);
+        }
+        else if (e.NewState is SelectNewRacePowerState)
+        {
+            AnsiConsole.Write(GameRenderer.GetPlayerTable(_game, _gameFlow.CurrentPlayerIndex));
+            var selectedPower = await _serviceProvider.GetRequiredService<ISelection<RacePower>>().SelectAsync(_game.AvailableRacePowers);
+            var vpUsed = _game.ReplaceRacePower(selectedPower);
+            _gameFlow.CurrentPlayer.Player.AddScore(-vpUsed);
         }
     }
 
     private static void PlayerTurnStep(bool canEnterDecline)
     {
 
-        GameRenderer.RenderPlayerTurnStep(gameFlow.Game, gameFlow.CurrentPlayer, regionsConquered);
+        GameRenderer.RenderPlayerTurnStep(_gameFlow.Game, _gameFlow.CurrentPlayer, regionsConquered);
 
         var choices = new List<string> { "Conquer", "End turn" };
         if (canEnterDecline)
@@ -109,8 +116,8 @@ internal class Program
 
     private static void ConquerPhase()
     {
-        var allRegions = gameFlow.Game.Regions;
-        var conquerable = allRegions.Where(gameFlow.CurrentPlayer.CanConquerRegion).ToList();
+        var allRegions = _gameFlow.Game.Regions;
+        var conquerable = allRegions.Where(_gameFlow.CurrentPlayer.CanConquerRegion).ToList();
 
         _serviceProvider.GetRequiredService<ISelection<SWRegion>>().SelectAsync(conquerable);
     }

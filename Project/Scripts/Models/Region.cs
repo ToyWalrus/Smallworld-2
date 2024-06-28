@@ -255,9 +255,8 @@ public class Region
 
     override public string ToString()
     {
-        if (Name != null) return Name;
-
         var str = GetRegionAttributeString(Attribute) + GetRegionAttributeString(SecondAttribute);
+
         switch (Type)
         {
             case RegionType.Forest:
@@ -280,8 +279,17 @@ public class Region
                 break;
         }
 
-        return str.Trim();
+        if (Name == "")
+        {
+            return str.Trim();
+        }
+        if (str == "")
+        {
+            return Name;
+        }
+        return $"{Name} ({str.Trim()})";
     }
+
 
     private static string GetRegionAttributeString(RegionAttribute attr)
     {

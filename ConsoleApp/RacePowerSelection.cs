@@ -25,7 +25,7 @@ internal class RacePowerSelection : ISelection<RacePower>
                 .UseConverter(rp => $"[{MarkupHelper.GetRaceStringColor(rp.Race)}]{rp.Name}[/]")
          ));
 
-        _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new RacePowerSelectEvent(choice, null));
+        _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new RacePowerSelectEvent(choice));
 
         return choice;
     }

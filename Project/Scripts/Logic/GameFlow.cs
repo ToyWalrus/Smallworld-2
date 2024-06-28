@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Smallworld.Events;
 using Smallworld.Logic.FSM;
 using Smallworld.Models;
 using Smallworld.Utils;
-
 
 namespace Smallworld.Logic;
 
@@ -15,6 +13,7 @@ public class GameFlow
 {
     public IGame Game { get; private set; }
     public GamePlayer CurrentPlayer => stateMachine.CurrentPlayer;
+    public int CurrentPlayerIndex => players.IndexOf(CurrentPlayer);
     public bool IsEnded => round >= Game.NumRounds;
     private StateMachine stateMachine;
     private List<GamePlayer> players = new();

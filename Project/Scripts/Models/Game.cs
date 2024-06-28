@@ -18,6 +18,9 @@ public interface IGame
     void AddPlayer(Player player);
     void SetRegions(List<Region> regions);
     void SetAvailableRacePowers(List<RacePower> racePowers);
+    /// <param name="racePower">The RacePower to replace</param>
+    /// <returns>The index of the racePower being replaced, or -1 if the racePower is not found.</returns>
+    int ReplaceRacePower(RacePower racePower);
 }
 
 public partial class Game : IGame
@@ -56,6 +59,16 @@ public partial class Game : IGame
     public void SetAvailableRacePowers(List<RacePower> racePowers)
     {
         AvailableRacePowers = racePowers;
+    }
+
+    public int ReplaceRacePower(RacePower racePower)
+    {
+        var index = AvailableRacePowers.FindIndex(rp => rp.Equals(racePower));
+        if (index != -1)
+        {
+            AvailableRacePowers[index] = GenerateNewRacePower();
+        }
+        return index;
     }
 
     public RacePower GenerateNewRacePower(bool unused = true)

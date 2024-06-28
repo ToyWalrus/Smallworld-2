@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using Smallworld.Events;
 
 namespace Smallworld.Logic.FSM;
@@ -23,11 +22,13 @@ public abstract class State
 
     protected void ChangeState<T>(params object[] args) where T : State
     {
-        var newState = (T) Activator.CreateInstance(typeof(T), _stateMachine, args);
+        var fullArgs = new object[args.Length + 1];
+        fullArgs[0] = _stateMachine;
+        args.CopyTo(fullArgs, 1);
+
+        var newState = (T) Activator.CreateInstance(typeof(T), fullArgs);
         _stateMachine.ChangeState(newState);
     }
-
-    protected T GetRequiredService<T>() => _stateMachine.serviceProvider.GetRequiredService<T>();
 
     protected void ChangeTurn()
     {

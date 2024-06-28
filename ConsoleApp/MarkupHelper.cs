@@ -14,7 +14,7 @@ internal class MarkupHelper
 
     public static string RegionToMarkupString(SWRegion region, bool showOccupiedBy, bool showConquerCost, bool showNumRaceTokens)
     {
-        var str = $"[{GetRegionStringColor(region)}]{region.Name}[/]";
+        var str = $"[{GetRegionStringColor(region)}]{region}[/]";
 
         if (showOccupiedBy)
         {
