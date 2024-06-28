@@ -3,13 +3,11 @@ using Smallworld.Models;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-using SWRegion = Smallworld.Models.Region;
-
 namespace ConsoleApp;
 
 internal class GameRenderer
 {
-    private static Color BorderColor = Color.LightSkyBlue3;
+    private static readonly Color BorderColor = Color.LightSkyBlue3;
 
     public static IRenderable GetConsoleLayout(IRenderable playerTable, IRenderable gameRenderable, IRenderable inputRenderable)
     {
@@ -130,9 +128,8 @@ internal class GameRenderer
         return playerInfoPanel;
     }
 
-    public static void RenderPlayerTurnStep(IGame game, GamePlayer currentPlayer, List<SWRegion> conqueredRegions)
+    public static void RenderPlayerTurnStep(IGame game, GamePlayer currentPlayer, List<string> actions)
     {
-
         // Clear console
         AnsiConsole.Clear();
 
@@ -146,14 +143,9 @@ internal class GameRenderer
 
         // Start the lines indicating player's actions
         AnsiConsole.Write(new Padder(new Rule($"{currentPlayer.Name}'s turn"), new(2, 1)));
-
-        foreach (var region in conqueredRegions)
+        foreach (var action in actions)
         {
-            AnsiConsole.MarkupLine($"[bold {
-                    MarkupHelper.GetRegionStringColor(region)
-                }]{region.Name}[/] conquered by [bold {
-                    MarkupHelper.GetRaceStringColor(region.OccupiedBy.Race)
-                }]{region.OccupiedBy.Name}[/]");
+            AnsiConsole.MarkupLine(action);
         }
     }
 }

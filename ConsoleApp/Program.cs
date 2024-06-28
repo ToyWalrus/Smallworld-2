@@ -6,6 +6,7 @@ using Smallworld.Logic.FSM;
 using Smallworld.Models;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;
+using Smallworld.Scripts.Events;
 using Smallworld.Utils;
 using Spectre.Console;
 
@@ -19,7 +20,8 @@ internal class Program
     private static IEventAggregator EventAggregator => _serviceProvider.GetRequiredService<IEventAggregator>();
     private static GameFlow _gameFlow;
     private static IGame _game => _gameFlow.Game;
-    private static List<SWRegion> regionsConquered = new();
+    private static List<string> _turnActions = new();
+    private static string _currentStateName;
 
     public static void Main(string[] args)
     {
@@ -52,43 +54,49 @@ internal class Program
         EventAggregator.Subscribe<ChangeStateEvent>(OnChangeState);
         EventAggregator.Subscribe<RegionConqueredEvent>(OnRegionConquered);
         EventAggregator.Subscribe<ChangeTurnEvent>(OnChangeTurn);
+        EventAggregator.Subscribe<DiceRollResultEvent>(OnRollDiceResult);
     }
 
     private static void OnChangeTurn(ChangeTurnEvent e)
     {
+        _turnActions.Clear();
         AnsiConsole.Clear();
         AnsiConsole.Write(new Rule($"{e.NewPlayer.Name}'s turn").Justify(Justify.Center));
-        regionsConquered.Clear();
     }
 
     private static void OnRegionConquered(RegionConqueredEvent e)
     {
-        regionsConquered.Add(e.Region);
-        PlayerTurnStep(false);
+        var region = e.Region;
+        _turnActions.Add($"[bold {MarkupHelper.GetRegionStringColor(region)}]{region.Name}[/] conquered by [bold {MarkupHelper.GetRaceStringColor(region.OccupiedBy.Race)}]{region.OccupiedBy.Name}[/]");
     }
 
     private static async void OnChangeState(ChangeStateEvent e)
     {
+        _currentStateName = e.NewState.Name;
+
         if (e.NewState is TurnPlayState)
         {
-            PlayerTurnStep(true);
+            PlayerTurnStep();
         }
-        else if (e.NewState is SelectNewRacePowerState)
+        // Need to check for old state being TurnStartState because for some reason this event is being
+        // triggered twice with the new state being SelectNewRacePowerState (it might have something to do
+        // with multiple threads?)
+        else if (e.OldState is TurnStartState && e.NewState is SelectNewRacePowerState)
         {
             AnsiConsole.Write(GameRenderer.GetPlayerTable(_game, _gameFlow.CurrentPlayerIndex));
             var selectedPower = await _serviceProvider.GetRequiredService<ISelection<RacePower>>().SelectAsync(_game.AvailableRacePowers);
+
             var vpUsed = _game.ReplaceRacePower(selectedPower);
             _gameFlow.CurrentPlayer.Player.AddScore(-vpUsed);
         }
     }
 
-    private static void PlayerTurnStep(bool canEnterDecline)
+    private static void PlayerTurnStep()
     {
-
-        GameRenderer.RenderPlayerTurnStep(_gameFlow.Game, _gameFlow.CurrentPlayer, regionsConquered);
+        GameRenderer.RenderPlayerTurnStep(_gameFlow.Game, _gameFlow.CurrentPlayer, _turnActions);
 
         var choices = new List<string> { "Conquer", "End turn" };
-        if (canEnterDecline)
+        if (_gameFlow.CurrentPlayer.ActiveRacePowers.FirstOrDefault()?.CanEnterDecline() == true)
         {
             choices.Insert(1, "Enter decline");
         }
@@ -108,15 +116,20 @@ internal class Program
         {
             EventAggregator.Publish(UIInteractionEvent.EndTurn);
         }
-        else
+        else if (choice == "Conquer")
         {
             ConquerPhase();
         }
     }
 
+    private static void OnRollDiceResult(DiceRollResultEvent e)
+    {
+        _turnActions.Add($"Rolled [bold]{e.Result}[/] on the die");
+    }
+
     private static void ConquerPhase()
     {
-        var allRegions = _gameFlow.Game.Regions;
+        var allRegions = _game.Regions;
         var conquerable = allRegions.Where(_gameFlow.CurrentPlayer.CanConquerRegion).ToList();
 
         _serviceProvider.GetRequiredService<ISelection<SWRegion>>().SelectAsync(conquerable);

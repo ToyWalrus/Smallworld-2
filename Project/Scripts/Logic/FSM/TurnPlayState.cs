@@ -1,5 +1,6 @@
 using System.Linq;
 using Smallworld.Events;
+using Smallworld.Utils;
 
 namespace Smallworld.Logic.FSM;
 
@@ -10,9 +11,14 @@ public class TurnPlayState : State
     public bool CanEnterDecline => CurrentPlayer.ActiveRacePowers.Any(rp => rp.CanEnterDecline());
     public bool IsFirstTurn { get; private set; }
 
-    public TurnPlayState(StateMachine stateMachine, bool isFirstTurn = false) : base(stateMachine)
+    public TurnPlayState(StateMachine stateMachine, bool isFirstTurn) : base(stateMachine)
     {
         IsFirstTurn = isFirstTurn;
+    }
+
+    public TurnPlayState(StateMachine stateMachine) : base(stateMachine)
+    {
+        IsFirstTurn = false;
     }
 
     public override void Enter()
@@ -47,6 +53,7 @@ public class TurnPlayState : State
 
     private void OnUIInteraction(UIInteractionEvent e)
     {
+        Logger.LogMessage(e.ToString());
         switch (e.InteractionType)
         {
             case UIInteractionEvent.Types.EndTurn:
@@ -54,7 +61,10 @@ public class TurnPlayState : State
                 break;
             case UIInteractionEvent.Types.EnterDecline:
                 if (!CanEnterDecline)
+                {
+                    Logger.LogWarning("Player cannot enter decline");
                     return;
+                }
                 CurrentPlayer.EnterDecline();
                 ChangeState<TurnEndState>();
                 break;

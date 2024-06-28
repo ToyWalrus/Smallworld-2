@@ -24,7 +24,7 @@ internal class Confirmation : IConfirmation
 
         var didConfirm = choice == confirmLabel;
 
-        _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new UIInteractionEvent(didConfirm ? UIInteractionEvent.Types.Confirm : UIInteractionEvent.Types.Cancel));
+        _serviceProvider.GetRequiredService<IEventAggregator>().Publish(didConfirm ? UIInteractionEvent.Confirm : UIInteractionEvent.Cancel);
 
         return didConfirm;
     }

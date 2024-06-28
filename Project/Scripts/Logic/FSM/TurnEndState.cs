@@ -1,4 +1,6 @@
-﻿namespace Smallworld.Logic.FSM;
+﻿using Smallworld.Utils;
+
+namespace Smallworld.Logic.FSM;
 
 public class TurnEndState : State
 {
@@ -13,6 +15,7 @@ public class TurnEndState : State
 
     private async void EndRacePowerTurns()
     {
+        Logger.LogMessage("End turn");
         foreach (var rp in CurrentPlayer.ActiveRacePowers)
         {
             await rp.OnTurnEnd();

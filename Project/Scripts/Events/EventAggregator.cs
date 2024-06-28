@@ -5,6 +5,7 @@ namespace Smallworld.Events;
 
 public interface IEventAggregator
 {
+    void Once<T>(Action<T> handler) where T : IEvent;
     void Subscribe<T>(Action<T> handler) where T : IEvent;
     void Unsubscribe<T>(Action<T> handler) where T : IEvent;
     void Publish<T>(T @event) where T : IEvent;
@@ -30,6 +31,17 @@ public class EventAggregator : IEventAggregator
         {
             _subscribers[typeof(T)].Remove(handler);
         }
+    }
+
+    public void Once<T>(Action<T> handler) where T : IEvent
+    {
+        void Wrapper(T @event)
+        {
+            handler(@event);
+            Unsubscribe(handler);
+        }
+
+        Subscribe<T>(Wrapper);
     }
 
     public void Publish<T>(T @event) where T : IEvent

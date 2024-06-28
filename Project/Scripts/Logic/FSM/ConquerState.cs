@@ -36,5 +36,6 @@ public class ConquerState : State
             RegionToConquer.Conquer(racePowerToUse, numTokensToUse);
             EventAggregator.Publish(new RegionConqueredEvent(RegionToConquer));
         }
+        ChangeState<TurnPlayState>();
     }
 }

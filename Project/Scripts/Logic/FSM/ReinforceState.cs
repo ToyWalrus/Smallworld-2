@@ -1,4 +1,5 @@
 ﻿using System;
+using Smallworld.Utils;
 
 namespace Smallworld.Logic.FSM;
 
@@ -10,11 +11,7 @@ public class ReinforceState : State
 
     public override void Enter()
     {
-        throw new NotImplementedException();
-    }
-
-    public override void Exit()
-    {
-        throw new NotImplementedException();
+        Logger.LogWarning("ReinforceState not implemented yet");
+        ChangeState<TurnEndState>();
     }
 }

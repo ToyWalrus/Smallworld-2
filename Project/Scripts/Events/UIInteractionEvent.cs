@@ -12,7 +12,7 @@ public class UIInteractionEvent : IEvent
         NewPlayer
     }
 
-    public string Name => "UI interaction";
+    public string Name => ToString();
     public Types InteractionType { get; }
 
     public UIInteractionEvent(Types interactionType)
@@ -22,7 +22,7 @@ public class UIInteractionEvent : IEvent
 
     public override string ToString()
     {
-        var str = Name;
+        var str = "UI Interaction";
 
         switch (InteractionType)
         {

@@ -31,9 +31,8 @@ public class StateMachine
 
         CurrentState?.Exit();
         CurrentState = newState;
+        CurrentState.Enter();
         
         EventAggregator.Publish(new ChangeStateEvent(oldState, CurrentState));
-
-        CurrentState.Enter();
     }
 }
