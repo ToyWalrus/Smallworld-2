@@ -146,13 +146,8 @@ public class RaceTests
         skeleton.OnTurnStart();
 
         region1.Conquer(rp, 3);
-        skeleton.OnRegionConquered(region1);
-
         region2.Conquer(rp, 3);
-        skeleton.OnRegionConquered(region2);
-
         emptyRegion.Conquer(rp, 3);
-        skeleton.OnRegionConquered(emptyRegion);
 
         // Each region will give 2 token as base (6 total)
         // +1/2 for each non-empty region conquered this turn (2 regions, 1 extra token)

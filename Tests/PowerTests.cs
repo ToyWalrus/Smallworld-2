@@ -2,6 +2,7 @@
 using Smallworld.IO;
 using Smallworld.Models;
 using Smallworld.Models.Powers;
+using Smallworld.Models.Races;
 
 namespace Tests;
 
@@ -121,7 +122,7 @@ public class PowerTests
     }
 
     [TestMethod]
-    public async void DragonMaster_GetRegionConquerCostReduction_Returns0IfAlreadyUsedDragon()
+    public async Task DragonMaster_GetRegionConquerCostReduction_Returns0IfAlreadyUsedDragon()
     {
         var dragonMaster = pFactory.Create<DragonMaster>();
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
@@ -321,9 +322,10 @@ public class PowerTests
     }
 
     [TestMethod]
-    public async void Stout_OnTurnEnd_CanEnterDecline()
+    public async Task Stout_OnTurnEnd_CanEnterDecline()
     {
         var stout = pFactory.Create<Stout>();
+        stout.SetRacePower(new RacePower(new Ratmen(), stout));
 
         confirmationMock.SetShouldConfirm(true);
 
@@ -335,7 +337,7 @@ public class PowerTests
     }
 
     [TestMethod]
-    public async void Stout_OnTurnEnd_CanChooseNotToEnterDecline()
+    public async Task Stout_OnTurnEnd_CanChooseNotToEnterDecline()
     {
         var stout = pFactory.Create<Stout>();
 
