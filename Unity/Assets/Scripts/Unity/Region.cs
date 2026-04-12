@@ -9,40 +9,18 @@ namespace UnityModels
 {
     public class Region : MonoBehaviour, IUnityModel<SMRegion>
     {
-        private SMRegion model = new(RegionType.Hill, RegionAttribute.None, false, RegionAttribute.None);
+        [SerializeField] private RegionType type = RegionType.Hill;
+        [SerializeField] private RegionAttribute attribute = RegionAttribute.None;
+        [SerializeField] private RegionAttribute secondAttribute = RegionAttribute.None;
+        [SerializeField] private bool isBorder;
 
-        public RegionType Type
-        {
-            get => model.Type;
-            set
-            {
-                model = new(value, Attribute, IsBorder, SecondAttribute);
-            }
-        }
-        public RegionAttribute Attribute
-        {
-            get => model.Attribute;
-            set
-            {
-                model = new(Type, value, IsBorder, SecondAttribute);
-            }
-        }
-        public RegionAttribute SecondAttribute
-        {
-            get => model.SecondAttribute;
-            set
-            {
-                model = new(Type, Attribute, IsBorder, value);
-            }
-        }
-        public bool IsBorder
-        {
-            get => model.IsBorder;
-            set
-            {
-                model.IsBorder = value;
-            }
-        }
+        private SMRegion model;
+
+        void Awake() => RebuildModel();
+        void OnValidate() => RebuildModel();
+
+        private void RebuildModel() =>
+            model = new SMRegion(type, attribute, isBorder, secondAttribute);
 
         public bool IsOccupied => model.OccupiedBy != null || model.HasToken(Token.LostTribe);
         public int NumRaceTokens => model.NumRaceTokens;
@@ -54,22 +32,10 @@ namespace UnityModels
             set
             {
                 _adjacentTo = value;
-                model.SetAdjacentRegions(value.Select((r) => r.GetModel()).ToList());
+                model.SetAdjacentRegions(value.Select(r => r.GetModel()).ToList());
             }
         }
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start() { }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        public SMRegion GetModel()
-        {
-            return model;
-        }
+        public SMRegion GetModel() => model;
     }
 }

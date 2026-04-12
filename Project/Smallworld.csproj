@@ -1,7 +1,8 @@
 <!-- <Project Sdk="Godot.NET.Sdk/4.2.0"> -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>10</LangVersion>
     <!-- <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework> -->
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -18,4 +19,8 @@
   <ItemGroup>
     <PackageReference Update="GodotSharpEditor" Version="4.2.2" />
   </ItemGroup> -->
+  <Target Name="CopyToUnity" AfterTargets="Build">
+    <Copy SourceFiles="$(OutputPath)Smallworld.dll"
+          DestinationFolder="$(MSBuildProjectDirectory)/../Unity/Assets/Plugins/Smallworld" />
+  </Target>
 </Project>
