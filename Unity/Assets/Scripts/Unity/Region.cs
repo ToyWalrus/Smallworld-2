@@ -19,10 +19,7 @@ namespace UnityModels
         void Awake() => RebuildModel();
         void OnValidate() => RebuildModel();
 
-        private void RebuildModel() =>
-            model = new SMRegion(type, attribute, isBorder, secondAttribute);
-
-        public bool IsOccupied => model.OccupiedBy != null || model.HasToken(Token.LostTribe);
+        public bool IsOccupied => model.IsOccupied;
         public int NumRaceTokens => model.NumRaceTokens;
 
         private List<Region> _adjacentTo;
@@ -37,5 +34,11 @@ namespace UnityModels
         }
 
         public SMRegion GetModel() => model;
+
+        private void RebuildModel()
+        {
+            model = new SMRegion(type, attribute, isBorder, secondAttribute);
+        }
+
     }
 }

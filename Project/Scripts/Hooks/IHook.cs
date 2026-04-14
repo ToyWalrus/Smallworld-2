@@ -1,6 +1,6 @@
-namespace Smallworld.Events;
+namespace Smallworld.Hooks;
 
-public interface IEvent
+public interface IHook
 {
     string Name { get; }
 

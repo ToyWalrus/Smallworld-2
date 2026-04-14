@@ -7,6 +7,8 @@ namespace UnityModels
 {
     public class Player : MonoBehaviour, IUnityModel<SMPlayer>
     {
+        public int Score => model.Score;
+
         private SMPlayer model;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,9 +23,6 @@ namespace UnityModels
 
         }
 
-        public SMPlayer GetModel()
-        {
-            return model;
-        }
+        public SMPlayer GetModel() => model;
     }
 }

@@ -20,9 +20,6 @@ namespace UnityModels
 
         }
 
-        public SMRacePower GetModel()
-        {
-            return model;
-        }
+        public SMRacePower GetModel() => model;
     }
 }

@@ -21,9 +21,6 @@ namespace UnityModels
 
         }
 
-        public SMPower GetModel()
-        {
-            return model;
-        }
+        public SMPower GetModel() => model;
     }
 }
