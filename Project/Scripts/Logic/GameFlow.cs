@@ -1,82 +1,206 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Smallworld.Events;
-using Smallworld.Logic.FSM;
+using Smallworld.Hooks;
+using Smallworld.IO;
 using Smallworld.Models;
-using Smallworld.Utils;
 
 namespace Smallworld.Logic;
 
 public class GameFlow
 {
     public IGame Game { get; private set; }
-    public GamePlayer CurrentPlayer => stateMachine.CurrentPlayer;
-    public int CurrentPlayerIndex => players.IndexOf(CurrentPlayer);
-    public bool IsEnded => round >= Game.NumRounds;
-    private StateMachine stateMachine;
-    private List<GamePlayer> players = new();
-    private int round = 0;
-    private IServiceProvider _serviceProvider;
+    public int CurrentRound = 0;
 
-    public GameFlow() { }
-    public GameFlow(IGame game)
+    private int activePlayerIndex = 0;
+    public Player ActivePlayer => Game.Players[activePlayerIndex];
+
+    private TaskCompletionSource<bool> enterDecline = new();
+    private TaskCompletionSource<bool> doneConquering = new();
+    private readonly int[] vpsOnAvailableRacePowers;
+    private readonly IServiceProvider serviceProvider;
+
+    public GameFlow(IServiceProvider serviceProvider, IGame game)
     {
         Game = game;
+        this.serviceProvider = serviceProvider;
+        vpsOnAvailableRacePowers = new int[] { 0, 0, 0, 0, 0, 0, 0 };
     }
 
-    public void SetGame(IGame game)
+    public int GetVPOnRacePowerIndex(int idx)
     {
-        Game = game;
-    }
-
-    public void StartGame(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-        Game = Game ?? serviceProvider.GetRequiredService<IGame>();
-
-        if (Game == null)
+        if (idx >= vpsOnAvailableRacePowers.Count() || idx < 0)
         {
-            Logger.LogError("Game not set, cannot start game");
-            return;
+            return 0;
+        }
+        return vpsOnAvailableRacePowers[idx];
+    }
+
+    public void EnterDeclineButtonPressed()
+    {
+        enterDecline.TrySetResult(true);
+    }
+
+    public void DoneConqueringButtonPressed()
+    {
+        doneConquering.TrySetResult(true);
+    }
+
+    public async Task RunGame()
+    {
+        while (CurrentRound < Game.NumRounds)
+        {
+            await Game.Hooks.Run(new RoundStartHook { RoundNumber = CurrentRound });
+
+            while (activePlayerIndex < Game.Players.Count)
+            {
+                await Game.Hooks.Run(new TurnStartHook { Player = ActivePlayer });
+
+                var rp = await RacePowerSelectionPhase();
+                await ConquerPhase(rp);
+                await ScorePhase();
+
+                await Game.Hooks.Run(new TurnEndHook { Player = ActivePlayer });
+                activePlayerIndex++;
+            }
+
+            await Game.Hooks.Run(new RoundEndHook { RoundNumber = CurrentRound });
+
+            CurrentRound++;
+            activePlayerIndex = 0;
         }
 
-        if (!Game.Players.Any())
-        {
-            Logger.LogError("No players added to the game, cannot start game");
-            return;
-        }
-
-        InitGame(serviceProvider);
-
-        stateMachine.ChangeState(new TurnStartState(stateMachine));
+        DetermineVictor();
     }
 
-    private void InitGame(IServiceProvider serviceProvider)
+    private async Task<RacePower> RacePowerSelectionPhase()
     {
-        foreach (var player in Game.Players)
-        {
-            players.Add(new GamePlayer(player));
-        }
+        if (ActivePlayer.HasActiveRace) return ActivePlayer.ActiveRacePower;
 
-        stateMachine = new StateMachine(serviceProvider);
-        stateMachine.OnChangeTurn += ChangePlayerTurn;
-        stateMachine.SetCurrentPlayer(players[0]);
+        await Game.Hooks.Run(new BeforeRacePowerSelectionHook { Player = ActivePlayer });
+        var (rp, passedCount, existingVP) = await SelectNewRacePowerFromAvailable();
+        await Game.Hooks.Run(new AfterRacePowerSelectionHook { Player = ActivePlayer, Selected = rp });
+
+        ActivePlayer.AddScore(existingVP - passedCount);
+        ActivePlayer.AddRacePower(rp);
+
+        Game.ReplaceRacePower(rp);
+
+        return rp;
+
     }
 
-    private void ChangePlayerTurn(GamePlayer prevPlayer)
+    private async Task ConquerPhase(RacePower rp)
     {
-        var oldPlayerIndex = players.IndexOf(prevPlayer);
-        var newPlayerIndex = (oldPlayerIndex + 1) % players.Count;
+        enterDecline = new();
+        doneConquering = new();
 
-        if (newPlayerIndex == 0)
+        await Game.Hooks.Run(new ConquerPhaseStartHook { Player = ActivePlayer });
+
+        bool didEnterDecline = false;
+
+        rp.OnTurnStart();
+
+        while (true)
         {
-            round++;
+            /*
+              How cancellation token works:
+
+              GameFlow (CALLER)          SelectAsync impl (CALLEE)
+                   |                              |
+                   | creates CTS                  |
+                   | passes cts.Token ----------> | receives token (read-only)
+                   |                              | waits for user input...
+                   |                              | checks: was I canceled?
+                   | cts.Cancel() ------------>   | yes → abort, dismiss UI
+            */
+            using var cts = new CancellationTokenSource();
+
+
+            var regionSelection = SelectRegionFromAvailable(rp, cts.Token);
+            var winner = await Task.WhenAny(regionSelection, enterDecline.Task, doneConquering.Task);
+
+            if (winner == enterDecline.Task && rp.CanEnterDecline())
+            {
+                cts.Cancel();
+                didEnterDecline = true;
+                break;
+            }
+
+            if (winner == doneConquering.Task)
+            {
+                cts.Cancel();
+                break;
+            }
+
+            var region = await regionSelection;
+            var conquerCost = await rp.GetFinalRegionConquerCost(region);
+
+            await Game.Hooks.Run(new BeforeConquerRegionHook { ConquerCount = conquerCost, RacePower = rp, Region = region });
+            rp.ConquerRegion(region, conquerCost);
+            await Game.Hooks.Run(new AfterConquerRegionHook { FinalConquerCount = conquerCost, RacePower = rp, Region = region });
         }
 
-        stateMachine.SetCurrentPlayer(players[newPlayerIndex]);
+        if (didEnterDecline)
+        {
+            ActivePlayer.ClearDeclineRacePowers();
+            rp.EnterDecline();
+        }
+        else
+        {
+            // TODO: redeploy troops
+        }
 
-        _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new ChangeTurnEvent(players[newPlayerIndex]));
+        await rp.OnTurnEnd();
+
+        if (rp.IsInDecline)
+        {
+            await Game.Hooks.Run(new RacePowerEnterDeclineHook { RacePower = rp });
+        }
     }
+
+    private async Task ScorePhase()
+    {
+
+        await Game.Hooks.Run(new BeforeScorePhaseHook { Player = ActivePlayer });
+
+        var vp = ActivePlayer.TallyVP();
+        ActivePlayer.AddScore(vp);
+
+        await Game.Hooks.Run(new AfterScorePhaseHook { Player = ActivePlayer, VPScored = vp });
+    }
+
+    private async Task<(RacePower, int, int)> SelectNewRacePowerFromAvailable()
+    {
+        var availableVP = ActivePlayer.Score;
+        var rpSelector = serviceProvider.GetRequiredService<ISelection<RacePower>>();
+
+        var availableRPs = Game.AvailableRacePowers;
+        var selectableRPs = availableRPs.GetRange(0, Math.Min(availableVP, availableRPs.Count));
+        var selection = await rpSelector.SelectAsync(selectableRPs);
+        var indexOfSelection = selectableRPs.IndexOf(selection);
+
+        for (int i = 0; i < indexOfSelection; ++i)
+        {
+            vpsOnAvailableRacePowers[i]++;
+        }
+
+        var vpGained = vpsOnAvailableRacePowers[indexOfSelection];
+        vpsOnAvailableRacePowers[indexOfSelection] = 0;
+
+        return (selection, indexOfSelection, vpGained);
+    }
+
+    private async Task<Region> SelectRegionFromAvailable(RacePower rp, CancellationToken token)
+    {
+        var regionSelector = serviceProvider.GetRequiredService<ISelection<Region>>();
+        var conquerable = Game.Regions.Where(region => rp.IsValidConquerRegion(region).Item1).ToList();
+        return await regionSelector.SelectAsync(conquerable, token);
+    }
+
+
+    private void DetermineVictor() { }
 }

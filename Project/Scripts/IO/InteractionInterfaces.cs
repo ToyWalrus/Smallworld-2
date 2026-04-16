@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using Smallworld.Models;
 
 namespace Smallworld.IO;
 
@@ -17,4 +17,5 @@ public interface IRollDice
 public interface ISelection<T>
 {
     Task<T> SelectAsync(List<T> items);
+    Task<T> SelectAsync(List<T> items, CancellationToken cancellationToken);
 }

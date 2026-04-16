@@ -11,6 +11,7 @@ public enum InvalidConquerReason
     SeaOrLake,
     NotAdjacent,
     RegionImmune,
+    IsOwnedBySelf,
 }
 
 public class Region
@@ -113,12 +114,11 @@ public class Region
     }
 
     /// <summary>
-    /// Sets a new RacePower in control of this region. Calls the OnWasConquered for the previous occupier
-    /// and the OnNewRegionConquered for the new occupier.
+    /// Sets a new RacePower in control of this region. Calls the OnWasConquered for the previous occupier.
     /// </summary>
     /// <param name="racePower">the new occupying race</param>
     /// <param name="conqueringTokenCount">the amount of tokens used to conquer this region</param>
-    public void Conquer(RacePower racePower, int conqueringTokenCount)
+    public void WasConquered(RacePower racePower, int conqueringTokenCount)
     {
         if (OccupiedBy == racePower)
         {
@@ -130,7 +130,7 @@ public class Region
         {
             int troopReimbursement;
 
-            if (OccupiedBy.IsInDecline)
+            if (OccupiedBy.IsInDecline && OccupiedBy.Race is not Ghoul)
             {
                 troopReimbursement = 0;
             }
@@ -151,8 +151,6 @@ public class Region
         RemoveAllTokensOfType(Token.LostTribe);
         RemoveAllTokensOfType(Token.Race);
         tokens.AddRange(Enumerable.Repeat(Token.Race, conqueringTokenCount));
-
-        OccupiedBy.OnNewRegionConquered(this, conqueringTokenCount);
     }
 
     public void Reinforce(int numRaceTokens)
@@ -200,6 +198,12 @@ public class Region
     {
         var isFirstConquest = playerOwnedRegions.Count == 0;
         var reasons = new List<InvalidConquerReason>();
+
+        if (playerOwnedRegions.Contains(this))
+        {
+            reasons.Add(InvalidConquerReason.IsOwnedBySelf);
+            return reasons;
+        }
 
         if (IsImmune())
         {

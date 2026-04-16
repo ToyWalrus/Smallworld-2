@@ -52,11 +52,15 @@ public class RacePower
         await Power.OnTurnEnd();
     }
 
-    public void OnNewRegionConquered(Region region, int cost)
+    public void ConquerRegion(Region region, int cost)
     {
+        region.WasConquered(this, cost);
+
         Race.OnRegionConquered(region);
         Power.OnRegionConquered(region);
+
         AvailableTokenCount = Math.Max(0, AvailableTokenCount - cost);
+
         ownedRegions.Add(region);
     }
 
@@ -88,6 +92,7 @@ public class RacePower
         Race.EnterDecline();
         Power.EnterDecline();
 
+        // Does this belong here...?
         if (IsInDecline)
         {
             AvailableTokenCount = 0;
@@ -130,6 +135,9 @@ public class RacePower
         {
             switch (currentReason)
             {
+                case InvalidConquerReason.IsOwnedBySelf:
+                    reason += "Region is already owned by player | ";
+                    break;
                 case InvalidConquerReason.NotAdjacent:
                     reason += "Region is not adjacent to any owned regions | ";
                     break;

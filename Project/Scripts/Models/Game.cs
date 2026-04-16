@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;
 using Smallworld.Utils;
+using Smallworld.Hooks;
 
 namespace Smallworld.Models;
 
@@ -13,7 +14,9 @@ public interface IGame
     List<Player> Players { get; }
     List<Region> Regions { get; }
     List<RacePower> AvailableRacePowers { get; }
-    int NumRounds { get; }
+    int NumRounds { get; set; }
+
+    IHooks Hooks { get; }
 
     void AddPlayer(Player player);
     void SetRegions(List<Region> regions);
@@ -28,7 +31,8 @@ public partial class Game : IGame
     public List<Player> Players { get; private set; }
     public List<Region> Regions { get; private set; }
     public List<RacePower> AvailableRacePowers { get; private set; }
-    public int NumRounds { get; }
+    public int NumRounds { get; set; }
+    public IHooks Hooks { get; private set; }
 
     private readonly HashSet<Type> usedPowers = new();
     private readonly HashSet<Type> usedRaces = new();
@@ -39,6 +43,8 @@ public partial class Game : IGame
     {
         Game.serviceProvider ??= serviceProvider;
         InitializePowersAndRaces();
+
+        Hooks = new Hooks.Hooks();
 
         Players = new List<Player>();
         Regions = new List<Region>();
@@ -126,6 +132,7 @@ public partial class Game : IGame
         allPowers = GetEnumerableOfType<Power>();
         allRaces = GetEnumerableOfType<Race>();
     }
+
     private static IEnumerable<Type> GetEnumerableOfType<T>() where T : class
     {
         var objects = new List<Type>();

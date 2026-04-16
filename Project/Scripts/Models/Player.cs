@@ -8,6 +8,8 @@ public class Player
     public string Name { get; set; }
     public int Score { get; private set; }
     public List<RacePower> RacePowers => new(racePowers);
+    public bool HasActiveRace => ActiveRacePower != null;
+    public RacePower ActiveRacePower => RacePowers.FirstOrDefault(rp => !rp.IsInDecline);
 
     private readonly List<RacePower> racePowers = new();
 
@@ -34,12 +36,9 @@ public class Player
         racePower.SetOwner(null);
     }
 
-    public void EnterDecline()
+    public void ClearDeclineRacePowers()
     {
-        var alreadyInDecline = new List<RacePower>(racePowers.Where(rp => rp.IsInDecline));
-        racePowers.ForEach(rp => rp.EnterDecline());
-
-        foreach (var rp in alreadyInDecline)
+        foreach (var rp in racePowers.Where(rp => rp.IsInDecline))
         {
             rp.AbandonAllRegions();
             RemoveRacePower(rp);

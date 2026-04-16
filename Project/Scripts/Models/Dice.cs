@@ -36,7 +36,7 @@ public class EqualProbabilityDice : IDice
 
 public class CustomProbabilityDice : IDice
 {
-    public static readonly CustomProbabilityDice Reinforcement = new CustomProbabilityDice(new() { 0, 0, 0, 1, 2, 3 });
+    public static readonly CustomProbabilityDice Reinforcement = new(new() { 0, 0, 0, 1, 2, 3 });
 
     public List<int> Distribution { get; set; }
     public int Value { get; set; }
