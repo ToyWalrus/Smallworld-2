@@ -122,8 +122,7 @@ public class GameFlow
             */
             using var cts = new CancellationTokenSource();
 
-
-            var regionSelection = SelectRegionFromAvailable(rp, cts.Token);
+            var regionSelection = SelectRegionForConquering(rp, cts.Token);
             var winner = await Task.WhenAny(regionSelection, enterDecline.Task, doneConquering.Task);
 
             if (winner == enterDecline.Task && rp.CanEnterDecline())
@@ -154,7 +153,7 @@ public class GameFlow
         }
         else
         {
-            // TODO: redeploy troops
+            await RedeployPhase(rp);
         }
 
         await rp.OnTurnEnd();
@@ -162,6 +161,16 @@ public class GameFlow
         if (rp.IsInDecline)
         {
             await Game.Hooks.Run(new RacePowerEnterDeclineHook { RacePower = rp });
+        }
+    }
+
+    private async Task RedeployPhase(RacePower rp)
+    {
+        while (rp.AvailableTokenCount > 0)
+        {
+            var region = await SelectOwnedRegionForRedeployment(rp);
+            region.Reinforce(1);
+            rp.SpendToken(1);
         }
     }
 
@@ -199,7 +208,13 @@ public class GameFlow
         return (selection, indexOfSelection, vpGained);
     }
 
-    private async Task<Region> SelectRegionFromAvailable(RacePower rp, CancellationToken token)
+    private async Task<Region> SelectOwnedRegionForRedeployment(RacePower rp)
+    {
+        var regionSelector = serviceProvider.GetRequiredService<ISelection<Region>>();
+        return await regionSelector.SelectAsync(rp.GetOwnedRegions());
+    }
+
+    private async Task<Region> SelectRegionForConquering(RacePower rp, CancellationToken token)
     {
         var regionSelector = serviceProvider.GetRequiredService<ISelection<Region>>();
         var conquerable = Game.Regions.Where(region => region.IsValidConquerTarget(rp).Item1).ToList();

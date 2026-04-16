@@ -18,12 +18,11 @@
    - #### Parts of phase
      1. If player has the Ghouls race in decline, they conquer before anything done by the active race of the player
      1. If race is new (i.e. first conquest) must start in a border region (edges of board or sea)
-     1. Take all active race tokens into hand, leaving one in each occupied region
+     1. Take all active race tokens into hand (which includes defeated tokens removed from other players' conquering), leaving one in each occupied region
         + The player may choose to abandon regions by taking the remaining token of that region, but that region no longer will count toward VP unless reconquered
         + If all regions are abandoned by the player, they must follow the rules of first conquest (border region)
      1. Conquer adjacent regions (see conquering later on for details)
      1. Redeploy troops
-     1. All other players redeploy their conquered troops to regions they control
 ### 2b. Put race into decline
    - #### Phase preliminaries
      + Chosen instead of 2a

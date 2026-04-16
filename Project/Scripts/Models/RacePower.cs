@@ -52,6 +52,11 @@ public class RacePower
         await Power.OnTurnEnd();
     }
 
+    public void SpendToken(int count)
+    {
+        AvailableTokenCount -= count;
+    }
+
     public void ConquerRegion(Region region, int cost)
     {
         region.WasConquered(this, cost);
