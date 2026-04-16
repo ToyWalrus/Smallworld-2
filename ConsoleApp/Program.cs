@@ -141,7 +141,6 @@ internal class Program
 
         services.AddSingleton<IGame, Game>((serviceProvider) => Game.GetPresetGame(serviceProvider, numPlayers));
         services.AddSingleton<IRollDice, DiceRoller>((serviceProvider) => new DiceRoller(serviceProvider, CustomProbabilityDice.Reinforcement));
-        services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddTransient<IConfirmation, Confirmation>();
         services.AddTransient<ISelection<SWRegion>, RegionSelection>();
         services.AddTransient<ISelection<RacePower>, RacePowerSelection>();
