@@ -12,6 +12,7 @@ public enum InvalidConquerReason
     NotAdjacent,
     RegionImmune,
     IsOwnedBySelf,
+    ProtectedByDiplomat,
 }
 
 public class Region
@@ -28,6 +29,7 @@ public class Region
     public int NumRaceTokens => tokens.Count(t => t == Token.Race);
 
     private readonly List<Token> tokens;
+    private bool isImmune;
 
     public Region(RegionType type, RegionAttribute attribute, bool isBorder, RegionAttribute secondAttr = RegionAttribute.None)
     {
@@ -60,45 +62,33 @@ public class Region
         }
     }
 
-    public Token GetSpecialTokens(out int count)
+    public (Token, int) GetSpecialTokens()
     {
-        count = 1;
         if (HasToken(Token.Encampment))
         {
-            count = tokens.Count((t) => t == Token.Encampment);
-            return Token.Encampment;
+            return (Token.Encampment, tokens.Count((t) => t == Token.Encampment));
         }
         if (HasToken(Token.Fortress))
         {
-            count = tokens.Count((t) => t == Token.Fortress);
-            return Token.Fortress;
+            return (Token.Fortress, tokens.Count((t) => t == Token.Fortress));
         }
         if (HasToken(Token.TrollLair))
         {
-            return Token.TrollLair;
+            return (Token.TrollLair, 1);
         }
         if (HasToken(Token.Dragon))
         {
-            return Token.Dragon;
+            return (Token.Dragon, 1);
         }
         if (HasToken(Token.HoleInTheGround))
         {
-            return Token.HoleInTheGround;
+            return (Token.HoleInTheGround, 1);
         }
         if (HasToken(Token.Heroic))
         {
-            return Token.Heroic;
+            return (Token.Heroic, 1);
         }
-        count = 0;
-        return Token.None;
-    }
-
-    public bool IsImmune()
-    {
-        return tokens.Exists((token) =>
-            token == Token.Dragon ||
-            token == Token.HoleInTheGround ||
-            token == Token.Heroic);
+        return (Token.None, 0);
     }
 
     /// <summary>
@@ -147,6 +137,7 @@ public class Region
         }
 
         OccupiedBy = racePower;
+        isImmune = false;
 
         RemoveAllTokensOfType(Token.LostTribe);
         RemoveAllTokensOfType(Token.Race);
@@ -164,6 +155,7 @@ public class Region
     public void Abandon()
     {
         OccupiedBy = null;
+        isImmune = false;
         tokens.Clear();
 
         if (Type == RegionType.Mountain)
@@ -190,6 +182,7 @@ public class Region
     public bool HasToken(Token token) => tokens.Exists((t) => t == token);
     public void AddToken(Token token) => tokens.Add(token);
     public void RemoveAllTokensOfType(Token tokenType) => tokens.RemoveAll((t) => t == tokenType);
+    public void SetImmune(bool immune) => isImmune = immune;
 
     /// <summary>
     /// Determines whether this region is able to be conquered by the provided RacePower.
@@ -199,11 +192,12 @@ public class Region
     public (bool, string) IsValidConquerTarget(RacePower rp)
     {
         var ownedRegions = rp.GetOwnedRegions();
-        var reasons = GetInvalidConquerReasons(ownedRegions);
-        rp.Race.FilterConquerReasons(reasons, ownedRegions, this);
-        rp.Power.FilterConquerReasons(reasons, ownedRegions, this);
+        var restrictions = GetConquerRestrictions(ownedRegions);
 
-        if (!reasons.Any())
+        rp.ModifyConquerRestrictions(restrictions, ownedRegions, this);
+        OccupiedBy?.ModifyDefenseRestrictions(restrictions, rp, this);
+
+        if (!restrictions.Any())
         {
             if (rp.AvailableTokenCount < rp.EstimateRegionConquerCost(this))
             {
@@ -214,7 +208,7 @@ public class Region
         }
 
         string reason = "| ";
-        foreach (var currentReason in reasons)
+        foreach (var currentReason in restrictions)
         {
             switch (currentReason)
             {
@@ -233,6 +227,9 @@ public class Region
                 case InvalidConquerReason.RegionImmune:
                     reason += "Region is immune to conquest | ";
                     break;
+                case InvalidConquerReason.ProtectedByDiplomat:
+                    reason += "Region is protected by a Diplomat | ";
+                    break;
             }
         }
 
@@ -242,7 +239,7 @@ public class Region
     /// <summary>
     /// Returns the reasons why a region cannot be conquered. If the list is empty, the region can be conquered.
     /// </summary>
-    public List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> playerOwnedRegions)
+    public List<InvalidConquerReason> GetConquerRestrictions(List<Region> playerOwnedRegions)
     {
         var isFirstConquest = playerOwnedRegions.Count == 0;
         var reasons = new List<InvalidConquerReason>();
@@ -253,7 +250,7 @@ public class Region
             return reasons;
         }
 
-        if (IsImmune())
+        if (isImmune)
         {
             reasons.Add(InvalidConquerReason.RegionImmune);
         }

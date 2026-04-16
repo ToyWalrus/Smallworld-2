@@ -18,6 +18,8 @@ public class DragonMaster : Power
     {
         hasUsedDragonTokenThisRound = false;
         regionWithDragon?.RemoveAllTokensOfType(Token.Dragon);
+        regionWithDragon?.SetImmune(false);
+        regionWithDragon = null;
     }
 
     public override int GetEstimatedConquerCostReduction(Region region)
@@ -34,6 +36,7 @@ public class DragonMaster : Power
 
         hasUsedDragonTokenThisRound = true;
         region.AddToken(Token.Dragon);
+        region.SetImmune(true);
         regionWithDragon = region;
 
         return int.MaxValue;
@@ -42,5 +45,7 @@ public class DragonMaster : Power
     protected override void OnEnterDecline(List<Region> ownedRegions)
     {
         regionWithDragon?.RemoveAllTokensOfType(Token.Dragon);
+        regionWithDragon?.SetImmune(false);
+        regionWithDragon = null;
     }
 }

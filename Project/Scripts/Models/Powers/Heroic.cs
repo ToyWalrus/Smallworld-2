@@ -15,9 +15,16 @@ public class Heroic : Power
         foreach (var region in ownedRegions)
         {
             region.RemoveAllTokensOfType(Token.Heroic);
+            region.SetImmune(false);
         }
 
         return new() { Token.Heroic, Token.Heroic };
+    }
+
+    public void PlaceHeroicToken(Region region)
+    {
+        region.AddToken(Token.Heroic);
+        region.SetImmune(true);
     }
 
     protected override void OnEnterDecline(List<Region> ownedRegions)
@@ -25,6 +32,7 @@ public class Heroic : Power
         foreach (var region in ownedRegions)
         {
             region.RemoveAllTokensOfType(Token.Heroic);
+            region.SetImmune(false);
         }
     }
 }

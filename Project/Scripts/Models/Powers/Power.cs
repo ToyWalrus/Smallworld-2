@@ -14,6 +14,7 @@ public abstract class Power
     public IConfirmation Confirmation { protected get; set; }
     public ISelection<Player> PlayerSelection { protected get; set; }
     public IRollDice DiceRoller { protected get; set; }
+    public IGame GameRef { protected get; set; }
 
     protected RacePower racePower;
 
@@ -37,7 +38,18 @@ public abstract class Power
     public virtual int GetEstimatedConquerCostReduction(Region region) => 0;
     public virtual Task<int> GetRegionConquerCostReduction(Region region) => Task.FromResult(GetEstimatedConquerCostReduction(region));
     public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions) => new();
-    public virtual void FilterConquerReasons(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region) { }
+
+    /// <summary>
+    /// Called when this power is the attacker. Override to remove reasons from <paramref name="reasons"/>
+    /// to allow conquests that would otherwise be blocked.
+    /// </summary>
+    public virtual void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region) { }
+
+    /// <summary>
+    /// Called when this power occupies the region being attacked. Override to add reasons to <paramref name="reasons"/>
+    /// to block conquests that would otherwise be allowed.
+    /// </summary>
+    public virtual void ModifyDefenseRestrictions(List<InvalidConquerReason> reasons, RacePower attacker, Region region) { }
 
     /// <summary>
     /// This method should be called before moving around

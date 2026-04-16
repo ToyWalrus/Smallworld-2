@@ -28,7 +28,18 @@ public abstract class Race
 
     public virtual int GetRegionConquerCostReduction(Region region) => 0;
     public virtual int TallyRaceBonusVP(List<Region> ownedRegions) => 0;
-    public virtual void FilterConquerReasons(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region) { }
+
+    /// <summary>
+    /// Called when this race is the attacker. Override to remove reasons from <paramref name="reasons"/>
+    /// to allow conquests that would otherwise be blocked.
+    /// </summary>
+    public virtual void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region) { }
+
+    /// <summary>
+    /// Called when this race occupies the region being attacked. Override to add reasons to <paramref name="reasons"/>
+    /// to block conquests that would otherwise be allowed.
+    /// </summary>
+    public virtual void ModifyDefenseRestrictions(List<InvalidConquerReason> reasons, RacePower attacker, Region region) { }
 
     public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
     {

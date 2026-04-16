@@ -99,7 +99,9 @@ public partial class Game : IGame
 
         usedPowers.Add(randomPower);
 
-        return powerFactory.Create(randomPower);
+        var power = powerFactory.Create(randomPower);
+        power.GameRef = this;
+        return power;
     }
 
     private Race GetRandomRace(bool unused)

@@ -52,6 +52,18 @@ public class RacePower
         await Power.OnTurnEnd();
     }
 
+    public void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
+    {
+        Race.ModifyConquerRestrictions(reasons, ownedRegions, region);
+        Power.ModifyConquerRestrictions(reasons, ownedRegions, region);
+    }
+
+    public void ModifyDefenseRestrictions(List<InvalidConquerReason> reasons, RacePower attacker, Region region)
+    {
+        Race.ModifyDefenseRestrictions(reasons, attacker, region);
+        Power.ModifyDefenseRestrictions(reasons, attacker, region);
+    }
+
     public void SpendToken(int count)
     {
         AvailableTokenCount -= count;

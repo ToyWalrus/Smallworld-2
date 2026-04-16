@@ -17,7 +17,7 @@ public class Underworld : Power
         return region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0;
     }
 
-    public override void FilterConquerReasons(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
+    public override void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
     {
         if (
             reasons.Contains(InvalidConquerReason.NotAdjacent) &&
