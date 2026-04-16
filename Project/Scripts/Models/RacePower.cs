@@ -80,6 +80,13 @@ public class RacePower
         return raceVP + powerVP + ownedRegions.Count;
     }
 
+    public int EstimateRegionConquerCost(Region region)
+    {
+        int raceCostReduction = Race.GetRegionConquerCostReduction(region);
+        int powerCostReduction = Power.GetEstimatedConquerCostReduction(region);
+        return Math.Max(1, region.GetBaseConquerCost() - raceCostReduction - powerCostReduction);
+    }
+
     public async Task<int> GetFinalRegionConquerCost(Region region)
     {
         int raceCostReduction = Race.GetRegionConquerCostReduction(region);
@@ -127,6 +134,11 @@ public class RacePower
         // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
         if (!invalidPowerConquerReasons.Any() || !invalidRaceConquerReasons.Any())
         {
+            if (AvailableTokenCount < EstimateRegionConquerCost(region))
+            {
+                return (false, "Not enough tokens");
+            }
+
             return (true, "");
         }
 

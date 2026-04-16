@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,8 +14,8 @@ public class GameFlow
     public IGame Game { get; private set; }
     public int CurrentRound = 0;
 
-    private int activePlayerIndex = 0;
-    public Player ActivePlayer => Game.Players[activePlayerIndex];
+    public int ActivePlayerIndex { get; private set; }
+    public Player ActivePlayer => Game.Players[ActivePlayerIndex];
 
     private TaskCompletionSource<bool> enterDecline = new();
     private TaskCompletionSource<bool> doneConquering = new();
@@ -26,10 +25,12 @@ public class GameFlow
     public GameFlow(IServiceProvider serviceProvider, IGame game)
     {
         Game = game;
+        ActivePlayerIndex = 0;
+        vpsOnAvailableRacePowers = Enumerable.Repeat(0, Game.AvailableRacePowers.Count).ToArray();
         this.serviceProvider = serviceProvider;
-        vpsOnAvailableRacePowers = new int[] { 0, 0, 0, 0, 0, 0, 0 };
     }
 
+    #region Public
     public int GetVPOnRacePowerIndex(int idx)
     {
         if (idx >= vpsOnAvailableRacePowers.Count() || idx < 0)
@@ -55,7 +56,7 @@ public class GameFlow
         {
             await Game.Hooks.Run(new RoundStartHook { RoundNumber = CurrentRound });
 
-            while (activePlayerIndex < Game.Players.Count)
+            while (ActivePlayerIndex < Game.Players.Count)
             {
                 await Game.Hooks.Run(new TurnStartHook { Player = ActivePlayer });
 
@@ -64,18 +65,20 @@ public class GameFlow
                 await ScorePhase();
 
                 await Game.Hooks.Run(new TurnEndHook { Player = ActivePlayer });
-                activePlayerIndex++;
+                ActivePlayerIndex++;
             }
 
             await Game.Hooks.Run(new RoundEndHook { RoundNumber = CurrentRound });
 
             CurrentRound++;
-            activePlayerIndex = 0;
+            ActivePlayerIndex = 0;
         }
 
         DetermineVictor();
     }
+    #endregion
 
+    #region Phases
     private async Task<RacePower> RacePowerSelectionPhase()
     {
         if (ActivePlayer.HasActiveRace) return ActivePlayer.ActiveRacePower;
@@ -172,7 +175,9 @@ public class GameFlow
 
         await Game.Hooks.Run(new AfterScorePhaseHook { Player = ActivePlayer, VPScored = vp });
     }
+    #endregion
 
+    #region Helpers
     private async Task<(RacePower, int, int)> SelectNewRacePowerFromAvailable()
     {
         var availableVP = ActivePlayer.Score;
@@ -203,4 +208,5 @@ public class GameFlow
 
 
     private void DetermineVictor() { }
+    #endregion
 }

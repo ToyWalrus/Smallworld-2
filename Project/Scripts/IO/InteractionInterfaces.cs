@@ -11,6 +11,7 @@ public interface IConfirmation
 
 public interface IRollDice
 {
+    int GetMaxRollValue();
     Task<int> RollDiceAsync();
 }
 

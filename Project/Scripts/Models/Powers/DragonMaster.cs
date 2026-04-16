@@ -20,6 +20,11 @@ public class DragonMaster : Power
         regionWithDragon?.RemoveAllTokensOfType(Token.Dragon);
     }
 
+    public override int GetEstimatedConquerCostReduction(Region region)
+    {
+        return hasUsedDragonTokenThisRound ? 0 : int.MaxValue;
+    }
+
     public async override Task<int> GetRegionConquerCostReduction(Region region)
     {
         if (hasUsedDragonTokenThisRound) return 0;

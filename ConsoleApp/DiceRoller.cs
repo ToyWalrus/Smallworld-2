@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Smallworld.Events;
 using Smallworld.IO;
 using Smallworld.Models;
-using Smallworld.Scripts.Events;
 using Spectre.Console;
 
 namespace ConsoleApp;
@@ -16,6 +14,11 @@ internal class DiceRoller : IRollDice
     {
         _serviceProvider = serviceProvider;
         _dice = dice;
+    }
+
+    public int GetMaxRollValue()
+    {
+        return _dice.GetMaxValue();
     }
 
     public async Task<int> RollDiceAsync()
@@ -32,7 +35,7 @@ internal class DiceRoller : IRollDice
                 AnsiConsole.MarkupLine($"[bold]Rolled {result}[/]");
             });
 
-        _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new DiceRollResultEvent(result));
+        // _serviceProvider.GetRequiredService<IEventAggregator>().Publish(new DiceRollResultEvent(result));
 
         return result;
     }

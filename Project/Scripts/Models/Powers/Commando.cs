@@ -10,8 +10,8 @@ public class Commando : Power
         StartingTokenCount = 4;
     }
 
-    public override Task<int> GetRegionConquerCostReduction(Region region)
+    public override int GetEstimatedConquerCostReduction(Region region)
     {
-        return Task.FromResult(1);
+        return 1;
     }
 }

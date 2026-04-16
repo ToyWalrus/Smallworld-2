@@ -34,7 +34,8 @@ public abstract class Power
     }
     public virtual Task OnTurnEnd() => Task.CompletedTask;
     public virtual int TallyPowerBonusVP(List<Region> regions) => 0;
-    public virtual Task<int> GetRegionConquerCostReduction(Region region) => Task.FromResult(0);
+    public virtual int GetEstimatedConquerCostReduction(Region region) => 0;
+    public virtual Task<int> GetRegionConquerCostReduction(Region region) => Task.FromResult(GetEstimatedConquerCostReduction(region));
     public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions) => new();
     public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
     {

@@ -12,9 +12,9 @@ public class Underworld : Power
         StartingTokenCount = 5;
     }
 
-    public override Task<int> GetRegionConquerCostReduction(Region region)
+    public override int GetEstimatedConquerCostReduction(Region region)
     {
-        return Task.FromResult(region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0);
+        return region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0;
     }
 
     public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
