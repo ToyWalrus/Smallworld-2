@@ -202,7 +202,7 @@ public class GameFlow
     private async Task<Region> SelectRegionFromAvailable(RacePower rp, CancellationToken token)
     {
         var regionSelector = serviceProvider.GetRequiredService<ISelection<Region>>();
-        var conquerable = Game.Regions.Where(region => rp.IsValidConquerRegion(region).Item1).ToList();
+        var conquerable = Game.Regions.Where(region => region.IsValidConquerTarget(rp).Item1).ToList();
         return await regionSelector.SelectAsync(conquerable, token);
     }
 

@@ -10,11 +10,9 @@ public class Flying : Power
         StartingTokenCount = 5;
     }
 
-    public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
+    public override void FilterConquerReasons(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
     {
-        var reasons = region.GetInvalidConquerReasons(ownedRegions);
         reasons.Remove(InvalidConquerReason.NotAdjacent);
         reasons.Remove(InvalidConquerReason.NotBorder);
-        return reasons;
     }
 }

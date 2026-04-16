@@ -24,14 +24,11 @@ public class Halfling : Race
         totalRegionsConquered++;
     }
 
-    public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
+    public override void FilterConquerReasons(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
     {
-        var isFirstConquest = ownedRegions.Count == 0;
-        var reasons = region.GetInvalidConquerReasons(ownedRegions);
-        if (isFirstConquest)
+        if (ownedRegions.Count == 0)
         {
             reasons.Remove(InvalidConquerReason.NotBorder);
         }
-        return reasons;
     }
 }

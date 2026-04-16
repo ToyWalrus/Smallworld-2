@@ -28,10 +28,7 @@ public abstract class Race
 
     public virtual int GetRegionConquerCostReduction(Region region) => 0;
     public virtual int TallyRaceBonusVP(List<Region> ownedRegions) => 0;
-    public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
-    {
-        return region.GetInvalidConquerReasons(ownedRegions);
-    }
+    public virtual void FilterConquerReasons(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region) { }
 
     public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
     {

@@ -37,10 +37,7 @@ public abstract class Power
     public virtual int GetEstimatedConquerCostReduction(Region region) => 0;
     public virtual Task<int> GetRegionConquerCostReduction(Region region) => Task.FromResult(GetEstimatedConquerCostReduction(region));
     public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions) => new();
-    public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
-    {
-        return region.GetInvalidConquerReasons(ownedRegions);
-    }
+    public virtual void FilterConquerReasons(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region) { }
 
     /// <summary>
     /// This method should be called before moving around

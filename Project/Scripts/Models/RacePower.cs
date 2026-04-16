@@ -119,55 +119,6 @@ public class RacePower
         ownedRegions.Clear();
     }
 
-    public (bool, string) IsValidConquerRegion(Region region)
-    {
-
-        if (region.OccupiedBy == this)
-        {
-            return (false, "Region is already occupied by this RacePower");
-        }
-
-        var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region);
-        var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region);
-        var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
-
-        // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
-        if (!invalidPowerConquerReasons.Any() || !invalidRaceConquerReasons.Any())
-        {
-            if (AvailableTokenCount < EstimateRegionConquerCost(region))
-            {
-                return (false, "Not enough tokens");
-            }
-
-            return (true, "");
-        }
-
-        string reason = "| ";
-        foreach (var currentReason in reasons)
-        {
-            switch (currentReason)
-            {
-                case InvalidConquerReason.IsOwnedBySelf:
-                    reason += "Region is already owned by player | ";
-                    break;
-                case InvalidConquerReason.NotAdjacent:
-                    reason += "Region is not adjacent to any owned regions | ";
-                    break;
-                case InvalidConquerReason.SeaOrLake:
-                    reason += "Region is a sea or lake | ";
-                    break;
-                case InvalidConquerReason.NotBorder:
-                    reason += "First conquest must happen on a border region | ";
-                    break;
-                case InvalidConquerReason.RegionImmune:
-                    reason += "Region is immune to conquest | ";
-                    break;
-            }
-        }
-
-        return (false, reason.Trim());
-    }
-
     public List<Region> GetOwnedRegions() => new(ownedRegions);
 
     public static bool operator ==(RacePower left, RacePower right)

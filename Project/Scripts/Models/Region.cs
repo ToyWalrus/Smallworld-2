@@ -192,6 +192,54 @@ public class Region
     public void RemoveAllTokensOfType(Token tokenType) => tokens.RemoveAll((t) => t == tokenType);
 
     /// <summary>
+    /// Determines whether this region is able to be conquered by the provided RacePower.
+    /// </summary>
+    /// <param name="rp">The RacePower checking whether this region is conquerable.</param>
+    /// <returns>A tuple, boolean first and if it is false, the second item is the reason as a string</returns>
+    public (bool, string) IsValidConquerTarget(RacePower rp)
+    {
+        var ownedRegions = rp.GetOwnedRegions();
+        var reasons = GetInvalidConquerReasons(ownedRegions);
+        rp.Race.FilterConquerReasons(reasons, ownedRegions, this);
+        rp.Power.FilterConquerReasons(reasons, ownedRegions, this);
+
+        if (!reasons.Any())
+        {
+            if (rp.AvailableTokenCount < rp.EstimateRegionConquerCost(this))
+            {
+                return (false, "Not enough tokens");
+            }
+
+            return (true, "");
+        }
+
+        string reason = "| ";
+        foreach (var currentReason in reasons)
+        {
+            switch (currentReason)
+            {
+                case InvalidConquerReason.IsOwnedBySelf:
+                    reason += "Region is already owned by player | ";
+                    break;
+                case InvalidConquerReason.NotAdjacent:
+                    reason += "Region is not adjacent to any owned regions | ";
+                    break;
+                case InvalidConquerReason.SeaOrLake:
+                    reason += "Region is a sea or lake | ";
+                    break;
+                case InvalidConquerReason.NotBorder:
+                    reason += "First conquest must happen on a border region | ";
+                    break;
+                case InvalidConquerReason.RegionImmune:
+                    reason += "Region is immune to conquest | ";
+                    break;
+            }
+        }
+
+        return (false, reason.Trim());
+    }
+
+    /// <summary>
     /// Returns the reasons why a region cannot be conquered. If the list is empty, the region can be conquered.
     /// </summary>
     public List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> playerOwnedRegions)
