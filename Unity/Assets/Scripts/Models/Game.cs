@@ -8,7 +8,7 @@ using SMGame = Smallworld.Models.Game;
 
 namespace UnityModels
 {
-    public class Game : IUnityModel<SMGame>
+    public class Game : UnityModel<SMGame>
     {
         private SMGame model;
 

@@ -5,7 +5,7 @@ using SMPlayer = Smallworld.Models.Player;
 
 namespace UnityModels
 {
-    public class Player : IUnityModel<SMPlayer>
+    public class Player : UnityModel<SMPlayer>
     {
         public int Score => model.Score;
 

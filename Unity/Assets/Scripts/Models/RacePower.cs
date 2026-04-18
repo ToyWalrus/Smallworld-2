@@ -4,7 +4,7 @@ using SMRacePower = Smallworld.Models.RacePower;
 
 namespace UnityModels
 {
-    public class RacePower : IUnityModel<SMRacePower>
+    public class RacePower : UnityModel<SMRacePower>
     {
         private SMRacePower model;
 

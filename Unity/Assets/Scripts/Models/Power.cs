@@ -5,7 +5,7 @@ using SMPower = Smallworld.Models.Powers.Power;
 
 namespace UnityModels
 {
-    public class Power : IUnityModel<SMPower>
+    public class Power : UnityModel<SMPower>
     {
         private SMPower model;
 

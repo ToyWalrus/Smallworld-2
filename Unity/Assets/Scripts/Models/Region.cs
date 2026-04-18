@@ -7,7 +7,7 @@ using SMRegion = Smallworld.Models.Region;
 
 namespace UnityModels
 {
-    public class Region : IUnityModel<SMRegion>
+    public class Region : UnityModel<SMRegion>
     {
         [SerializeField] private RegionType type = RegionType.Hill;
         [SerializeField] private RegionAttribute attribute = RegionAttribute.None;
