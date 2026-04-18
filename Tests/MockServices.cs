@@ -36,6 +36,11 @@ internal class RollDiceMock : IRollDice
     {
         return Task.FromResult(value);
     }
+
+    public int GetMaxRollValue()
+    {
+        return value;
+    }
 }
 
 internal class SelectionMock<T> : ISelection<T>
@@ -48,6 +53,11 @@ internal class SelectionMock<T> : ISelection<T>
     }
 
     public Task<T> SelectAsync(List<T> items)
+    {
+        return Task.FromResult(item);
+    }
+
+    public Task<T> SelectAsync(List<T> items, CancellationToken cancellationToken)
     {
         return Task.FromResult(item);
     }

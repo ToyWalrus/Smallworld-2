@@ -135,18 +135,15 @@ public class PowerTests
     }
 
     [TestMethod]
-    public void Flying_GetInvalidConquerReasons_ReturnsReasonsWithoutBorderOrAdjacentRestriction()
+    public void Flying_ModifyConquerRestrictions_ReturnsReasonsWithoutBorderOrAdjacentRestriction()
     {
         var flying = pFactory.Create<Flying>();
-        var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
-        var region2 = new Region(RegionType.Mountain, RegionAttribute.None, false);
-        var region3 = new Region(RegionType.Sea, RegionAttribute.None, true);
-        var region4 = new Region(RegionType.Lake, RegionAttribute.None, false);
+        var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
 
-        Assert.AreEqual(flying.GetInvalidConquerReasons([region1], region1).Count, 0);
-        Assert.AreEqual(flying.GetInvalidConquerReasons([region1], region2).Count, 0);
-        Assert.AreNotEqual(flying.GetInvalidConquerReasons([region1], region3).Count, 0); // Cannot conquer sea regions
-        Assert.AreNotEqual(flying.GetInvalidConquerReasons([region1], region4).Count, 0); // Cannot conquer lake regions
+        List<InvalidConquerReason> reasons = [InvalidConquerReason.NotAdjacent, InvalidConquerReason.NotBorder, InvalidConquerReason.SeaOrLake];
+        flying.ModifyConquerRestrictions(reasons, [], region);
+        Assert.AreEqual(reasons.Count, 1);
+        Assert.IsTrue(reasons.Contains(InvalidConquerReason.SeaOrLake)); // Adjacency and border reasons removed
     }
 
     [TestMethod]
@@ -306,19 +303,14 @@ public class PowerTests
     }
 
     [TestMethod]
-    public void Seafaring_GetInvalidConquerReasons_ReturnsReasonsWithoutSeaOrLakeRestriction()
+    public void Seafaring_ModifyConquerRestrictions_RemovesSeaOrLakeReason()
     {
         var seafaring = pFactory.Create<Seafaring>();
-        var region1 = new Region(RegionType.Sea, RegionAttribute.None, false);
-        var region2 = new Region(RegionType.Lake, RegionAttribute.None, false);
-        var region3 = new Region(RegionType.Farmland, RegionAttribute.None, false);
-        var region4 = new Region(RegionType.Mountain, RegionAttribute.None, false);
-        var ownedRegions = new List<Region> { region1, region4 };
+        var region = new Region(RegionType.Sea, RegionAttribute.None, false);
 
-        region1.SetAdjacentRegions([region2, region3, region4]);
-
-        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region1).Contains(InvalidConquerReason.SeaOrLake));
-        Assert.IsFalse(seafaring.GetInvalidConquerReasons(ownedRegions, region2).Contains(InvalidConquerReason.SeaOrLake));
+        List<InvalidConquerReason> reasons = [InvalidConquerReason.SeaOrLake];
+        seafaring.ModifyConquerRestrictions(reasons, [], region);
+        Assert.AreEqual(reasons.Count, 0);
     }
 
     [TestMethod]

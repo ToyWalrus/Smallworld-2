@@ -191,10 +191,9 @@ public class Region
     /// <returns>A tuple, boolean first and if it is false, the second item is the reason as a string</returns>
     public (bool, string) IsValidConquerTarget(RacePower rp)
     {
-        var ownedRegions = rp.GetOwnedRegions();
-        var restrictions = GetConquerRestrictions(ownedRegions);
+        var restrictions = GetConquerRestrictions(rp.GetOwnedRegions());
 
-        rp.ModifyConquerRestrictions(restrictions, ownedRegions, this);
+        rp.ModifyConquerRestrictions(restrictions, this);
         OccupiedBy?.ModifyDefenseRestrictions(restrictions, rp, this);
 
         if (!restrictions.Any())

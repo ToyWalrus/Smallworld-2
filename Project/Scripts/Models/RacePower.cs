@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Smallworld.Models.Races;
-using Smallworld.Models.Powers;
 using System.Linq;
-
-using Math = System.Math;
 using System.Threading.Tasks;
+using Smallworld.Models.Powers;
+using Smallworld.Models.Races;
+using Math = System.Math;
 
 namespace Smallworld.Models;
 
@@ -52,7 +51,7 @@ public class RacePower
         await Power.OnTurnEnd();
     }
 
-    public void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
+    public void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, Region region)
     {
         Race.ModifyConquerRestrictions(reasons, ownedRegions, region);
         Power.ModifyConquerRestrictions(reasons, ownedRegions, region);

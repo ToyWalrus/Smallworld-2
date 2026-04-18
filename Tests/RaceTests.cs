@@ -1,6 +1,6 @@
 using Smallworld.Models;
-using Smallworld.Models.Races;
 using Smallworld.Models.Powers;
+using Smallworld.Models.Races;
 
 namespace Tests;
 
@@ -55,14 +55,19 @@ public class RaceTests
     }
 
     [TestMethod]
-    public void Halfling_GetInvalidConquerReasons_ReturnsTrueIfRegionIsNotBorderAndIsTheFirstConquest()
+    public void Halfling_ModifyConquerRestrictions_AllowsNotBorderForFirstConquer()
     {
         var halfling = new Halfling();
         var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var unconnectedBorderRegion = new Region(RegionType.Farmland, RegionAttribute.None, true);
 
-        Assert.AreEqual(halfling.GetInvalidConquerReasons([], region).Count, 0);
-        Assert.AreNotEqual(halfling.GetInvalidConquerReasons([region], unconnectedBorderRegion).Count, 0); // Not first conquest, not connected
+        List<InvalidConquerReason> reasons = [InvalidConquerReason.NotBorder];
+        halfling.ModifyConquerRestrictions(reasons, [], region);
+        Assert.AreEqual(reasons.Count, 0); // No previously owned regions 
+
+        reasons = [InvalidConquerReason.NotBorder];
+        halfling.ModifyConquerRestrictions(reasons, [unconnectedBorderRegion], region);
+        Assert.AreNotEqual(reasons.Count, 1); // Does not remove NotBorder reason
     }
 
     [TestMethod]
