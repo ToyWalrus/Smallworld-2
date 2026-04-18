@@ -1,20 +1,17 @@
 using UnityEngine;
 
-using SMPlayer = Smallworld.Models.Player;
-
+using SMRacePower = Smallworld.Models.RacePower;
 
 namespace UnityModels
 {
-    public class Player : MonoBehaviour, IUnityModel<SMPlayer>
+    public class RacePower : IUnityModel<SMRacePower>
     {
-        public int Score => model.Score;
-
-        private SMPlayer model;
+        private SMRacePower model;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            model = new(this.name);
+
         }
 
         // Update is called once per frame
@@ -23,6 +20,6 @@ namespace UnityModels
 
         }
 
-        public SMPlayer GetModel() => model;
+        override public SMRacePower GetModel() => model;
     }
 }

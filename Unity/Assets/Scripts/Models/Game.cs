@@ -8,7 +8,7 @@ using SMGame = Smallworld.Models.Game;
 
 namespace UnityModels
 {
-    public class Game : MonoBehaviour, IUnityModel<SMGame>
+    public class Game : IUnityModel<SMGame>
     {
         private SMGame model;
 
@@ -34,11 +34,9 @@ namespace UnityModels
 
         public void StartGame()
         {
-            var flow = new GameFlow();
-            flow.RunGame(model);
         }
 
 
-        public SMGame GetModel() => model;
+        override public SMGame GetModel() => model;
     }
 }

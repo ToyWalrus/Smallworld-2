@@ -7,7 +7,7 @@ using SMRegion = Smallworld.Models.Region;
 
 namespace UnityModels
 {
-    public class Region : MonoBehaviour, IUnityModel<SMRegion>
+    public class Region : IUnityModel<SMRegion>
     {
         [SerializeField] private RegionType type = RegionType.Hill;
         [SerializeField] private RegionAttribute attribute = RegionAttribute.None;
@@ -33,7 +33,7 @@ namespace UnityModels
             }
         }
 
-        public SMRegion GetModel() => model;
+        override public SMRegion GetModel() => model;
 
         private void RebuildModel()
         {

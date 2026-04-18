@@ -1,12 +1,13 @@
 using UnityEngine;
 
-using SMRacePower = Smallworld.Models.RacePower;
+using SMPower = Smallworld.Models.Powers.Power;
+
 
 namespace UnityModels
 {
-    public class RacePower : MonoBehaviour, IUnityModel<SMRacePower>
+    public class Power : IUnityModel<SMPower>
     {
-        private SMRacePower model;
+        private SMPower model;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -20,6 +21,6 @@ namespace UnityModels
 
         }
 
-        public SMRacePower GetModel() => model;
+        override public SMPower GetModel() => model;
     }
 }
