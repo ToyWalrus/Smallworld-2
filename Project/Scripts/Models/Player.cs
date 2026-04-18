@@ -9,7 +9,7 @@ public class Player
     public int Score { get; private set; }
     public List<RacePower> RacePowers => new(racePowers);
     public bool HasActiveRace => ActiveRacePower != null;
-    public RacePower ActiveRacePower => RacePowers.FirstOrDefault(rp => !rp.IsInDecline);
+    public RacePower ActiveRacePower => racePowers.FirstOrDefault(rp => !rp.IsInDecline);
 
     private readonly List<RacePower> racePowers = new();
 

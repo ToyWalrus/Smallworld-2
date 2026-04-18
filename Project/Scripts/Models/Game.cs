@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Smallworld.Hooks;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;
 using Smallworld.Utils;
-using Smallworld.Hooks;
 
 namespace Smallworld.Models;
 
@@ -18,7 +18,7 @@ public interface IGame
 
     IHooks Hooks { get; }
 
-    void AddPlayer(Player player);
+    void SetPlayers(List<Player> players);
     void SetRegions(List<Region> regions);
     void SetAvailableRacePowers(List<RacePower> racePowers);
     /// <param name="racePower">The RacePower to replace</param>
@@ -55,6 +55,11 @@ public partial class Game : IGame
     public void AddPlayer(Player player)
     {
         Players.Add(player);
+    }
+
+    public void SetPlayers(List<Player> players)
+    {
+        Players = players;
     }
 
     public void SetRegions(List<Region> regions)
