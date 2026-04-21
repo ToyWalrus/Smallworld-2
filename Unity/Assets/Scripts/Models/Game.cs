@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Smallworld.Hooks;
 using Smallworld.IO;
 using Smallworld.Models;
 using UnityEngine;
@@ -26,6 +27,8 @@ namespace UnityModels
         public RegionSelector regionSelector;
         public RacePowerSelector racePowerSelector;
         public PlayerSelector playerSelector;
+
+        public IHooks Hooks => game.Hooks;
 
         void OnValidate()
         {
