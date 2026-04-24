@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7b5a8e125caef4ba6a079736990c15, type: 3}
+  m_Name: NorthwestSea
+  m_EditorClassIdentifier: Assembly-CSharp::RegionScriptableObject
+  regionType: 0
+  attribute: 0
+  secondaryAttribute: 0
+  isBorder: 1
+  lostTribeRegion: 0
+  occupiedBy: {fileID: 0}
+  adjacentRegions:
+  - {fileID: 11400000, guid: ff66dd6940e8c3942a1165ef139c32a0, type: 2}
+  - {fileID: 11400000, guid: 5770ef46d718d7f41822e6475008ae93, type: 2}
+  - {fileID: 11400000, guid: 2edb9039f7663714aaea9e31805384a7, type: 2}
+  - {fileID: 11400000, guid: d6446aeccd9f29f49b1710114ec7d141, type: 2}
+  - {fileID: 11400000, guid: 5abc0b220057f06429f2f898e24bdf66, type: 2}
+  - {fileID: 11400000, guid: 63d3d1a692e2a804a8d9d64accdc8553, type: 2}
+  - {fileID: 11400000, guid: 68a126fe72adb8c44b90a5b676294da0, type: 2}
+  oldAdjacentRegions:
+  - {fileID: 11400000, guid: ff66dd6940e8c3942a1165ef139c32a0, type: 2}
+  - {fileID: 11400000, guid: 5770ef46d718d7f41822e6475008ae93, type: 2}

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7b5a8e125caef4ba6a079736990c15, type: 3}
+  m_Name: Swamp_3
+  m_EditorClassIdentifier: Assembly-CSharp::RegionScriptableObject
+  regionType: 3
+  attribute: 0
+  secondaryAttribute: 0
+  isBorder: 0
+  lostTribeRegion: 0
+  occupiedBy: {fileID: 0}
+  adjacentRegions:
+  - {fileID: 11400000, guid: ff66dd6940e8c3942a1165ef139c32a0, type: 2}
+  - {fileID: 11400000, guid: 3d638d10a16d5f94a9fbcaab8f58f16d, type: 2}
+  - {fileID: 11400000, guid: 6a5ec090fdc72ea418d1682e23595a49, type: 2}
+  - {fileID: 11400000, guid: da7cda84422ea7d4f869fc20ff89496e, type: 2}
+  - {fileID: 11400000, guid: 5a006382a56f2004cb9b5a71aed1711f, type: 2}
+  - {fileID: 11400000, guid: 2edb9039f7663714aaea9e31805384a7, type: 2}
+  oldAdjacentRegions:
+  - {fileID: 11400000, guid: ff66dd6940e8c3942a1165ef139c32a0, type: 2}
+  - {fileID: 11400000, guid: 3d638d10a16d5f94a9fbcaab8f58f16d, type: 2}
+  - {fileID: 11400000, guid: 6a5ec090fdc72ea418d1682e23595a49, type: 2}

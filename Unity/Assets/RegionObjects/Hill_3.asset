@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7b5a8e125caef4ba6a079736990c15, type: 3}
+  m_Name: Hill_3
+  m_EditorClassIdentifier: Assembly-CSharp::RegionScriptableObject
+  regionType: 1
+  attribute: 0
+  secondaryAttribute: 0
+  isBorder: 0
+  lostTribeRegion: 1
+  occupiedBy: {fileID: 0}
+  adjacentRegions:
+  - {fileID: 11400000, guid: 5770ef46d718d7f41822e6475008ae93, type: 2}
+  - {fileID: 11400000, guid: 6a5ec090fdc72ea418d1682e23595a49, type: 2}
+  - {fileID: 11400000, guid: 469cfed0bce804a47b7d06f745562204, type: 2}
+  - {fileID: 11400000, guid: 3f86e1388fcedd74e8b0abc97ad7d6ee, type: 2}
+  - {fileID: 11400000, guid: 4b025d71e8506f644b964673fa7b6622, type: 2}
+  - {fileID: 11400000, guid: 2edb9039f7663714aaea9e31805384a7, type: 2}
+  - {fileID: 11400000, guid: 5973f0540cbbb6d47abb9e59f15f921c, type: 2}
+  oldAdjacentRegions:
+  - {fileID: 11400000, guid: 5770ef46d718d7f41822e6475008ae93, type: 2}
+  - {fileID: 11400000, guid: 6a5ec090fdc72ea418d1682e23595a49, type: 2}
+  - {fileID: 11400000, guid: 469cfed0bce804a47b7d06f745562204, type: 2}
+  - {fileID: 11400000, guid: 3f86e1388fcedd74e8b0abc97ad7d6ee, type: 2}
