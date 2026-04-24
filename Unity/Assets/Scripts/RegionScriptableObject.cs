@@ -20,8 +20,6 @@ public class RegionScriptableObject : ScriptableObject
     [SerializeField] private RegionAttribute secondaryAttribute = RegionAttribute.None;
     [SerializeField] private bool isBorder = false;
     [SerializeField] private bool lostTribeRegion = false;
-
-    [SerializeField] private UnityModels.RacePower occupiedBy;
     [SerializeField] private List<RegionScriptableObject> adjacentRegions = new();
 
     [SerializeField, HideInInspector] private List<RegionScriptableObject> oldAdjacentRegions = new();
@@ -46,11 +44,7 @@ public class RegionScriptableObject : ScriptableObject
             );
         }
 
-        if (occupiedBy != null)
-        {
-            model.WasConquered(occupiedBy.GetModel(), 1);
-        }
-        else if (lostTribeRegion)
+        if (lostTribeRegion)
         {
             model.AddToken(Token.LostTribe);
         }
