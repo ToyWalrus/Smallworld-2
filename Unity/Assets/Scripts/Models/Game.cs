@@ -43,7 +43,16 @@ namespace UnityModels
 
         void Start()
         {
-            game = new(ConfigureServiceProvider(), NumRounds);
+            var provider = ConfigureServiceProvider();
+            game = new(provider, NumRounds);
+
+            List<SMRacePower> rps = new();
+            for (int i = 0; i < 6; ++i)
+            {
+                rps.Add(game.GenerateNewRacePower());
+            }
+
+            provider.GetRequiredService<ISelection<SMRacePower>>().SelectAsync(rps);
         }
 
         void Update()

@@ -1,0 +1,37 @@
+:root {
+}
+
+.RPLabel {
+    flex-grow: 0;
+    -unity-text-align: upper-center;
+    -unity-font-definition: url("project://database/Assets/Fonts/Magic%20Sound.ttf?fileID=12800000&guid=718dd2e30803ec3409ec39d4058eeb7b&type=3#Magic Sound");
+    font-size: 16px;
+    -unity-font-style: normal;
+    color: rgb(24, 24, 24);
+    -unity-text-outline-color: rgba(255, 255, 255, 0.28);
+    -unity-text-outline-width: 2px;
+    white-space: pre-wrap;
+}
+
+.RPButton {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding-top: 16px;
+    padding-right: 20px;
+    padding-bottom: 16px;
+    padding-left: 20px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    --bg-color: rgb(209, 150, 88);
+    background-color: var(--bg-color);
+}

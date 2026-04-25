@@ -1,0 +1,15 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/GameStyles.uss?fileID=7433441132597879392&amp;guid=65da4ba4461bdd047898d97d618e8b80&amp;type=3#GameStyles"/>
+    <ui:Button text="" name="RPButton" class="RPButton" style="flex-grow: 1; flex-shrink: 1; flex-direction: row; justify-content: space-around; align-items: center;">
+        <ui:Label text="Power" name="PowerLabel" class="RPLabel">
+            <Bindings>
+                <ui:DataBinding property="text" binding-mode="ToTarget"/>
+            </Bindings>
+        </ui:Label>
+        <ui:Label text="Race" name="RaceLabel" class="RPLabel">
+            <Bindings>
+                <ui:DataBinding property="text" binding-mode="ToTarget"/>
+            </Bindings>
+        </ui:Label>
+    </ui:Button>
+</ui:UXML>
