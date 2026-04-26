@@ -11,7 +11,7 @@ public class RacePowerSelector : MonoBehaviour, ISelection<SMRacePower>
 {
     public GameUI gameUI;
 
-    void Start()
+    void Awake()
     {
         gameUI.SetRacePowerButtonsInteractable(false);
     }
