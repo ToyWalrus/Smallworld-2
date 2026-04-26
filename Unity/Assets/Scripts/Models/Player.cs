@@ -7,18 +7,19 @@ namespace UnityModels
 {
     public class Player : UnityModel<SMPlayer>
     {
-        private string Name
-        {
-            get => model.Name;
-            set { model.Name = value; }
-        }
-        public int Score => model.Score;
+        [SerializeField] private string PlayerName;
 
         private SMPlayer model = new("Player");
+
+        void OnValidate()
+        {
+            model = new(PlayerName ?? name ?? "Player");
+        }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+
         }
 
         // Update is called once per frame
