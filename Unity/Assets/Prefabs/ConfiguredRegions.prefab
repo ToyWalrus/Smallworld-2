@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3a5a4f84b158849875994d239496ea, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7a3a5a4f84b158849875994d239496ea, type: 3}
       propertyPath: m_LocalPosition.z
@@ -542,9 +542,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3929851618085490504, guid: 7a3a5a4f84b158849875994d239496ea, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2694749402632052019}
-    - targetCorrespondingSourceObject: {fileID: 2664323570137254989, guid: 7a3a5a4f84b158849875994d239496ea, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8608976683699594726}
     - targetCorrespondingSourceObject: {fileID: 2664323570137254989, guid: 7a3a5a4f84b158849875994d239496ea, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8544947952175250990}
@@ -2531,19 +2528,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2664323570137254989, guid: 7a3a5a4f84b158849875994d239496ea, type: 3}
   m_PrefabInstance: {fileID: 6866092703544629931}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8608976683699594726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8912859800691709670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b8c686247cf7c147bb6922a989fbc7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
-  region: {fileID: 0}
 --- !u!114 &8544947952175250990
 MonoBehaviour:
   m_ObjectHideFlags: 0
