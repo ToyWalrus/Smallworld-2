@@ -32,7 +32,7 @@ public class RegionScriptableObject : ScriptableObject
 
     private void RebuildModel()
     {
-        model = new(regionType, attribute, isBorder, secondaryAttribute);
+        model = new(regionType, attribute, isBorder, secondaryAttribute, lostTribeRegion);
 
         if (adjacentRegions != null)
         {
@@ -42,15 +42,6 @@ public class RegionScriptableObject : ScriptableObject
                     .Select(r => r.GetModel())
                     .ToList()
             );
-        }
-
-        if (lostTribeRegion)
-        {
-            model.AddToken(Token.LostTribe);
-        }
-        else
-        {
-            model.Abandon();
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Smallworld.Hooks;
 using Smallworld.Models.Races;
 using Smallworld.Utils;
 
@@ -31,20 +32,32 @@ public class Region
     private readonly List<Token> tokens;
     private bool isImmune;
 
-    public Region(RegionType type, RegionAttribute attribute = RegionAttribute.None, bool isBorder = false, RegionAttribute secondAttr = RegionAttribute.None)
+    public Region(
+        RegionType type,
+        RegionAttribute attribute = RegionAttribute.None,
+        bool isBorder = false,
+        RegionAttribute secondAttr = RegionAttribute.None,
+        bool hasLostTribe = false
+    )
     {
         Type = type;
         Attribute = attribute;
         SecondAttribute = secondAttr;
         IsBorder = isBorder;
         OccupiedBy = null;
-        AdjacentTo = new();
 
+        AdjacentTo = new();
         tokens = new();
 
         if (type == RegionType.Mountain)
         {
+            // Not calling AddToken() in constructor since that calls the Hooks.Run which may not have been instantialized yet
             tokens.Add(Token.Mountain);
+        }
+
+        if (hasLostTribe)
+        {
+            tokens.Add(Token.LostTribe);
         }
     }
 
@@ -141,37 +154,37 @@ public class Region
 
         RemoveAllTokensOfType(Token.LostTribe);
         RemoveAllTokensOfType(Token.Race);
-        tokens.AddRange(Enumerable.Repeat(Token.Race, conqueringTokenCount));
+        AddToken(Token.Race, conqueringTokenCount);
     }
 
     public void Reinforce(int numRaceTokens)
     {
-        for (int i = 0; i < numRaceTokens; ++i)
-        {
-            tokens.Add(Token.Race);
-        }
+        AddToken(Token.Race, numRaceTokens);
     }
 
     public void Abandon()
     {
         OccupiedBy = null;
         isImmune = false;
-        tokens.Clear();
 
-        if (Type == RegionType.Mountain)
+        var unique = tokens.Distinct().Where(t => t != Token.Mountain);
+        foreach (var token in unique)
         {
-            tokens.Add(Token.Mountain);
+            RemoveAllTokensOfType(token);
         }
     }
 
     public void ClearExcessRaceTokens()
     {
         var excess = GetExcessRaceTokens();
+        var count = excess;
         while (excess > 0)
         {
             tokens.Remove(Token.Race);
             excess--;
         }
+
+        HooksService.Instance.Run(new RegionTokensRemovedHook { Region = this, Token = Token.Race, RemovedCount = count });
     }
 
     /// <summary>
@@ -180,9 +193,22 @@ public class Region
     /// </summary>    
     public int GetExcessRaceTokens() => System.Math.Max(0, NumRaceTokens - 1);
     public bool HasToken(Token token) => tokens.Exists((t) => t == token);
-    public void AddToken(Token token) => tokens.Add(token);
-    public void RemoveAllTokensOfType(Token tokenType) => tokens.RemoveAll((t) => t == tokenType);
     public void SetImmune(bool immune) => isImmune = immune;
+
+    public void AddToken(Token token, int count = 1)
+    {
+        tokens.AddRange(Enumerable.Repeat(token, count));
+        HooksService.Instance.Run(new RegionTokensAddedHook { Region = this, Token = token, AddedCount = count });
+    }
+
+    public void RemoveAllTokensOfType(Token token)
+    {
+        var count = tokens.Count((t) => t == token);
+        if (count == 0) return;
+
+        tokens.RemoveAll((t) => t == token);
+        HooksService.Instance.Run(new RegionTokensRemovedHook { Region = this, Token = token, RemovedCount = count });
+    }
 
     /// <summary>
     /// Determines whether this region is able to be conquered by the provided RacePower.

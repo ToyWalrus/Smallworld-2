@@ -5,6 +5,7 @@ using Smallworld.Hooks;
 using Smallworld.IO;
 using Smallworld.Logic;
 using Smallworld.Models;
+using Smallworld.Utils;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -30,7 +31,7 @@ namespace UnityModels
         public RacePowerSelector racePowerSelector;
         public PlayerSelector playerSelector;
 
-        public IHooks Hooks => game.Hooks;
+        public IHooks Hooks => HooksService.Instance;
 
         private List<SMPlayer> PlayerModels => Players.Select(p => p.GetModel()).ToList();
         private GameFlow gameFlow;
@@ -41,6 +42,12 @@ namespace UnityModels
             SetGameValues();
         }
 
+        void Awake()
+        {
+            Debug.Log("Initializing hooks");
+            HooksService.Initialize(new Hooks());
+        }
+
         void Start()
         {
             var provider = ConfigureServiceProvider();
@@ -49,7 +56,7 @@ namespace UnityModels
 
             playerSelector.gameUI.SetPlayerButtons(PlayerModels);
 
-            game.Hooks.Subscribe<TurnStartHook>(async (evt) =>
+            Hooks.Subscribe<TurnStartHook>(async (evt) =>
             {
                 Debug.Log($"Turn start for {evt.Player.Name}");
                 playerSelector.gameUI.SetActivePlayerLabel(gameFlow.ActivePlayerIndex);
