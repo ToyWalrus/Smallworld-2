@@ -31,7 +31,7 @@ public class Region
     private readonly List<Token> tokens;
     private bool isImmune;
 
-    public Region(RegionType type, RegionAttribute attribute, bool isBorder, RegionAttribute secondAttr = RegionAttribute.None)
+    public Region(RegionType type, RegionAttribute attribute = RegionAttribute.None, bool isBorder = false, RegionAttribute secondAttr = RegionAttribute.None)
     {
         Type = type;
         Attribute = attribute;

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;

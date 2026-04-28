@@ -16,8 +16,6 @@ public interface IGame
     List<RacePower> AvailableRacePowers { get; }
     int NumRounds { get; set; }
 
-    IHooks Hooks { get; }
-
     void SetPlayers(List<Player> players);
     void SetRegions(List<Region> regions);
     void SetAvailableRacePowers(List<RacePower> racePowers);
@@ -32,7 +30,6 @@ public partial class Game : IGame
     public List<Region> Regions { get; private set; }
     public List<RacePower> AvailableRacePowers { get; private set; }
     public int NumRounds { get; set; }
-    public IHooks Hooks { get; private set; }
 
     private readonly HashSet<Type> usedPowers = new();
     private readonly HashSet<Type> usedRaces = new();
@@ -43,8 +40,6 @@ public partial class Game : IGame
     {
         Game.serviceProvider ??= serviceProvider;
         InitializePowersAndRaces();
-
-        Hooks = new Hooks.Hooks();
 
         Players = new List<Player>();
         Regions = new List<Region>();
