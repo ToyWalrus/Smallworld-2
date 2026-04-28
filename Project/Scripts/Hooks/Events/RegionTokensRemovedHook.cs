@@ -2,7 +2,7 @@ using Smallworld.Models;
 
 namespace Smallworld.Hooks;
 
-class RegionTokensRemovedHook : IHook
+public class RegionTokensRemovedHook : IHook
 {
     public string Name => "RegionTokensRemoved";
 

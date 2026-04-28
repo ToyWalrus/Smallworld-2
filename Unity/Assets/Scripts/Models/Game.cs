@@ -44,7 +44,7 @@ namespace UnityModels
 
         void Awake()
         {
-            Debug.Log("Initializing hooks");
+            // Game.cs is set to execute before any other asset script
             HooksService.Initialize(new Hooks());
         }
 
@@ -63,6 +63,8 @@ namespace UnityModels
             });
 
             gameFlow = new(provider, game);
+
+            Hooks.Run(new RegionTokensAddedHook { AddedCount = 3, Region = Regions[2].GetModel(), Token = Token.Race });
 
             // List<SMRacePower> rps = new();
             // for (int i = 0; i < 6; ++i)

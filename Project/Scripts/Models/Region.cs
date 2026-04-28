@@ -364,6 +364,40 @@ public class Region
         return $"{Name} ({str.Trim()})";
     }
 
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+
+        var other = (Region)obj;
+        return tokens.SequenceEqual(other.tokens) && ToString() == other.ToString();
+    }
+
+    public override int GetHashCode()
+    {
+        return tokens.GetHashCode() * ToString().GetHashCode();
+    }
+
+    public static bool operator ==(Region a, object b)
+    {
+        if (ReferenceEquals(a, b)) return true;
+        if (a is null || b is null) return false;
+        return a.Equals(b);
+    }
+
+    public static bool operator !=(Region a, object b)
+    {
+        return !a.Equals(b);
+    }
 
     private static string GetRegionAttributeString(RegionAttribute attr)
     {
