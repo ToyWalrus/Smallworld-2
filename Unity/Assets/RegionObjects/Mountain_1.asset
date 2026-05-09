@@ -15,9 +15,8 @@ MonoBehaviour:
   regionType: 6
   attribute: 2
   secondaryAttribute: 0
-  isBorder: 0
+  isBorder: 1
   lostTribeRegion: 0
-  occupiedBy: {fileID: 0}
   adjacentRegions:
   - {fileID: 11400000, guid: 22e6cfe2d16cadb40b0f9855d18cc731, type: 2}
   - {fileID: 11400000, guid: 770aeaf0fd095404eabb6d48d2feaf79, type: 2}
@@ -26,3 +25,5 @@ MonoBehaviour:
   oldAdjacentRegions:
   - {fileID: 11400000, guid: 22e6cfe2d16cadb40b0f9855d18cc731, type: 2}
   - {fileID: 11400000, guid: 770aeaf0fd095404eabb6d48d2feaf79, type: 2}
+  - {fileID: 11400000, guid: 3f86e1388fcedd74e8b0abc97ad7d6ee, type: 2}
+  - {fileID: 11400000, guid: 291e87335da8f2f40ae32c0b28a03b1e, type: 2}

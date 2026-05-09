@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,6 @@ public interface IRollDice
 
 public interface ISelection<T>
 {
-    Task<T> SelectAsync(List<T> items);
-    Task<T> SelectAsync(List<T> items, CancellationToken cancellationToken);
+    Task<T> SelectAsync(List<T> items, Func<T, string> unselectableReason);
+    Task<T> SelectAsync(List<T> items, Func<T, string> unselectableReason, CancellationToken cancellationToken);
 }

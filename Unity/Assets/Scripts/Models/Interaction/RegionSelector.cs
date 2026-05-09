@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,18 +11,20 @@ using SMRegion = Smallworld.Models.Region;
 
 public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
 {
+    [SerializeField] private GameUI GameUI;
     [SerializeField] private bool AlwaysShowHoverState = false;
 
     private TaskCompletionSource<SMRegion> tsc;
     private List<SMRegion> validItems;
     private Region previouslyHovered;
+    private Func<SMRegion, string> getUnselectableReason;
 
-    public Task<SMRegion> SelectAsync(List<SMRegion> items)
+    public Task<SMRegion> SelectAsync(List<SMRegion> items, Func<SMRegion, string> getReason)
     {
-        return SelectAsync(items, CancellationToken.None);
+        return SelectAsync(items, getReason, CancellationToken.None);
     }
 
-    public async Task<SMRegion> SelectAsync(List<SMRegion> items, CancellationToken cancellationToken)
+    public async Task<SMRegion> SelectAsync(List<SMRegion> items, Func<SMRegion, string> getReason, CancellationToken cancellationToken)
     {
         if (tsc != null)
         {
@@ -29,6 +32,7 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
             return null;
         }
 
+        getUnselectableReason = getReason;
         tsc = new(TaskCreationOptions.RunContinuationsAsynchronously);
         validItems = items;
 
@@ -41,6 +45,8 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
         }
         finally
         {
+            GameUI.SetGameHintText("");
+            getUnselectableReason = null;
             validItems = null;
             tsc = null;
         }
@@ -73,15 +79,23 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
             UpdateHoverState(region);
         }
 
-        if (validItems == null || !validItems.Contains(region.GetModel()))
+        if (validItems == null)
         {
             return;
         }
+
+        if (!validItems.Contains(region.GetModel()) && getUnselectableReason != null)
+        {
+            GameUI.SetGameHintText(region.GetModel().ToString() + $"\n{getUnselectableReason(region.GetModel())}");
+            return;
+        }
+
 
         // Update hover state here if not already updated
         if (!AlwaysShowHoverState)
         {
             UpdateHoverState(region);
+            GameUI.SetGameHintText(region.GetModel().ToString());
         }
 
         if (Mouse.current.leftButton.wasPressedThisFrame && tsc != null)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,26 +9,32 @@ using SMPlayer = Smallworld.Models.Player;
 
 public class PlayerSelector : MonoBehaviour, ISelection<SMPlayer>
 {
-    public GameUI gameUI;
+    [SerializeField] private GameUI GameUI;
 
-    public Task<SMPlayer> SelectAsync(List<SMPlayer> items)
+    public Task<SMPlayer> SelectAsync(List<SMPlayer> items, Func<SMPlayer, string> getReason)
     {
-        return SelectAsync(items, CancellationToken.None);
+        return SelectAsync(items, getReason, CancellationToken.None);
     }
 
-    public async Task<SMPlayer> SelectAsync(List<SMPlayer> items, CancellationToken cancellationToken)
+    public async Task<SMPlayer> SelectAsync(List<SMPlayer> items, Func<SMPlayer, string> getReason, CancellationToken cancellationToken)
     {
         var tsc = new TaskCompletionSource<SMPlayer>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         void listener(SMPlayer selection)
         {
+            if (!items.Contains(selection))
+            {
+                GameUI.SetGameHintText($"Cannot select {selection.Name}:\n${getReason(selection)}");
+                return;
+            }
+
             Debug.Log($"Selected ${selection.Name}");
             tsc.TrySetResult(selection);
         }
 
         try
         {
-            gameUI.AddPlayerButtonListener(listener);
+            GameUI.AddPlayerButtonListener(listener);
 
             using (cancellationToken.Register(() => tsc.TrySetCanceled()))
             {
@@ -36,7 +43,7 @@ public class PlayerSelector : MonoBehaviour, ISelection<SMPlayer>
         }
         finally
         {
-            gameUI.RemovePlayerButtonListener(listener);
+            GameUI.RemovePlayerButtonListener(listener);
         }
     }
 }

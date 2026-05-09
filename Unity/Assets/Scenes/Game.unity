@@ -1362,6 +1362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8c5a72a92356f4ea68c035394d6b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RegionSelector
+  GameUI: {fileID: 411029677}
   AlwaysShowHoverState: 0
 --- !u!114 &1292879884
 MonoBehaviour:
@@ -1375,7 +1376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e46857a3f52c83940af6acfae0629449, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RacePowerSelector
-  gameUI: {fileID: 411029677}
+  GameUI: {fileID: 411029677}
 --- !u!114 &1292879885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1388,7 +1389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaa88e1bdd1d314e973aa45a1bb2bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSelector
-  gameUI: {fileID: 411029677}
+  GameUI: {fileID: 411029677}
 --- !u!114 &1292879886
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -189,4 +189,16 @@ public class GameUI : MonoBehaviour
         var startBtn = _doc.rootVisualElement.Q<Button>("StartGameButton");
         startBtn.SetEnabled(enabled);
     }
+
+    public void SetGameStatusText(string text)
+    {
+        var label = _doc.rootVisualElement.Q<Label>("GameStatus");
+        label.text = text;
+    }
+
+    public void SetGameHintText(string text)
+    {
+        var label = _doc.rootVisualElement.Q<Label>("GameHint");
+        label.text = text;
+    }
 }

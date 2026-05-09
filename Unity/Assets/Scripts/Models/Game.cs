@@ -54,6 +54,7 @@ namespace UnityModels
             var provider = ConfigureServiceProvider();
             game = new(provider, NumRounds);
             SetGameValues();
+            SetUpGameStatusHooks();
 
             Hooks.Subscribe<TurnStartHook>(async (evt) =>
             {
@@ -63,12 +64,13 @@ namespace UnityModels
 
             Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
             {
-                Debug.Log($"RacePower selected: ${evt.Selected.Name}");
+                Debug.Log($"RacePower selected: {evt.Selected.Name}");
                 GameUI.SetPlayerRacePower(PlayerModels.IndexOf(evt.Player), evt.Selected);
                 var replacedIndex = game.ReplaceRacePower(evt.Selected);
 
             });
 
+            // This probably belongs in the game logic
             List<SMRacePower> rps = new();
             for (int i = 0; i < 6; ++i)
             {
@@ -108,6 +110,19 @@ namespace UnityModels
             game.SetPlayers(PlayerModels);
             game.SetRegions(Regions.Select(r => r.GetModel()).ToList());
             game.SetAvailableRacePowers(AvailableRacePowers.Select(rp => rp.GetModel()).ToList());
+        }
+
+        private void SetUpGameStatusHooks()
+        {
+            Hooks.Subscribe<BeforeRacePowerSelectionHook>(async (evt) =>
+            {
+                GameUI.SetGameStatusText("RacePower selection phase");
+            });
+
+            Hooks.Subscribe<ConquerPhaseStartHook>(async (evt) =>
+            {
+                GameUI.SetGameStatusText("Conquer phase");
+            });
         }
     }
 }

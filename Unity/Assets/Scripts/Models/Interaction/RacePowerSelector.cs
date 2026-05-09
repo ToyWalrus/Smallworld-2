@@ -9,33 +9,39 @@ using SMRacePower = Smallworld.Models.RacePower;
 
 public class RacePowerSelector : MonoBehaviour, ISelection<SMRacePower>
 {
-    public GameUI gameUI;
+    [SerializeField] private GameUI GameUI;
 
     void Awake()
     {
-        gameUI.SetRacePowerButtonsInteractable(false);
+        GameUI.SetRacePowerButtonsInteractable(false);
     }
 
-    public Task<SMRacePower> SelectAsync(List<SMRacePower> items)
+    public Task<SMRacePower> SelectAsync(List<SMRacePower> items, Func<SMRacePower, string> getReason)
     {
-        return SelectAsync(items, CancellationToken.None);
+        return SelectAsync(items, getReason, CancellationToken.None);
     }
 
-    public async Task<SMRacePower> SelectAsync(List<SMRacePower> items, CancellationToken cancellationToken)
+    public async Task<SMRacePower> SelectAsync(List<SMRacePower> items, Func<SMRacePower, string> getReason, CancellationToken cancellationToken)
     {
         var tsc = new TaskCompletionSource<SMRacePower>(TaskCreationOptions.RunContinuationsAsynchronously);
 
 
         void listener(SMRacePower selection)
         {
+            if (!items.Contains(selection))
+            {
+                GameUI.SetGameHintText($"Cannot select {selection.Name}:\n{getReason(selection)}");
+                return;
+            }
+
             tsc.TrySetResult(selection);
         }
 
         try
         {
-            gameUI.SetRacePowerButtons(items);
-            gameUI.AddRacePowerButtonListener(listener);
-            gameUI.SetRacePowerButtonsInteractable(true);
+            GameUI.SetRacePowerButtons(items);
+            GameUI.AddRacePowerButtonListener(listener);
+            GameUI.SetRacePowerButtonsInteractable(true);
 
             using (cancellationToken.Register(() => tsc.TrySetCanceled()))
             {
@@ -44,8 +50,8 @@ public class RacePowerSelector : MonoBehaviour, ISelection<SMRacePower>
         }
         finally
         {
-            gameUI.SetRacePowerButtonsInteractable(false);
-            gameUI.RemoveRacePowerButtonListener(listener);
+            GameUI.SetRacePowerButtonsInteractable(false);
+            GameUI.RemoveRacePowerButtonListener(listener);
         }
     }
 }

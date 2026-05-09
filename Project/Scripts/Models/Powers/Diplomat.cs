@@ -43,7 +43,7 @@ public class Diplomat : Power
 
         if (eligiblePlayers.Count == 0) return;
 
-        var selectedPlayer = await PlayerSelection.SelectAsync(eligiblePlayers);
+        var selectedPlayer = await PlayerSelection.SelectAsync(eligiblePlayers, (player) => $"You attacked {player.Name} this turn");
         protectedRacePower = selectedPlayer?.ActiveRacePower;
     }
 

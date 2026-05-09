@@ -203,7 +203,7 @@ public class GameFlow
 
         var availableRPs = Game.AvailableRacePowers;
         var selectableRPs = availableRPs.GetRange(0, Math.Min(availableVP, availableRPs.Count));
-        var selection = await rpSelector.SelectAsync(selectableRPs);
+        var selection = await rpSelector.SelectAsync(selectableRPs, (_) => "Not enough VPs");
         var indexOfSelection = selectableRPs.IndexOf(selection);
 
         for (int i = 0; i < indexOfSelection; ++i)
@@ -220,14 +220,14 @@ public class GameFlow
     private async Task<Region> SelectOwnedRegionForRedeployment(RacePower rp)
     {
         var regionSelector = serviceProvider.GetRequiredService<ISelection<Region>>();
-        return await regionSelector.SelectAsync(rp.GetOwnedRegions());
+        return await regionSelector.SelectAsync(rp.GetOwnedRegions(), (_) => "Not owned region");
     }
 
     private async Task<Region> SelectRegionForConquering(RacePower rp, CancellationToken token)
     {
         var regionSelector = serviceProvider.GetRequiredService<ISelection<Region>>();
         var conquerable = Game.Regions.Where(region => region.IsValidConquerTarget(rp).Item1).ToList();
-        return await regionSelector.SelectAsync(conquerable, token);
+        return await regionSelector.SelectAsync(conquerable, (region) => region.IsValidConquerTarget(rp).Item2, token);
     }
 
 
