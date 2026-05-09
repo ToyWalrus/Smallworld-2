@@ -55,6 +55,12 @@ public class GameFlow
 
     public async Task RunGame()
     {
+        // Each player begins with 7 VP
+        foreach (var player in Game.Players)
+        {
+            player.AddScore(7);
+        }
+
         while (CurrentRound < Game.NumRounds)
         {
             await Hooks.Run(new RoundStartHook { RoundNumber = CurrentRound });

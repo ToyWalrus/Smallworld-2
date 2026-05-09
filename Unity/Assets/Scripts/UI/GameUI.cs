@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Smallworld.Models;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
 public class GameUI : MonoBehaviour
 {
+    public UnityEvent StartGameButtonPressed;
+
     private event Action<RacePower> OnRacePowerClicked;
     private event Action<Player> OnPlayerClicked;
     private UIDocument _doc;
@@ -16,6 +19,9 @@ public class GameUI : MonoBehaviour
     void Awake()
     {
         _doc = GetComponent<UIDocument>();
+
+        var startBtn = _doc.rootVisualElement.Q<Button>("StartGameButton");
+        startBtn.clicked += OnStartGameClicked;
     }
 
     public void SetRacePowerButtonsInteractable(bool interactable)
@@ -44,6 +50,16 @@ public class GameUI : MonoBehaviour
         }
     }
 
+    public void SetPlayerRacePower(int playerIndex, RacePower rp)
+    {
+        var root = _doc.rootVisualElement;
+        var container = root.Q<VisualElement>("PlayerContainer");
+        var item = container.Q<VisualElement>($"P{playerIndex + 1}");
+        var rpLabel = item.Q<Label>("RacePowerLabel");
+
+        rpLabel.text = rp.Name;
+    }
+
     public void SetRacePowerButtons(List<RacePower> racePowers)
     {
         var root = _doc.rootVisualElement;
@@ -51,27 +67,7 @@ public class GameUI : MonoBehaviour
 
         for (int i = 0; i < racePowers.Count; ++i)
         {
-            var rp = racePowers[i];
-            var item = container.Q<VisualElement>($"RP{i + 1}");
-
-            if (item == null)
-                continue;
-
-            item.style.display = DisplayStyle.Flex;
-
-            var button = item.Q<Button>("RPButton");
-            var raceLabel = item.Q<Label>("RaceLabel");
-            var powerLabel = item.Q<Label>("PowerLabel");
-
-            // Set text
-            raceLabel.text = rp.Race.Name;
-            powerLabel.text = rp.Power.Name;
-
-            // Clear previous handlers (important if reused)
-            button.clicked -= () => _OnRacePowerClicked(rp);
-
-            // Register click
-            button.clicked += () => _OnRacePowerClicked(rp);
+            UpdateRacePowerButton(i, racePowers[i]);
         }
 
         var extraCount = container.childCount - racePowers.Count;
@@ -101,9 +97,11 @@ public class GameUI : MonoBehaviour
             var button = item.Q<Button>("PlayerButton");
             var playerName = item.Q<Label>("PlayerName");
             var activePlayerLabel = item.Q<Label>("ActiveLabel");
+            var rpLabel = item.Q<Label>("RacePowerLabel");
 
             playerName.text = player.Name ?? $"Player {i + 1}";
             activePlayerLabel.style.visibility = Visibility.Hidden;
+            rpLabel.text = "";
 
             // Clear previous handlers (important if reused)
             button.clicked -= () => _OnPlayerClicked(player);
@@ -119,6 +117,33 @@ public class GameUI : MonoBehaviour
             item.style.display = DisplayStyle.None;
             extraCount--;
         }
+    }
+
+    public void UpdateRacePowerButton(int index, RacePower rp)
+    {
+        var container = _doc.rootVisualElement.Q<VisualElement>("RPListContainer");
+        var item = container.Q<VisualElement>($"RP{index + 1}");
+
+        if (item == null)
+        {
+            return;
+        }
+
+        item.style.display = DisplayStyle.Flex;
+
+        var button = item.Q<Button>("RPButton");
+        var raceLabel = item.Q<Label>("RaceLabel");
+        var powerLabel = item.Q<Label>("PowerLabel");
+
+        // Set text
+        raceLabel.text = rp.Race.Name;
+        powerLabel.text = rp.Power.Name;
+
+        // Clear previous handlers (important if reused)
+        button.clicked -= () => _OnRacePowerClicked(rp);
+
+        // Register click
+        button.clicked += () => _OnRacePowerClicked(rp);
     }
 
 
@@ -152,5 +177,16 @@ public class GameUI : MonoBehaviour
     {
         Debug.Log($"Clicked {player.Name}");
         OnPlayerClicked?.Invoke(player);
+    }
+
+    private void OnStartGameClicked()
+    {
+        StartGameButtonPressed.Invoke();
+    }
+
+    public void SetStartGameButtonEnabled(bool enabled)
+    {
+        var startBtn = _doc.rootVisualElement.Q<Button>("StartGameButton");
+        startBtn.SetEnabled(enabled);
     }
 }

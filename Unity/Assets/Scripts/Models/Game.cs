@@ -24,6 +24,7 @@ namespace UnityModels
         [SerializeField] private List<Region> Regions;
         [SerializeField] private List<RacePower> AvailableRacePowers;
         [SerializeField] private int NumRounds = 10;
+        [SerializeField] private GameUI GameUI;
 
         public DiceRoller diceRoller;
         public ConfirmationPopup confirmationPopup;
@@ -54,26 +55,30 @@ namespace UnityModels
             game = new(provider, NumRounds);
             SetGameValues();
 
-            playerSelector.gameUI.SetPlayerButtons(PlayerModels);
-
             Hooks.Subscribe<TurnStartHook>(async (evt) =>
             {
                 Debug.Log($"Turn start for {evt.Player.Name}");
-                playerSelector.gameUI.SetActivePlayerLabel(gameFlow.ActivePlayerIndex);
+                GameUI.SetActivePlayerLabel(gameFlow.ActivePlayerIndex);
             });
 
+            Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
+            {
+                Debug.Log($"RacePower selected: ${evt.Selected.Name}");
+                GameUI.SetPlayerRacePower(PlayerModels.IndexOf(evt.Player), evt.Selected);
+                var replacedIndex = game.ReplaceRacePower(evt.Selected);
+
+            });
+
+            List<SMRacePower> rps = new();
+            for (int i = 0; i < 6; ++i)
+            {
+                rps.Add(game.GenerateNewRacePower());
+            }
+            game.SetAvailableRacePowers(rps);
+
+            GameUI.SetPlayerButtons(PlayerModels);
+
             gameFlow = new(provider, game);
-
-            Hooks.Run(new RegionTokensAddedHook { AddedCount = 3, Region = Regions[2].GetModel(), Token = Token.Race });
-
-            // List<SMRacePower> rps = new();
-            // for (int i = 0; i < 6; ++i)
-            // {
-            //     rps.Add(game.GenerateNewRacePower());
-            // }
-
-            // provider.GetRequiredService<ISelection<SMRacePower>>().SelectAsync(rps);
-
         }
 
         public void StartGame()
