@@ -10,8 +10,11 @@ using SMRegion = Smallworld.Models.Region;
 
 public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
 {
+    [SerializeField] private bool AlwaysShowHoverState = false;
+
     private TaskCompletionSource<SMRegion> tsc;
     private List<SMRegion> validItems;
+    private Region previouslyHovered;
 
     public Task<SMRegion> SelectAsync(List<SMRegion> items)
     {
@@ -45,32 +48,65 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
 
     void Update()
     {
-        if (tsc == null || validItems == null)
-        {
-            return;
-        }
+        HandleRegionHovering();
+    }
 
+    private void HandleRegionHovering()
+    {
         var mouse = Mouse.current;
-        if (!mouse.leftButton.wasPressedThisFrame)
+        var ray = Camera.main.ScreenPointToRay(mouse.position.value);
+
+        if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, LayerMask.GetMask("Region")))
+        {
+            ClearPreviouslyHovered();
+            return;
+        }
+
+        if (!hit.collider.TryGetComponent<Region>(out var region))
+        {
+            Debug.LogError("Detected a non-region component on the Region layer!");
+            return;
+        }
+
+        if (AlwaysShowHoverState)
+        {
+            UpdateHoverState(region);
+        }
+
+        if (validItems == null || !validItems.Contains(region.GetModel()))
         {
             return;
         }
 
-        var ray = Camera.main.ScreenPointToRay(mouse.position.value);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Region")))
+        // Update hover state here if not already updated
+        if (!AlwaysShowHoverState)
         {
-            var region = hit.collider.GetComponent<Region>();
-            if (region)
-            {
-                if (validItems.Contains(region.GetModel()))
-                {
-                    tsc.TrySetResult(region.GetModel());
-                }
-                else
-                {
-                    Debug.Log("That is not a valid region to select");
-                }
-            }
+            UpdateHoverState(region);
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame && tsc != null)
+        {
+            tsc.TrySetResult(region.GetModel());
+        }
+    }
+
+    private void UpdateHoverState(Region region)
+    {
+        if (previouslyHovered != null && previouslyHovered != region)
+        {
+            previouslyHovered.SetIsHovered(false);
+        }
+
+        previouslyHovered = region;
+        region.SetIsHovered(true);
+    }
+
+    private void ClearPreviouslyHovered()
+    {
+        if (previouslyHovered != null)
+        {
+            previouslyHovered.SetIsHovered(false);
+            previouslyHovered = null;
         }
     }
 }

@@ -13,22 +13,40 @@ namespace UnityModels
     public class Region : UnityModel<SMRegion>
     {
         public Rigidbody tilePrefab;
+        [SerializeField] private Vector3 HoverTransformOffset = Vector3.up;
 
         [SerializeField] private RegionScriptableObject region;
         override public SMRegion GetModel() => region.GetModel();
 
         private Dictionary<Token, List<Rigidbody>> tiles = new();
+        private bool isHovered = false;
+        private Vector3 restingPosition;
 
         void Awake()
         {
             HooksService.Instance.Subscribe<RegionTokensAddedHook>(AddTokens);
             HooksService.Instance.Subscribe<RegionTokensRemovedHook>(RemoveTokens);
+            restingPosition = transform.localPosition;
         }
 
         void OnDestroy()
         {
             HooksService.Instance.Unsubscribe<RegionTokensAddedHook>(AddTokens);
             HooksService.Instance.Unsubscribe<RegionTokensRemovedHook>(RemoveTokens);
+        }
+
+        void Update()
+        {
+            var targetPosition = restingPosition + HoverTransformOffset;
+            var threshold = 0.001f;
+            if (isHovered && Vector3.Distance(transform.localPosition, targetPosition) > threshold)
+            {
+                transform.localPosition = targetPosition;
+            }
+            else if (!isHovered && Vector3.Distance(transform.localPosition, restingPosition) > threshold)
+            {
+                transform.localPosition = restingPosition;
+            }
         }
 
         async Task AddTokens(RegionTokensAddedHook evt)
@@ -66,6 +84,11 @@ namespace UnityModels
             }
 
             tiles[evt.Token].RemoveRange(0, evt.RemovedCount);
+        }
+
+        public void SetIsHovered(bool hovered)
+        {
+            isHovered = hovered;
         }
     }
 }

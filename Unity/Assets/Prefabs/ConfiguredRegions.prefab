@@ -741,6 +741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 3d59b1a90234a1744ab7fbc48c7ab837, type: 2}
 --- !u!64 &791026212459306626
 MeshCollider:
@@ -782,6 +783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: c0a922be497a491428a6a96909e24346, type: 2}
 --- !u!64 &2892878757810412737
 MeshCollider:
@@ -823,6 +825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: a208ba6127eaccd4cb2baace26867636, type: 2}
 --- !u!64 &7265469255338625015
 MeshCollider:
@@ -864,6 +867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 63d3d1a692e2a804a8d9d64accdc8553, type: 2}
 --- !u!64 &5029268766340860129
 MeshCollider:
@@ -905,6 +909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: b420e332adfdc864f846cb897cc31862, type: 2}
 --- !u!64 &2647852716160460764
 MeshCollider:
@@ -946,6 +951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 311940248bcc2b34a98597b236bc933a, type: 2}
 --- !u!64 &3928691164416501705
 MeshCollider:
@@ -987,6 +993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 8ba59e2642045e04bb3336f9b2297f53, type: 2}
 --- !u!64 &878181851577852909
 MeshCollider:
@@ -1028,6 +1035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: f90f59bce39ecfc449cf668d432f7b33, type: 2}
 --- !u!64 &2098193862821770399
 MeshCollider:
@@ -1069,6 +1077,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 68a126fe72adb8c44b90a5b676294da0, type: 2}
 --- !u!64 &7132436128839997143
 MeshCollider:
@@ -1110,6 +1119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 6b8b7a70c4237db4f978ba12337b8984, type: 2}
 --- !u!64 &4107699093360496214
 MeshCollider:
@@ -1151,6 +1161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 469cfed0bce804a47b7d06f745562204, type: 2}
 --- !u!64 &3283002433805582579
 MeshCollider:
@@ -1192,6 +1203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 04dc1176467766b40b42eaa5fc272881, type: 2}
 --- !u!64 &6824932728786800927
 MeshCollider:
@@ -1233,6 +1245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 060d4a0a798bf13419d203c66e436e13, type: 2}
 --- !u!64 &8914176357879912721
 MeshCollider:
@@ -1274,6 +1287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 8d7d7141b20614144bc2781c7f8220b4, type: 2}
 --- !u!64 &3175754175702649242
 MeshCollider:
@@ -1315,6 +1329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 770aeaf0fd095404eabb6d48d2feaf79, type: 2}
 --- !u!64 &7072850331049402333
 MeshCollider:
@@ -1356,6 +1371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 9f2bb91e13539b64987b3f74f7a447a1, type: 2}
 --- !u!64 &4962547168704485289
 MeshCollider:
@@ -1397,6 +1413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: a9998179db9cbe447ab4d34d6fa94866, type: 2}
 --- !u!64 &3490929691752388177
 MeshCollider:
@@ -1438,6 +1455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: c49cb9939ae0f4346b250134f7f37fa9, type: 2}
 --- !u!64 &8062581442838267030
 MeshCollider:
@@ -1479,6 +1497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 2edb9039f7663714aaea9e31805384a7, type: 2}
 --- !u!64 &3574371001555525970
 MeshCollider:
@@ -1520,6 +1539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 5770ef46d718d7f41822e6475008ae93, type: 2}
 --- !u!64 &3675765206162849001
 MeshCollider:
@@ -1561,6 +1581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: d6446aeccd9f29f49b1710114ec7d141, type: 2}
 --- !u!64 &4859256900553773929
 MeshCollider:
@@ -1602,6 +1623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 4b025d71e8506f644b964673fa7b6622, type: 2}
 --- !u!64 &9150839397370917884
 MeshCollider:
@@ -1643,6 +1665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 12b0e9eb15bd0e24e91d1a4ef1c4b3e8, type: 2}
 --- !u!64 &5580853323145143887
 MeshCollider:
@@ -1684,6 +1707,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 5973f0540cbbb6d47abb9e59f15f921c, type: 2}
 --- !u!64 &7664212782084718249
 MeshCollider:
@@ -1725,6 +1749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 5c2053cf607eac94292c2727cf9cfbcc, type: 2}
 --- !u!64 &3885720887962827468
 MeshCollider:
@@ -1766,6 +1791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: ac59a0a3f685fcc49a7a7204d020833a, type: 2}
 --- !u!64 &4405769110693991575
 MeshCollider:
@@ -1807,6 +1833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 1ff739d1a8eeb424c84542bc08bedd67, type: 2}
 --- !u!64 &4371152893946824888
 MeshCollider:
@@ -1848,6 +1875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: a22feec0f9bd4fa41b35ab99d132e3f7, type: 2}
 --- !u!64 &6280100310893022768
 MeshCollider:
@@ -1889,6 +1917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 5abc0b220057f06429f2f898e24bdf66, type: 2}
 --- !u!64 &8385004563182779752
 MeshCollider:
@@ -1930,6 +1959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 0634998124704a74bbdc7e613784227c, type: 2}
 --- !u!64 &6415459725238282399
 MeshCollider:
@@ -1971,6 +2001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 39475c1baf2103045800ffbe151e5a9b, type: 2}
 --- !u!64 &1627089709089490968
 MeshCollider:
@@ -2012,6 +2043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: ff66dd6940e8c3942a1165ef139c32a0, type: 2}
 --- !u!64 &5033812104567626828
 MeshCollider:
@@ -2053,6 +2085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: da7cda84422ea7d4f869fc20ff89496e, type: 2}
 --- !u!64 &5177950220226068481
 MeshCollider:
@@ -2094,6 +2127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 4b0c7c637d445384fa055a250db2c8d9, type: 2}
 --- !u!64 &486753215406090864
 MeshCollider:
@@ -2135,6 +2169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 6a5ec090fdc72ea418d1682e23595a49, type: 2}
 --- !u!64 &3781398325073516484
 MeshCollider:
@@ -2176,6 +2211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: b8fa28b3514f4dc42be6af4925a5cfd0, type: 2}
 --- !u!64 &2543897054265738663
 MeshCollider:
@@ -2217,6 +2253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 576584453c5fff343919315c3c0e99ad, type: 2}
 --- !u!64 &3273038814868376515
 MeshCollider:
@@ -2258,6 +2295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 47ac3ad3fe4a3f44d97b7004b49666e9, type: 2}
 --- !u!64 &2694749402632052019
 MeshCollider:
@@ -2299,6 +2337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 291e87335da8f2f40ae32c0b28a03b1e, type: 2}
 --- !u!64 &5737125063373230299
 MeshCollider:
@@ -2340,6 +2379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: ca997dc81a968e843b0674343f45530a, type: 2}
 --- !u!64 &2820063365602014920
 MeshCollider:
@@ -2381,6 +2421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 3f86e1388fcedd74e8b0abc97ad7d6ee, type: 2}
 --- !u!64 &192548965462994709
 MeshCollider:
@@ -2422,6 +2463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: dc1d6e02d438a43469a167a897bfcb7f, type: 2}
 --- !u!64 &7678257908522540037
 MeshCollider:
@@ -2463,6 +2505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: df63cb088e4d9b64db04906d94d3eb82, type: 2}
 --- !u!64 &2971426059482369037
 MeshCollider:
@@ -2504,6 +2547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 22e6cfe2d16cadb40b0f9855d18cc731, type: 2}
 --- !u!64 &7568691144627884657
 MeshCollider:
@@ -2545,6 +2589,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: a5e569ea708ecee4ea898c28f7cf6ec0, type: 2}
 --- !u!64 &7327735098810115647
 MeshCollider:
@@ -2586,6 +2631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 3d638d10a16d5f94a9fbcaab8f58f16d, type: 2}
 --- !u!64 &4017313851207183802
 MeshCollider:
@@ -2627,6 +2673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
   tilePrefab: {fileID: 5620676686987701626, guid: 9904cda8f5d30514bb28a0fb8406b42c, type: 3}
+  HoverTransformOffset: {x: 0, y: 0.1, z: 0}
   region: {fileID: 11400000, guid: 5a006382a56f2004cb9b5a71aed1711f, type: 2}
 --- !u!64 &8032234193138043190
 MeshCollider:
