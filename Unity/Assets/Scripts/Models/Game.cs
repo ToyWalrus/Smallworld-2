@@ -60,6 +60,11 @@ namespace UnityModels
             {
                 Debug.Log($"Turn start for {evt.Player.Name}");
                 GameUI.SetActivePlayerLabel(gameFlow.ActivePlayerIndex);
+
+                if (gameFlow.ActivePlayer.ActiveRacePower != null)
+                {
+                    GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, gameFlow.ActivePlayer.ActiveRacePower.AvailableTokenCount);
+                }
             });
 
             Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
@@ -67,7 +72,11 @@ namespace UnityModels
                 Debug.Log($"RacePower selected: {evt.Selected.Name}");
                 GameUI.SetPlayerRacePower(PlayerModels.IndexOf(evt.Player), evt.Selected);
                 var replacedIndex = game.ReplaceRacePower(evt.Selected);
+            });
 
+            Hooks.Subscribe<AfterConquerRegionHook>(async (evt) =>
+            {
+                GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, evt.RacePower.AvailableTokenCount);
             });
 
             // This probably belongs in the game logic

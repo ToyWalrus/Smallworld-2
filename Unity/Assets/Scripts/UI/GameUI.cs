@@ -57,6 +57,7 @@ public class GameUI : MonoBehaviour
         var rpLabel = item.Q<Label>("RacePowerLabel");
 
         rpLabel.text = rp.Name;
+        UpdatePlayerTokenCount(playerIndex, rp.AvailableTokenCount);
     }
 
     public void SetRacePowerButtons(List<RacePower> racePowers)
@@ -97,10 +98,12 @@ public class GameUI : MonoBehaviour
             var playerName = item.Q<Label>("PlayerName");
             var activePlayerLabel = item.Q<Label>("ActiveLabel");
             var rpLabel = item.Q<Label>("RacePowerLabel");
+            var tokenCountArea = item.Q<VisualElement>("TokenCountArea");
 
             playerName.text = player.Name ?? $"Player {i + 1}";
             activePlayerLabel.style.visibility = Visibility.Hidden;
             rpLabel.text = "";
+            tokenCountArea.style.display = DisplayStyle.None;
 
             // Clear previous handlers (important if reused)
             button.clicked -= () => _OnPlayerClicked(player);
@@ -199,5 +202,14 @@ public class GameUI : MonoBehaviour
     {
         var label = _doc.rootVisualElement.Q<Label>("GameHint");
         label.text = text;
+    }
+
+    public void UpdatePlayerTokenCount(int playerIndex, int count)
+    {
+        var playerElement = _doc.rootVisualElement.Q("PlayerContainer").Q($"P{playerIndex + 1}");
+        var tokenCount = playerElement.Q<Label>("TokenCount");
+
+        playerElement.Q("TokenCountArea").style.display = DisplayStyle.Flex;
+        tokenCount.text = count.ToString();
     }
 }

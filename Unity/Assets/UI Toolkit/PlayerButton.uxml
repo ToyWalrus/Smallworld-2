@@ -15,6 +15,10 @@
         </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 1; align-items: flex-end; justify-content: center; align-content: flex-start;">
             <ui:Label text="Power Race" name="RacePowerLabel" class="RPLabel" style="-unity-text-auto-size: best-fit 10px 80px;"/>
+            <ui:VisualElement name="TokenCountArea" style="flex-grow: 1; flex-direction: row;">
+                <ui:Label text="Remaining Tokens:" style="font-size: 20px; -unity-font-style: normal;"/>
+                <ui:Label text="0" name="TokenCount" style="font-size: 20px; -unity-font-style: italic; color: rgb(213, 253, 242);"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:Button>
 </ui:UXML>
