@@ -1277,6 +1277,7 @@ MonoBehaviour:
   - {fileID: 643376963}
   - {fileID: 643376962}
   - {fileID: 643376961}
+  - {fileID: 1563639470}
   - {fileID: 643376959}
   - {fileID: 643376958}
   - {fileID: 643376957}
@@ -1430,6 +1431,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1563639470 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8544947952175250990, guid: 03c8670990eeda845b7ebc0bdcb686bc, type: 3}
+  m_PrefabInstance: {fileID: 643376930}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b8c686247cf7c147bb6922a989fbc7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnityModels.Region
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

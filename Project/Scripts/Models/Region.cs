@@ -264,7 +264,7 @@ public class Region
     /// <summary>
     /// Returns the reasons why a region cannot be conquered. If the list is empty, the region can be conquered.
     /// </summary>
-    public List<InvalidConquerReason> GetConquerRestrictions(List<Region> playerOwnedRegions)
+    private List<InvalidConquerReason> GetConquerRestrictions(List<Region> playerOwnedRegions)
     {
         var isFirstConquest = playerOwnedRegions.Count == 0;
         var reasons = new List<InvalidConquerReason>();

@@ -71,6 +71,7 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
         if (!hit.collider.TryGetComponent<Region>(out var region))
         {
             Debug.LogError("Detected a non-region component on the Region layer!");
+            ClearPreviouslyHovered();
             return;
         }
 
@@ -79,14 +80,16 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
             UpdateHoverState(region);
         }
 
-        if (validItems == null)
+        if (validItems == null && !AlwaysShowHoverState)
         {
+            ClearPreviouslyHovered();
             return;
         }
 
         if (!validItems.Contains(region.GetModel()) && getUnselectableReason != null)
         {
             GameUI.SetGameHintText(region.GetModel().ToString() + $"\n{getUnselectableReason(region.GetModel())}");
+            ClearPreviouslyHovered();
             return;
         }
 
