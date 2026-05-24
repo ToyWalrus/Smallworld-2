@@ -37,49 +37,49 @@ public partial class Game
 
         var regions = new List<Region> {
             // Seas and Lakes
-            new(RegionType.Sea, RegionAttribute.None, true) { Name = "Northwest Sea" }, // 0
-            new(RegionType.Sea, RegionAttribute.None, true) { Name = "Southeast Sea" }, // 1
-            new(RegionType.Lake, RegionAttribute.None, false) { Name = "Central Lake" }, // 2
+            new("Northwest Sea", RegionType.Sea, RegionAttribute.None, true), // 0
+            new("Southeast Sea", RegionType.Sea, RegionAttribute.None, true), // 1
+            new("Central Lake", RegionType.Lake, RegionAttribute.None, false), // 2
 
             // Borders
-            new(RegionType.Forest, RegionAttribute.Underworld, true) { Name = "North Forest" }, // 3
-            new(RegionType.Hill, RegionAttribute.None, true) { Name = "North Hills" }, // 4
-            new(RegionType.Swamp, RegionAttribute.Magic, true) { Name = "Northeast Swamp" }, // 5
-            new(RegionType.Forest, RegionAttribute.Underworld, true) { Name = "East Forest" }, // 6
-            new(RegionType.Mountain, RegionAttribute.None, true) { Name = "East Mountains" }, // 7
-            new(RegionType.Farmland, RegionAttribute.None, true) { Name = "East Farmlands" }, // 8
-            new(RegionType.Swamp, RegionAttribute.Underworld, true) { Name = "Southeast Swamp" }, // 9
-            new(RegionType.Hill, RegionAttribute.Magic, true) { Name = "Southeast Hills" }, // 10
-            new(RegionType.Forest, RegionAttribute.None, true) { Name = "South Forest" }, // 11
-            new(RegionType.Mountain, RegionAttribute.Mine, true) { Name = "Southeast Mountains" }, // 12
-            new(RegionType.Farmland, RegionAttribute.None, true) { Name = "South Farmlands" }, // 13
-            new(RegionType.Hill, RegionAttribute.Mine, true) { Name = "South Hills" }, // 14
-            new(RegionType.Mountain, RegionAttribute.None, true) { Name = "Southwest Mountains" }, // 15
-            new(RegionType.Farmland, RegionAttribute.None, true) { Name = "Southwest Farmlands" }, // 16
-            new(RegionType.Swamp, RegionAttribute.Mine, true) { Name = "Southwest Swamp" }, // 17
-            new(RegionType.Mountain, RegionAttribute.None, true) { Name = "West Mountains" }, // 18
+            new("North Forest", RegionType.Forest, RegionAttribute.Underworld, true), // 3
+            new("North Hills", RegionType.Hill, RegionAttribute.None, true), // 4
+            new("Northeast Swamp", RegionType.Swamp, RegionAttribute.Magic, true), // 5
+            new("East Forest", RegionType.Forest, RegionAttribute.Underworld, true), // 6
+            new("East Mountains", RegionType.Mountain, RegionAttribute.None, true), // 7
+            new("East Farmlands", RegionType.Farmland, RegionAttribute.None, true), // 8
+            new("Southeast Swamp", RegionType.Swamp, RegionAttribute.Underworld, true), // 9
+            new("Southeast Hills", RegionType.Hill, RegionAttribute.Magic, true), // 10
+            new("South Forest", RegionType.Forest, RegionAttribute.None, true), // 11
+            new("Southeast Mountains", RegionType.Mountain, RegionAttribute.Mine, true), // 12
+            new("South Farmlands", RegionType.Farmland, RegionAttribute.None, true), // 13
+            new("South Hills", RegionType.Hill, RegionAttribute.Mine, true), // 14
+            new("Southwest Mountains", RegionType.Mountain, RegionAttribute.None, true), // 15
+            new("Southwest Farmlands", RegionType.Farmland, RegionAttribute.None, true), // 16
+            new("Southwest Swamp", RegionType.Swamp, RegionAttribute.Mine, true), // 17
+            new("West Mountains", RegionType.Mountain, RegionAttribute.None, true), // 18
 
             // Inner regions
-            new(RegionType.Farmland, RegionAttribute.None, false) { Name = "Northwest Farmlands" }, // 19
-            new(RegionType.Farmland, RegionAttribute.Mine, false) { Name = "North Farmlands" }, // 20
-            new(RegionType.Farmland, RegionAttribute.None, false) { Name = "North Central Farmlands" }, // 21
-            new(RegionType.Mountain, RegionAttribute.Mine, false) { Name = "North Central Mountains" }, // 22
-            new(RegionType.Forest, RegionAttribute.Magic, false) { Name = "North Central Forest" }, // 23
-            new(RegionType.Swamp, RegionAttribute.Mine, false) { Name = "East Central Swamp" }, // 24
-            new(RegionType.Hill, RegionAttribute.None, false) { Name = "East Central Hills" },  // 25
-            new(RegionType.Mountain, RegionAttribute.Underworld, false) { Name = "Southeast Central Mountains" }, // 26
-            new(RegionType.Farmland, RegionAttribute.None, false) { Name = "South Central Farmlands" }, // 27
-            new(RegionType.Swamp, RegionAttribute.Underworld, false) { Name = "South Central Swamp" }, // 28
-            new(RegionType.Mountain, RegionAttribute.None, false) { Name = "South Central Mountains" }, // 29
-            new(RegionType.Forest, RegionAttribute.Magic, false) { Name = "Southwest Central Forest" }, // 30
-            new(RegionType.Mountain, RegionAttribute.Mine, false, RegionAttribute.Underworld) { Name = "West Central Mountains" }, // 31
-            new(RegionType.Hill, RegionAttribute.None, false) { Name = "West Central Hills" }, // 32
-            new(RegionType.Forest, RegionAttribute.None, false) { Name = "West Forest" }, // 33
-            new(RegionType.Swamp, RegionAttribute.Magic, false) { Name = "West Swamp" }, // 34
-            new(RegionType.Hill, RegionAttribute.Underworld, false ) { Name = "West Hills" }, // 35
-            new(RegionType.Swamp, RegionAttribute.None, false) { Name = "Central Swamp" }, // 36
-            new(RegionType.Hill, RegionAttribute.Magic, false) { Name = "Central Hills" }, // 37
-            new(RegionType.Forest, RegionAttribute.Magic, false) { Name = "South Central Forest" } // 38
+            new("Northwest Farmlands", RegionType.Farmland, RegionAttribute.None, false), // 19
+            new("North Farmlands", RegionType.Farmland, RegionAttribute.Mine, false), // 20
+            new("North Central Farmlands", RegionType.Farmland, RegionAttribute.None, false), // 21
+            new("North Central Mountains", RegionType.Mountain, RegionAttribute.Mine, false), // 22
+            new("North Central Forest", RegionType.Forest, RegionAttribute.Magic, false), // 23
+            new("East Central Swamp", RegionType.Swamp, RegionAttribute.Mine, false), // 24
+            new("East Central Hills", RegionType.Hill, RegionAttribute.None, false),  // 25
+            new("Southeast Central Mountains", RegionType.Mountain, RegionAttribute.Underworld, false), // 26
+            new("South Central Farmlands", RegionType.Farmland, RegionAttribute.None, false), // 27
+            new("South Central Swamp", RegionType.Swamp, RegionAttribute.Underworld, false), // 28
+            new("South Central Mountains", RegionType.Mountain, RegionAttribute.None, false), // 29
+            new("Southwest Central Forest", RegionType.Forest, RegionAttribute.Magic, false), // 30
+            new("West Central Mountains", RegionType.Mountain, RegionAttribute.Mine, false, RegionAttribute.Underworld), // 31
+            new("West Central Hills", RegionType.Hill, RegionAttribute.None, false), // 32
+            new("West Forest", RegionType.Forest, RegionAttribute.None, false), // 33
+            new("West Swamp", RegionType.Swamp, RegionAttribute.Magic, false), // 34
+            new("West Hills", RegionType.Hill, RegionAttribute.Underworld, false ), // 35
+            new("Central Swamp", RegionType.Swamp, RegionAttribute.None, false), // 36
+            new("Central Hills", RegionType.Hill, RegionAttribute.Magic, false), // 37
+            new("South Central Forest", RegionType.Forest, RegionAttribute.Magic, false) // 38
         };
 
         SetRegionAdjacentTo(regions, 0, new() { 3, 18, 19, 20, 33, 34, 35 });

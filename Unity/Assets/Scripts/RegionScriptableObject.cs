@@ -32,10 +32,7 @@ public class RegionScriptableObject : ScriptableObject
 
     private void RebuildModel()
     {
-        model = new(regionType, attribute, isBorder, secondaryAttribute, lostTribeRegion)
-        {
-            Name = name
-        };
+        model = new(name, regionType, attribute, isBorder, secondaryAttribute, lostTribeRegion);
 
         if (adjacentRegions != null)
         {

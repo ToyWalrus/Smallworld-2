@@ -17,12 +17,15 @@ MonoBehaviour:
   secondaryAttribute: 0
   isBorder: 0
   lostTribeRegion: 0
-  occupiedBy: {fileID: 0}
   adjacentRegions:
   - {fileID: 11400000, guid: 4b025d71e8506f644b964673fa7b6622, type: 2}
   - {fileID: 11400000, guid: 0634998124704a74bbdc7e613784227c, type: 2}
   - {fileID: 11400000, guid: 39475c1baf2103045800ffbe151e5a9b, type: 2}
   - {fileID: 11400000, guid: f90f59bce39ecfc449cf668d432f7b33, type: 2}
+  - {fileID: 11400000, guid: 8ba59e2642045e04bb3336f9b2297f53, type: 2}
   oldAdjacentRegions:
   - {fileID: 11400000, guid: 4b025d71e8506f644b964673fa7b6622, type: 2}
   - {fileID: 11400000, guid: 0634998124704a74bbdc7e613784227c, type: 2}
+  - {fileID: 11400000, guid: 39475c1baf2103045800ffbe151e5a9b, type: 2}
+  - {fileID: 11400000, guid: f90f59bce39ecfc449cf668d432f7b33, type: 2}
+  - {fileID: 11400000, guid: 8ba59e2642045e04bb3336f9b2297f53, type: 2}

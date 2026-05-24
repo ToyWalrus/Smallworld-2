@@ -18,7 +18,7 @@ public enum InvalidConquerReason
 
 public class Region
 {
-    public string Name { get; set; }
+    public string Name { get; private set; }
     public RegionType Type { get; private set; }
     public RegionAttribute Attribute { get; private set; }
     public RegionAttribute SecondAttribute { get; private set; }
@@ -33,6 +33,7 @@ public class Region
     private bool isImmune;
 
     public Region(
+        string name,
         RegionType type,
         RegionAttribute attribute = RegionAttribute.None,
         bool isBorder = false,
@@ -40,6 +41,7 @@ public class Region
         bool hasLostTribe = false
     )
     {
+        Name = name;
         Type = type;
         Attribute = attribute;
         SecondAttribute = secondAttr;
@@ -367,35 +369,34 @@ public class Region
     public override bool Equals(object obj)
     {
         if (obj == null || GetType() != obj.GetType())
-        {
             return false;
-        }
-
 
         if (ReferenceEquals(this, obj))
-        {
             return true;
-        }
-
 
         var other = (Region)obj;
-        return tokens.SequenceEqual(other.tokens) && ToString() == other.ToString();
+        return Type == other.Type &&
+               Attribute == other.Attribute &&
+               SecondAttribute == other.SecondAttribute &&
+               Name == other.Name;
     }
 
     public override int GetHashCode()
     {
-        return tokens.GetHashCode() * ToString().GetHashCode();
+        return System.HashCode.Combine(Type, Attribute, SecondAttribute, Name);
     }
 
-    public static bool operator ==(Region a, object b)
+    public static bool operator ==(Region a, Region b)
     {
         if (ReferenceEquals(a, b)) return true;
         if (a is null || b is null) return false;
         return a.Equals(b);
     }
 
-    public static bool operator !=(Region a, object b)
+    public static bool operator !=(Region a, Region b)
     {
+        if (ReferenceEquals(a, b)) return false;
+        if (a is null || b is null) return true;
         return !a.Equals(b);
     }
 
