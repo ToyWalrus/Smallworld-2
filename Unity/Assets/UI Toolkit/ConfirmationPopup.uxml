@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/GameStyles.uss?fileID=7433441132597879392&amp;guid=65da4ba4461bdd047898d97d618e8b80&amp;type=3#GameStyles"/>
+    <ui:VisualElement name="Overlay" class="CenterFlex" style="flex-grow: 1; align-items: center; background-color: rgba(0, 0, 0, 0.59); opacity: 1; display: none;">
+        <ui:VisualElement name="VisualElement" style="flex-grow: 0; padding-top: 24px; padding-right: 24px; padding-bottom: 24px; padding-left: 24px; align-items: flex-start; background-color: rgba(72, 201, 214, 0.82); border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;">
+            <ui:Label text="Title" name="Title" style="-unity-font-style: bold; font-size: 46px; color: rgb(0, 0, 0);"/>
+            <ui:Label text="Message" name="Message" style="font-size: 36px; -unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=48af136bb93de9b43a94e61c53b086ed&amp;type=3#NotInter-Regular&quot;);"/>
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; margin-top: 16px; margin-right: 24px;">
+                <ui:Button text="Yes" name="Confirm" style="font-size: 34px;"/>
+                <ui:Button text="No" name="Cancel" style="font-size: 34px;"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
