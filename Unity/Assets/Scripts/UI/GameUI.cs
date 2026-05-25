@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 public class GameUI : MonoBehaviour
 {
     public UnityEvent StartGameButtonPressed;
+    public UnityEvent RollDieButtonPressed;
 
     private event Action<RacePower> OnRacePowerClicked;
     private event Action<Player> OnPlayerClicked;
@@ -21,6 +22,9 @@ public class GameUI : MonoBehaviour
 
         var startBtn = _doc.rootVisualElement.Q<Button>("StartGameButton");
         startBtn.clicked += OnStartGameClicked;
+
+        var rollBtn = _doc.rootVisualElement.Q<Button>("RollDieButton");
+        rollBtn.clicked += OnRollDieButtonClicked;
     }
 
     public void SetRacePowerButtonsInteractable(bool interactable)
@@ -184,6 +188,11 @@ public class GameUI : MonoBehaviour
     private void OnStartGameClicked()
     {
         StartGameButtonPressed.Invoke();
+    }
+
+    private void OnRollDieButtonClicked()
+    {
+        RollDieButtonPressed.Invoke();
     }
 
     public void SetStartGameButtonEnabled(bool enabled)
