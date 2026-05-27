@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Smallworld.Models;
+// using Smallworld.Models;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+using UnityModels;
+using SMPlayer = Smallworld.Models.Player;
+using SMRacePower = Smallworld.Models.RacePower;
 
 [RequireComponent(typeof(UIDocument))]
 public class GameUI : MonoBehaviour
@@ -11,8 +14,8 @@ public class GameUI : MonoBehaviour
     public UnityEvent StartGameButtonPressed;
     public UnityEvent RollDieButtonPressed;
 
-    private event Action<RacePower> OnRacePowerClicked;
-    private event Action<Player> OnPlayerClicked;
+    private event Action<SMRacePower> OnRacePowerClicked;
+    private event Action<SMPlayer> OnPlayerClicked;
     private UIDocument _doc;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -53,7 +56,7 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void SetPlayerRacePower(int playerIndex, RacePower rp)
+    public void SetPlayerRacePower(int playerIndex, SMRacePower rp)
     {
         var root = _doc.rootVisualElement;
         var container = root.Q<VisualElement>("PlayerContainer");
@@ -64,7 +67,7 @@ public class GameUI : MonoBehaviour
         UpdatePlayerTokenCount(playerIndex, rp.AvailableTokenCount);
     }
 
-    public void SetRacePowerButtons(List<RacePower> racePowers)
+    public void SetRacePowerButtons(List<SMRacePower> racePowers)
     {
         var root = _doc.rootVisualElement;
         var container = root.Q<VisualElement>("RPListContainer");
@@ -83,37 +86,41 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void SetPlayerButtons(List<Player> players)
+    public void InitPlayerButtons(List<Player> players)
     {
         var root = _doc.rootVisualElement;
         var container = root.Q<VisualElement>("PlayerContainer");
+
 
         for (int i = 0; i < players.Count; ++i)
         {
             var player = players[i];
             var item = container.Q<VisualElement>($"P{i + 1}");
 
+
             if (item == null)
                 continue;
 
             item.style.display = DisplayStyle.Flex;
 
+            player.InitButton(item);
             var button = item.Q<Button>("PlayerButton");
-            var playerName = item.Q<Label>("PlayerName");
-            var activePlayerLabel = item.Q<Label>("ActiveLabel");
-            var rpLabel = item.Q<Label>("RacePowerLabel");
-            var tokenCountArea = item.Q<VisualElement>("TokenCountArea");
 
-            playerName.text = player.Name ?? $"Player {i + 1}";
-            activePlayerLabel.style.visibility = Visibility.Hidden;
-            rpLabel.text = "";
-            tokenCountArea.style.display = DisplayStyle.None;
+            // var playerName = item.Q<Label>("PlayerName");
+            // var activePlayerLabel = item.Q<Label>("ActiveLabel");
+            // var rpLabel = item.Q<Label>("RacePowerLabel");
+            // var tokenCountArea = item.Q<VisualElement>("TokenCountArea");
+
+            // playerName.text = player.Name ?? $"Player {i + 1}";
+            // activePlayerLabel.style.visibility = Visibility.Hidden;
+            // rpLabel.text = "";
+            // tokenCountArea.style.display = DisplayStyle.None;
 
             // Clear previous handlers (important if reused)
-            button.clicked -= () => _OnPlayerClicked(player);
+            button.clicked -= () => _OnPlayerClicked(player.GetModel());
 
             // Register click
-            button.clicked += () => _OnPlayerClicked(player);
+            button.clicked += () => _OnPlayerClicked(player.GetModel());
         }
 
         var extraCount = container.childCount - players.Count;
@@ -125,7 +132,7 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void UpdateRacePowerButton(int index, RacePower rp)
+    public void UpdateRacePowerButton(int index, SMRacePower rp)
     {
         var container = _doc.rootVisualElement.Q<VisualElement>("RPListContainer");
         var item = container.Q<VisualElement>($"RP{index + 1}");
@@ -153,33 +160,33 @@ public class GameUI : MonoBehaviour
     }
 
 
-    public void AddRacePowerButtonListener(Action<RacePower> listener)
+    public void AddRacePowerButtonListener(Action<SMRacePower> listener)
     {
         OnRacePowerClicked += listener;
     }
 
-    public void RemoveRacePowerButtonListener(Action<RacePower> listener)
+    public void RemoveRacePowerButtonListener(Action<SMRacePower> listener)
     {
         OnRacePowerClicked -= listener;
     }
 
-    public void AddPlayerButtonListener(Action<Player> listener)
+    public void AddPlayerButtonListener(Action<SMPlayer> listener)
     {
         OnPlayerClicked += listener;
     }
 
-    public void RemovePlayerButtonListener(Action<Player> listener)
+    public void RemovePlayerButtonListener(Action<SMPlayer> listener)
     {
         OnPlayerClicked -= listener;
     }
 
-    private void _OnRacePowerClicked(RacePower rp)
+    private void _OnRacePowerClicked(SMRacePower rp)
     {
         Debug.Log($"Clicked {rp.Name}");
         OnRacePowerClicked?.Invoke(rp);
     }
 
-    private void _OnPlayerClicked(Player player)
+    private void _OnPlayerClicked(SMPlayer player)
     {
         Debug.Log($"Clicked {player.Name}");
         OnPlayerClicked?.Invoke(player);

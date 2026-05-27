@@ -59,24 +59,38 @@ namespace UnityModels
             Hooks.Subscribe<TurnStartHook>(async (evt) =>
             {
                 Debug.Log($"Turn start for {evt.Player.Name}");
-                GameUI.SetActivePlayerLabel(gameFlow.ActivePlayerIndex);
+                var activePlayer = Players[gameFlow.ActivePlayerIndex];
+                activePlayer.SetIsCurrentPlayer(true);
+                activePlayer.UpdateButtonUI();
 
                 if (gameFlow.ActivePlayer.ActiveRacePower != null)
                 {
-                    GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, gameFlow.ActivePlayer.ActiveRacePower.AvailableTokenCount);
+                    // GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, gameFlow.ActivePlayer.ActiveRacePower.AvailableTokenCount);
                 }
+            });
+
+            Hooks.Subscribe<TurnEndHook>(async (evt) =>
+            {
+                var activePlayer = Players[gameFlow.ActivePlayerIndex];
+                activePlayer.SetIsCurrentPlayer(false);
+                activePlayer.UpdateButtonUI();
             });
 
             Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
             {
                 Debug.Log($"RacePower selected: {evt.Selected.Name}");
-                GameUI.SetPlayerRacePower(PlayerModels.IndexOf(evt.Player), evt.Selected);
+                // GameUI.SetPlayerRacePower(PlayerModels.IndexOf(evt.Player), evt.Selected);
                 var replacedIndex = game.ReplaceRacePower(evt.Selected);
+                Players[gameFlow.ActivePlayerIndex].UpdateButtonUI();
             });
 
             Hooks.Subscribe<AfterConquerRegionHook>(async (evt) =>
             {
-                GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, evt.RacePower.AvailableTokenCount);
+                foreach (var p in Players)
+                {
+                    p.UpdateButtonUI();
+                }
+                // GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, evt.RacePower.AvailableTokenCount);
             });
 
             // This probably belongs in the game logic
@@ -87,7 +101,7 @@ namespace UnityModels
             }
             game.SetAvailableRacePowers(rps);
 
-            GameUI.SetPlayerButtons(PlayerModels);
+            GameUI.InitPlayerButtons(Players);
 
             gameFlow = new(provider, game);
         }

@@ -8,7 +8,7 @@ using UnityEditor;
 
 using SMRegion = Smallworld.Models.Region;
 
-[CreateAssetMenu(fileName = "Region", menuName = "Region")]
+[CreateAssetMenu(fileName = "Region", menuName = "Scriptables")]
 public class RegionScriptableObject : ScriptableObject
 {
     private static bool isSyncing = false;

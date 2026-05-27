@@ -1,13 +1,13 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/GameStyles.uss?fileID=7433441132597879392&amp;guid=65da4ba4461bdd047898d97d618e8b80&amp;type=3#GameStyles"/>
-    <ui:Button text="" name="PlayerButton" class="RPButton" style="flex-grow: 0; flex-shrink: 1; flex-direction: row; justify-content: center; align-items: flex-start; background-color: rgb(175, 88, 209);">
+    <ui:Button text="" name="PlayerButton" class="RPButton" style="flex-grow: 0; flex-shrink: 1; flex-direction: row; justify-content: center; align-items: flex-start; background-color: rgb(175, 88, 209); background-image: url(&quot;project://database/Assets/300Mind/2D%20Game%20UI%20Kit/Sprites/UI-pack_Sprite_1.png?fileID=-5680990995697710469&amp;guid=7f9865cf6ac20f7468e13d5a5daff8ef&amp;type=3#InactivePlayerButtonBg&quot;);">
         <ui:VisualElement style="flex-grow: 1; align-self: auto; align-items: flex-start;">
             <ui:Label text="Player 1" name="PlayerName" style="font-size: 32px; -unity-font-style: bold;">
                 <Bindings>
                     <ui:DataBinding property="text" binding-mode="ToTarget"/>
                 </Bindings>
             </ui:Label>
-            <ui:Label text="Active player" name="ActiveLabel" style="font-size: 24px; color: rgb(255, 255, 255); -unity-font-style: bold; -unity-text-outline-width: 2px; display: flex; visibility: visible;">
+            <ui:Label text="Active player" name="ActiveLabel" style="font-size: 24px; color: rgb(255, 255, 255); -unity-font-style: bold; -unity-text-outline-width: 2px; display: flex; visibility: hidden;">
                 <Bindings>
                     <ui:DataBinding property="style.visibility" binding-mode="ToTarget"/>
                 </Bindings>
