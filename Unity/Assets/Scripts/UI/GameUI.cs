@@ -56,16 +56,6 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void SetPlayerRacePower(int playerIndex, SMRacePower rp)
-    {
-        var root = _doc.rootVisualElement;
-        var container = root.Q<VisualElement>("PlayerContainer");
-        var item = container.Q<VisualElement>($"P{playerIndex + 1}");
-        var rpLabel = item.Q<Label>("RacePowerLabel");
-
-        rpLabel.text = rp.Name;
-        UpdatePlayerTokenCount(playerIndex, rp.AvailableTokenCount);
-    }
 
     public void SetRacePowerButtons(List<SMRacePower> racePowers)
     {

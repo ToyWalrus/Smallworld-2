@@ -78,9 +78,6 @@ namespace UnityModels
 
             Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
             {
-                Debug.Log($"RacePower selected: {evt.Selected.Name}");
-                // GameUI.SetPlayerRacePower(PlayerModels.IndexOf(evt.Player), evt.Selected);
-                var replacedIndex = game.ReplaceRacePower(evt.Selected);
                 Players[gameFlow.ActivePlayerIndex].UpdateButtonUI();
             });
 

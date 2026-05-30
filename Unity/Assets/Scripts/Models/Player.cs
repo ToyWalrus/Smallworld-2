@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Smallworld.Models.Races;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.UIElements;
+
 using SMPlayer = Smallworld.Models.Player;
+using SMRace = Smallworld.Models.Races.Race;
 
 
 namespace UnityModels
@@ -30,6 +34,7 @@ namespace UnityModels
         private string ActiveRacePowerName => model.ActiveRacePower == null ? "" : model.ActiveRacePower.Name;
 
         private SMPlayer model = new("Player");
+        private List<Sprite> tokenSprites;
 
         void OnValidate()
         {
@@ -40,10 +45,11 @@ namespace UnityModels
 
         void Awake()
         {
-            var allSprites = Resources.LoadAll<Sprite>("UI-pack_Sprite_1");
-            Debug.Log(allSprites.Count());
-            inactiveBackgroundSprite = allSprites.FirstOrDefault(s => s.name == "InactivePlayerButtonBg");
-            activeBackgroundSprite = allSprites.FirstOrDefault(s => s.name == "ActivePlayerButtonBg");
+            var uiSprites = Resources.LoadAll<Sprite>("UI-pack_Sprite_1");
+            inactiveBackgroundSprite = uiSprites.FirstOrDefault(s => s.name == "InactivePlayerButtonBg");
+            activeBackgroundSprite = uiSprites.FirstOrDefault(s => s.name == "ActivePlayerButtonBg");
+
+            tokenSprites = Resources.LoadAll<Sprite>("racetokens").ToList();
         }
 
         public void SetIsCurrentPlayer(bool val)
@@ -78,6 +84,7 @@ namespace UnityModels
             });
 
             UpdateTokenCountAreaVisibility();
+            UpdateTokenImage();
             UpdateButtonBg();
 
             propertyChanged += RefreshNonTrivialProperties;
@@ -101,6 +108,9 @@ namespace UnityModels
                 case nameof(TokenCountString):
                     UpdateTokenCountAreaVisibility();
                     break;
+                case nameof(ActiveRacePowerName):
+                    UpdateTokenImage();
+                    break;
             }
         }
 
@@ -108,6 +118,13 @@ namespace UnityModels
         {
             var baseBtn = buttonRoot.Q<Button>("PlayerButton");
             baseBtn.style.backgroundImage = Background.FromSprite(CurrentButtonBackground);
+        }
+
+        private void UpdateTokenImage()
+        {
+            var img = buttonRoot.Q<Image>("RaceTokenImage");
+            img.sprite = GetSpriteForRace(model.ActiveRacePower?.Race);
+            img.style.visibility = img.sprite == null ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void UpdateTokenCountAreaVisibility()
@@ -119,6 +136,66 @@ namespace UnityModels
         private void Notify(string propertyName)
         {
             propertyChanged?.Invoke(this, new BindablePropertyChangedEventArgs(propertyName));
+        }
+
+        private Sprite GetSpriteForRace(SMRace race)
+        {
+            if (tokenSprites == null || race == null)
+            {
+                return null;
+            }
+
+            var spriteName = "Token_";
+            switch (race)
+            {
+                case Amazon:
+                    spriteName += "Amazon";
+                    break;
+                case Dwarf:
+                    spriteName += "Dwarf";
+                    break;
+                case Elf:
+                    spriteName += "Elf";
+                    break;
+                case Ghoul:
+                    spriteName += "Ghoul";
+                    break;
+                case Giant:
+                    spriteName += "Giant";
+                    break;
+                case Halfling:
+                    spriteName += "Halfling";
+                    break;
+                case Human:
+                    spriteName += "Human";
+                    break;
+                case Orc:
+                    spriteName += "Orc";
+                    break;
+                case Ratmen:
+                    spriteName += "Ratmen";
+                    break;
+                case Skeleton:
+                    spriteName += "Skeleton";
+                    break;
+                case Sorcerer:
+                    spriteName += "Sorcerer";
+                    break;
+                case Triton:
+                    spriteName += "Triton";
+                    break;
+                case Troll:
+                    spriteName += "Troll";
+                    break;
+                case Wizard:
+                    spriteName += "Wizard";
+                    break;
+                default:
+                    return null;
+            }
+
+
+            return tokenSprites.FirstOrDefault(s => s.name == spriteName);
         }
     }
 }

@@ -7,8 +7,8 @@
     -unity-font-definition: url("project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=48af136bb93de9b43a94e61c53b086ed&type=3#NotInter-Regular");
     font-size: 32px;
     -unity-font-style: bold;
-    color: rgb(24, 24, 24);
-    -unity-text-outline-color: rgba(255, 255, 255, 0.28);
+    color: rgb(7, 7, 7);
+    -unity-text-outline-color: rgba(219, 219, 219, 0.36);
     -unity-text-outline-width: 2px;
     white-space: pre-wrap;
 }
