@@ -46,6 +46,7 @@ namespace UnityModels
         void Awake()
         {
             // Game.cs is set to execute before any other asset script
+            Smallworld.Utils.Logger.SetType<UnityLogger>();
             HooksService.Initialize(new Hooks());
         }
 
