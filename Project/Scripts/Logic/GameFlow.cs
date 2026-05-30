@@ -74,6 +74,7 @@ public class GameFlow
                 await ScorePhase();
 
                 await Hooks.Run(new TurnEndHook { Player = ActivePlayer });
+
                 ActivePlayerIndex++;
             }
 
@@ -93,13 +94,13 @@ public class GameFlow
         if (ActivePlayer.HasActiveRace) return ActivePlayer.ActiveRacePower;
 
         await Hooks.Run(new BeforeRacePowerSelectionHook { Player = ActivePlayer });
-        var (rp, passedCount, existingVP) = await SelectNewRacePowerFromAvailable();
-        await Hooks.Run(new AfterRacePowerSelectionHook { Player = ActivePlayer, Selected = rp });
 
+        var (rp, passedCount, existingVP) = await SelectNewRacePowerFromAvailable();
         ActivePlayer.AddScore(existingVP - passedCount);
         ActivePlayer.AddRacePower(rp);
-
         Game.ReplaceRacePower(rp);
+
+        await Hooks.Run(new AfterRacePowerSelectionHook { Player = ActivePlayer, Selected = rp });
 
         return rp;
 

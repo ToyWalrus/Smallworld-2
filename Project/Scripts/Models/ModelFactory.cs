@@ -21,12 +21,12 @@ public class PowerFactory : IModelFactory<Power>
         _serviceProvider = serviceProvider;
     }
 
-    public T Create<T>() where T : Power
+    public virtual T Create<T>() where T : Power
     {
         return (T)Create(typeof(T));
     }
 
-    public Power Create(Type type)
+    public virtual Power Create(Type type)
     {
         var newPower = (Power)Activator.CreateInstance(type);
         newPower.Confirmation = _serviceProvider.GetRequiredService<IConfirmation>();
@@ -45,12 +45,12 @@ public class RaceFactory : IModelFactory<Race>
         _serviceProvider = serviceProvider;
     }
 
-    public T Create<T>() where T : Race
+    public virtual T Create<T>() where T : Race
     {
         return (T)Create(typeof(T));
     }
 
-    public Race Create(Type type)
+    public virtual Race Create(Type type)
     {
         var newRace = (Race)Activator.CreateInstance(type);
         // newRace.RegionSelection = _serviceProvider.GetRequiredService<ISelection<Region>>();

@@ -86,7 +86,8 @@ public partial class Game : IGame
 
     private Power GetRandomPower(bool unused)
     {
-        var powerFactory = new PowerFactory(serviceProvider);
+        var factory = serviceProvider.GetService<IModelFactory<Power>>();
+        var powerFactory = factory ?? new PowerFactory(serviceProvider);
         var powers = unused ? allPowers.Where(p => !usedPowers.Contains(p)) : allPowers;
 
         if (!powers.Any())
@@ -106,7 +107,8 @@ public partial class Game : IGame
 
     private Race GetRandomRace(bool unused)
     {
-        var raceFactory = new RaceFactory(serviceProvider);
+        var factory = serviceProvider.GetService<IModelFactory<Race>>();
+        var raceFactory = factory ?? new RaceFactory(serviceProvider);
         var races = unused ? allRaces.Where(r => !usedRaces.Contains(r)) : allRaces;
 
         if (!races.Any())
