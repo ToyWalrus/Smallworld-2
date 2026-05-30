@@ -55,7 +55,6 @@ namespace UnityModels
             var provider = ConfigureServiceProvider();
             game = new(provider, NumRounds);
             SetGameValues();
-            SetUpGameStatusHooks();
 
             Hooks.Subscribe<TurnStartHook>(async (evt) =>
             {
@@ -133,17 +132,14 @@ namespace UnityModels
             game.SetAvailableRacePowers(AvailableRacePowers.Select(rp => rp.GetModel()).ToList());
         }
 
-        private void SetUpGameStatusHooks()
+        public void EndTurnClicked()
         {
-            Hooks.Subscribe<BeforeRacePowerSelectionHook>(async (evt) =>
-            {
-                GameUI.SetGameStatusText("RacePower selection phase");
-            });
+            gameFlow.DoneConqueringButtonPressed();
+        }
 
-            Hooks.Subscribe<ConquerPhaseStartHook>(async (evt) =>
-            {
-                GameUI.SetGameStatusText("Conquer phase");
-            });
+        public void EnterDeclineClicked()
+        {
+            gameFlow.EnterDeclineButtonPressed();
         }
     }
 }

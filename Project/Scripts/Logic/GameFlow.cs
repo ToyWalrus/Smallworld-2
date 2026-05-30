@@ -63,22 +63,22 @@ public class GameFlow
 
         while (CurrentRound < Game.NumRounds)
         {
-            await Hooks.Run(new RoundStartHook { RoundNumber = CurrentRound });
+            await RunHook(new RoundStartHook { RoundNumber = CurrentRound });
 
             while (ActivePlayerIndex < Game.Players.Count)
             {
-                await Hooks.Run(new TurnStartHook { Player = ActivePlayer });
+                await RunHook(new TurnStartHook { Player = ActivePlayer });
 
                 var rp = await RacePowerSelectionPhase();
                 await ConquerPhase(rp);
                 await ScorePhase();
 
-                await Hooks.Run(new TurnEndHook { Player = ActivePlayer });
+                await RunHook(new TurnEndHook { Player = ActivePlayer });
 
                 ActivePlayerIndex++;
             }
 
-            await Hooks.Run(new RoundEndHook { RoundNumber = CurrentRound });
+            await RunHook(new RoundEndHook { RoundNumber = CurrentRound });
 
             CurrentRound++;
             ActivePlayerIndex = 0;
@@ -93,14 +93,14 @@ public class GameFlow
     {
         if (ActivePlayer.HasActiveRace) return ActivePlayer.ActiveRacePower;
 
-        await Hooks.Run(new BeforeRacePowerSelectionHook { Player = ActivePlayer });
+        await RunHook(new BeforeRacePowerSelectionHook { Player = ActivePlayer });
 
         var (rp, passedCount, existingVP) = await SelectNewRacePowerFromAvailable();
         ActivePlayer.AddScore(existingVP - passedCount);
         ActivePlayer.AddRacePower(rp);
         Game.ReplaceRacePower(rp);
 
-        await Hooks.Run(new AfterRacePowerSelectionHook { Player = ActivePlayer, Selected = rp });
+        await RunHook(new AfterRacePowerSelectionHook { Player = ActivePlayer, Selected = rp });
 
         return rp;
 
@@ -111,7 +111,7 @@ public class GameFlow
         enterDecline = new();
         doneConquering = new();
 
-        await Hooks.Run(new ConquerPhaseStartHook { Player = ActivePlayer });
+        await RunHook(new BeforeConquerPhaseHook { Player = ActivePlayer });
 
         bool didEnterDecline = false;
 
@@ -151,10 +151,12 @@ public class GameFlow
             var region = await regionSelection;
             var conquerCost = await rp.GetFinalRegionConquerCost(region);
 
-            await Hooks.Run(new BeforeConquerRegionHook { ConquerCount = conquerCost, RacePower = rp, Region = region });
+            await RunHook(new BeforeConquerRegionHook { ConquerCount = conquerCost, RacePower = rp, Region = region });
             rp.ConquerRegion(region, conquerCost);
-            await Hooks.Run(new AfterConquerRegionHook { FinalConquerCount = conquerCost, RacePower = rp, Region = region });
+            await RunHook(new AfterConquerRegionHook { FinalConquerCount = conquerCost, RacePower = rp, Region = region });
         }
+
+        await RunHook(new AfterConquerPhaseHook { Player = ActivePlayer });
 
         if (didEnterDecline)
         {
@@ -170,29 +172,37 @@ public class GameFlow
 
         if (rp.IsInDecline)
         {
-            await Hooks.Run(new RacePowerEnterDeclineHook { RacePower = rp });
+            await RunHook(new RacePowerEnterDeclineHook { RacePower = rp });
         }
     }
 
     private async Task RedeployPhase(RacePower rp)
     {
+        await RunHook(new BeforeRedeployPhaseHook { Player = ActivePlayer, RedployableCount = rp.AvailableTokenCount });
+
         while (rp.AvailableTokenCount > 0)
         {
+            await RunHook(new BeforeRedeployTroopsHook { RacePower = rp });
+
             var region = await SelectOwnedRegionForRedeployment(rp);
             region.Reinforce(1);
             rp.SpendToken(1);
+
+            await RunHook(new AfterRedeployTroopsHook { FinalDeployCount = 1, RacePower = rp, Region = region });
         }
+
+        await RunHook(new AfterRedeployPhaseHook { Player = ActivePlayer });
     }
 
     private async Task ScorePhase()
     {
 
-        await Hooks.Run(new BeforeScorePhaseHook { Player = ActivePlayer });
+        await RunHook(new BeforeScorePhaseHook { Player = ActivePlayer });
 
         var vp = ActivePlayer.TallyVP();
         ActivePlayer.AddScore(vp);
 
-        await Hooks.Run(new AfterScorePhaseHook { Player = ActivePlayer, VPScored = vp });
+        await RunHook(new AfterScorePhaseHook { Player = ActivePlayer, VPScored = vp });
     }
     #endregion
 
@@ -229,6 +239,11 @@ public class GameFlow
         var regionSelector = serviceProvider.GetRequiredService<ISelection<Region>>();
         var conquerable = Game.Regions.Where(region => region.IsValidConquerTarget(rp).Item1).ToList();
         return await regionSelector.SelectAsync(conquerable, (region) => region.IsValidConquerTarget(rp).Item2, token);
+    }
+
+    private async Task RunHook<T>(T hook) where T : IHook
+    {
+        await Hooks.Run(hook);
     }
 
 

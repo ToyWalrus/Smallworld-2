@@ -400,48 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86dc0d13ced5fd5458167d9a341519e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameUI
-  StartGameButtonPressed:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 676663244}
-        m_TargetAssemblyTypeName: UnityModels.Game, Assembly-CSharp
-        m_MethodName: StartGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 411029677}
-        m_TargetAssemblyTypeName: GameUI, Assembly-CSharp
-        m_MethodName: SetStartGameButtonEnabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  RollDieButtonPressed:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 741191202}
-        m_TargetAssemblyTypeName: DiceRoller, Assembly-CSharp
-        m_MethodName: RollDie
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  game: {fileID: 676663244}
 --- !u!114 &411029678
 MonoBehaviour:
   m_ObjectHideFlags: 0

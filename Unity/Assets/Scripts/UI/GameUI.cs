@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-// using Smallworld.Models;
+using System.Threading.Tasks;
+using Smallworld.Hooks;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UIElements;
 using UnityModels;
 using SMPlayer = Smallworld.Models.Player;
@@ -11,51 +11,23 @@ using SMRacePower = Smallworld.Models.RacePower;
 [RequireComponent(typeof(UIDocument))]
 public class GameUI : MonoBehaviour
 {
-    public UnityEvent StartGameButtonPressed;
-    public UnityEvent RollDieButtonPressed;
+    public Game game;
 
     private event Action<SMRacePower> OnRacePowerClicked;
     private event Action<SMPlayer> OnPlayerClicked;
     private UIDocument _doc;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         _doc = GetComponent<UIDocument>();
-
-        var startBtn = _doc.rootVisualElement.Q<Button>("StartGameButton");
-        startBtn.clicked += OnStartGameClicked;
-
-        var rollBtn = _doc.rootVisualElement.Q<Button>("RollDieButton");
-        rollBtn.clicked += OnRollDieButtonClicked;
+        InitGameFlowButtons();
+        InitUIHooks();
     }
 
     public void SetRacePowerButtonsInteractable(bool interactable)
     {
         _doc.rootVisualElement.Q<VisualElement>("RPListContainer").SetEnabled(interactable);
     }
-
-    public void SetActivePlayerLabel(int playerIndex)
-    {
-        var root = _doc.rootVisualElement;
-        var container = root.Q<VisualElement>("PlayerContainer");
-
-        for (int i = 0; i < container.childCount; ++i)
-        {
-            var item = container.Q<VisualElement>($"P{i + 1}");
-            var activeLabel = item.Q<Label>("ActiveLabel");
-
-            if (i == playerIndex)
-            {
-                activeLabel.style.visibility = Visibility.Visible;
-            }
-            else
-            {
-                activeLabel.style.visibility = Visibility.Hidden;
-            }
-        }
-    }
-
 
     public void SetRacePowerButtons(List<SMRacePower> racePowers)
     {
@@ -76,6 +48,7 @@ public class GameUI : MonoBehaviour
         }
     }
 
+    // TODO: move to Player script
     public void InitPlayerButtons(List<Player> players)
     {
         var root = _doc.rootVisualElement;
@@ -182,15 +155,96 @@ public class GameUI : MonoBehaviour
         OnPlayerClicked?.Invoke(player);
     }
 
-    private void OnStartGameClicked()
+    private void InitUIHooks()
     {
-        StartGameButtonPressed.Invoke();
+        var hooks = game.Hooks;
+        var endTurnBtn = _doc.rootVisualElement.Q<Button>("EndTurnButton");
+        var enterDeclineBtn = _doc.rootVisualElement.Q<Button>("EnterDeclineButton");
+        var gameStatusText = _doc.rootVisualElement.Q<Label>("GameStatus");
+        var gameHintText = _doc.rootVisualElement.Q<Label>("GameHint");
+
+        hooks.Subscribe<BeforeRacePowerSelectionHook>(async (evt) =>
+        {
+            SetGameStatusText("RacePower selection phase");
+        });
+
+        hooks.Subscribe<BeforeConquerPhaseHook>(async (evt) =>
+        {
+            SetGameStatusText("Conquer phase");
+
+            endTurnBtn.SetEnabled(true);
+            enterDeclineBtn.SetEnabled(true);
+        });
+
+        hooks.Subscribe<AfterConquerRegionHook>(async (evt) =>
+        {
+            enterDeclineBtn.SetEnabled(evt.RacePower.CanEnterDecline());
+        });
+
+        hooks.Subscribe<AfterConquerPhaseHook>(async (evt) =>
+        {
+            endTurnBtn.SetEnabled(false);
+            enterDeclineBtn.SetEnabled(false);
+        });
+
+        hooks.Subscribe<BeforeRedeployPhaseHook>(async (evt) =>
+        {
+            SetGameStatusText("Redeploy troops");
+        });
+
+        hooks.Subscribe<BeforeRedeployTroopsHook>(async (evt) =>
+        {
+            SetGameHintText($"You have {evt.RacePower.AvailableTokenCount} left to deploy");
+        });
+
+        hooks.Subscribe<AfterScorePhaseHook>(async (evt) =>
+        {
+            SetGameStatusText("Score tallied");
+            SetGameHintText($"{evt.Player.Name} scored ${evt.VPScored} VP");
+
+            await Task.Delay(1500);
+        });
     }
 
-    private void OnRollDieButtonClicked()
+    private void InitGameFlowButtons()
     {
-        RollDieButtonPressed.Invoke();
+        var startBtn = _doc.rootVisualElement.Q<Button>("StartGameButton");
+        startBtn.clicked += OnStartGameClicked;
+        startBtn.style.display = DisplayStyle.Flex;
+
+        var endTurnBtn = _doc.rootVisualElement.Q<Button>("EndTurnButton");
+        endTurnBtn.clicked += OnEndTurnClicked;
+        endTurnBtn.style.display = DisplayStyle.None;
+
+        var enterDeclineBtn = _doc.rootVisualElement.Q<Button>("EnterDeclineButton");
+        enterDeclineBtn.clicked += OnEnterDeclineClicked;
+        enterDeclineBtn.style.display = DisplayStyle.None;
     }
+
+    private void OnStartGameClicked()
+    {
+        _doc.rootVisualElement.Q<Button>("StartGameButton").style.display = DisplayStyle.None;
+
+        var endTurnBtn = _doc.rootVisualElement.Q<Button>("EndTurnButton");
+        var enterDeclineBtn = _doc.rootVisualElement.Q<Button>("EnterDeclineButton");
+
+        endTurnBtn.style.display = DisplayStyle.Flex;
+        enterDeclineBtn.style.display = DisplayStyle.Flex;
+
+
+        game.StartGame();
+    }
+
+    private void OnEndTurnClicked()
+    {
+        game.EndTurnClicked();
+    }
+
+    private void OnEnterDeclineClicked()
+    {
+        game.EnterDeclineClicked();
+    }
+
 
     public void SetStartGameButtonEnabled(bool enabled)
     {
