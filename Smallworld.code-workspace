@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "Unity"
+		},
+		{
+			"path": "Project"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.asset": "yaml",
+			"*.meta": "yaml",
+			"*.prefab": "yaml",
+			"*.unity": "yaml"
+		},
+		"dotnet.defaultSolution": "Unity/Smallworld-Dev.slnx",
+	},
+}
