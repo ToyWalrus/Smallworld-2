@@ -22,7 +22,6 @@ namespace UnityModels
 
         [SerializeField] private List<Player> Players;
         [SerializeField] private List<Region> Regions;
-        [SerializeField] private List<RacePower> AvailableRacePowers;
         [SerializeField] private int NumRounds = 10;
         [SerializeField] private GameUI GameUI;
 
@@ -79,6 +78,12 @@ namespace UnityModels
             Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
             {
                 Players[gameFlow.ActivePlayerIndex].UpdateButtonUI();
+
+                // TODO: This is bad, get actual count
+                for (int i = 0; i < 6; ++i)
+                {
+                    GameUI.SetVPOnRacePowerButton(i, gameFlow.GetVPOnRacePowerIndex(i));
+                }
             });
 
             Hooks.Subscribe<AfterConquerRegionHook>(async (evt) =>
@@ -98,6 +103,7 @@ namespace UnityModels
             }
             game.SetAvailableRacePowers(rps);
 
+            GameUI.InitRacePowerButtons(rps);
             GameUI.InitPlayerButtons(Players);
 
             gameFlow = new(provider, game);
@@ -129,7 +135,6 @@ namespace UnityModels
             game.NumRounds = NumRounds;
             game.SetPlayers(PlayerModels);
             game.SetRegions(Regions.Select(r => r.GetModel()).ToList());
-            game.SetAvailableRacePowers(AvailableRacePowers.Select(rp => rp.GetModel()).ToList());
         }
 
         public void EndTurnClicked()

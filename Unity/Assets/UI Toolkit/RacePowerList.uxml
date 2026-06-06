@@ -1,7 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="RacePowerButton" src="project://database/Assets/UI%20Toolkit/RacePowerButton.uxml?fileID=9197481963319205126&amp;guid=c71de960c88f6e844bf7c5a4aa022387&amp;type=3#RacePowerButton"/>
     <Style src="project://database/Assets/UI%20Toolkit/GameStyles.uss?fileID=7433441132597879392&amp;guid=65da4ba4461bdd047898d97d618e8b80&amp;type=3#GameStyles"/>
-    <ui:VisualElement name="RPListContainer" enabled="true" style="flex-grow: 1; margin-top: 24px; margin-right: 24px; margin-bottom: 24px; margin-left: 24px; align-items: flex-start;">
+    <ui:VisualElement name="RPListContainer" enabled="true" class="RPList">
         <ui:Instance template="RacePowerButton" name="RP1"/>
         <ui:Instance template="RacePowerButton" name="RP2"/>
         <ui:Instance template="RacePowerButton" name="RP3"/>

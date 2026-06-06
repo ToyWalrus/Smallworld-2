@@ -1,11 +1,8 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="PlayerButton" src="project://database/Assets/UI%20Toolkit/PlayerButton.uxml?fileID=9197481963319205126&amp;guid=a9f5c21ad9c6d11499f26008dc6e8003&amp;type=3#PlayerButton"/>
-    <ui:Template name="RacePowerList" src="project://database/Assets/UI%20Toolkit/RacePowerList.uxml?fileID=9197481963319205126&amp;guid=6d06aaecfcab9dd4397f8ba3f6f083aa&amp;type=3#RacePowerList"/>
     <Style src="project://database/Assets/UI%20Toolkit/GameStyles.uss?fileID=7433441132597879392&amp;guid=65da4ba4461bdd047898d97d618e8b80&amp;type=3#GameStyles"/>
     <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between; padding-top: 16px; padding-right: 16px; padding-bottom: 16px; padding-left: 16px;">
-        <ui:VisualElement name="RPContainer">
-            <ui:Instance template="RacePowerList"/>
-        </ui:VisualElement>
+        <ui:VisualElement name="RPContainer" class="RPList"/>
         <ui:VisualElement name="PlayerContainer" style="flex-grow: 0; align-items: flex-end;">
             <ui:Instance template="PlayerButton" name="P1"/>
             <ui:Instance template="PlayerButton" name="P2"/>

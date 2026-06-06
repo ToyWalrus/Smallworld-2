@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Smallworld.Hooks;
 using UnityEngine;
@@ -17,6 +18,9 @@ public class GameUI : MonoBehaviour
     private event Action<SMPlayer> OnPlayerClicked;
     private UIDocument _doc;
 
+    public VisualTreeAsset racePowerButton;
+    private List<RacePowerButtonController> racePowerButtons = new();
+
     void Awake()
     {
         _doc = GetComponent<UIDocument>();
@@ -26,26 +30,46 @@ public class GameUI : MonoBehaviour
 
     public void SetRacePowerButtonsInteractable(bool interactable)
     {
-        _doc.rootVisualElement.Q<VisualElement>("RPListContainer").SetEnabled(interactable);
+        _doc.rootVisualElement.Q<VisualElement>("RPContainer").SetEnabled(interactable);
     }
 
+    public void InitRacePowerButtons(List<SMRacePower> racePowers)
+    {
+        var area = _doc.rootVisualElement.Q<VisualElement>("RPContainer");
+        var tokenSprites = Resources.LoadAll<Sprite>("racetokens").ToList();
+        foreach (var rp in racePowers)
+        {
+            var el = racePowerButton.Instantiate();
+            var controller = new RacePowerButtonController(el, tokenSprites);
+            controller.InitButton(rp);
+
+            area.Add(el);
+            racePowerButtons.Add(controller);
+            controller.OnClicked += (rp) => OnRacePowerClicked?.Invoke(rp);
+        }
+    }
+
+    // TODO: This architecture sucks.
     public void SetRacePowerButtons(List<SMRacePower> racePowers)
     {
-        var root = _doc.rootVisualElement;
-        var container = root.Q<VisualElement>("RPListContainer");
-
-        for (int i = 0; i < racePowers.Count; ++i)
+        var area = _doc.rootVisualElement.Q<VisualElement>("RPContainer");
+        foreach (var btn in racePowerButtons)
         {
-            UpdateRacePowerButton(i, racePowers[i]);
+            btn.RemoveSelf(area);
         }
 
-        var extraCount = container.childCount - racePowers.Count;
-        while (extraCount > 0)
+        racePowerButtons.Clear();
+        InitRacePowerButtons(racePowers);
+    }
+
+    public void SetVPOnRacePowerButton(int buttonIndex, int count)
+    {
+        if (buttonIndex >= racePowerButtons.Count)
         {
-            var item = container.Q<VisualElement>($"RP{6 - extraCount + 1}");
-            item.style.display = DisplayStyle.None;
-            extraCount--;
+            Debug.LogError($"Index {buttonIndex} is out of range");
+            return;
         }
+        racePowerButtons[buttonIndex].UpdateVPCountLabel(count);
     }
 
     // TODO: move to Player script

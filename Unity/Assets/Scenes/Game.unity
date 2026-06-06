@@ -401,6 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameUI
   game: {fileID: 676663244}
+  racePowerButton: {fileID: 9197481963319205126, guid: c71de960c88f6e844bf7c5a4aa022387, type: 3}
 --- !u!114 &411029678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,7 +572,7 @@ Transform:
   m_GameObject: {fileID: 524245380}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.83975697, z: -0.54296255, w: 0}
-  m_LocalPosition: {x: -1.813, y: 2.16, z: -10.49}
+  m_LocalPosition: {x: -1.703, y: 2.08, z: -10.312}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1281,7 +1282,6 @@ MonoBehaviour:
   - {fileID: 643376933}
   - {fileID: 643376932}
   - {fileID: 643376931}
-  AvailableRacePowers: []
   NumRounds: 10
   GameUI: {fileID: 411029677}
   diceRoller: {fileID: 741191202}
