@@ -138,6 +138,12 @@ public class GameFlow
             if (winner == enterDecline.Task && rp.CanEnterDecline())
             {
                 cts.Cancel();
+                // Need to finish waiting for the region selection task to complete
+                try
+                {
+                    await regionSelection;
+                }
+                catch (OperationCanceledException) { }
                 didEnterDecline = true;
                 break;
             }
@@ -145,6 +151,12 @@ public class GameFlow
             if (winner == doneConquering.Task)
             {
                 cts.Cancel();
+                // Need to finish waiting for the region selection task to complete
+                try
+                {
+                    await regionSelection;
+                }
+                catch (OperationCanceledException) { }
                 break;
             }
 
