@@ -100,7 +100,12 @@ public class GameFlow
         ActivePlayer.AddRacePower(rp);
         Game.ReplaceRacePower(rp);
 
-        await RunHook(new AfterRacePowerSelectionHook { Player = ActivePlayer, Selected = rp });
+        await RunHook(new AfterRacePowerSelectionHook
+        {
+            Player = ActivePlayer,
+            Selected = rp,
+            SelectedIndex = passedCount
+        });
 
         return rp;
 

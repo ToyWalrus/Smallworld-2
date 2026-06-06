@@ -79,6 +79,9 @@ namespace UnityModels
             {
                 Players[gameFlow.ActivePlayerIndex].UpdateButtonUI();
 
+                // Replace the selected race power button with a new one
+                GameUI.ReplaceRacePowerButton(evt.SelectedIndex, game.AvailableRacePowers[evt.SelectedIndex]);
+
                 // TODO: This is bad, get actual count
                 for (int i = 0; i < 6; ++i)
                 {

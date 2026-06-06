@@ -39,7 +39,6 @@ public class RacePowerSelector : MonoBehaviour, ISelection<SMRacePower>
 
         try
         {
-            GameUI.SetRacePowerButtons(items);
             GameUI.AddRacePowerButtonListener(listener);
             GameUI.SetRacePowerButtonsInteractable(true);
 

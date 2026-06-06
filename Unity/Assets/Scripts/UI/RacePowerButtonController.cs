@@ -23,7 +23,7 @@ public class RacePowerButtonController
         this.tokenSprites = tokenSprites;
     }
 
-    public void InitButton(SMRacePower rp)
+    public void SetButtonRacePower(SMRacePower rp)
     {
         model = rp;
 
@@ -33,7 +33,14 @@ public class RacePowerButtonController
         UpdateVPCountLabel(0);
 
         var button = root.Q<Button>("RPButton");
-        button.clicked += () => OnClicked?.Invoke(model);
+        // Clear old handlers before adding new one to prevent accumulation
+        button.clicked -= _onButtonClicked;
+        button.clicked += _onButtonClicked;
+    }
+
+    private void _onButtonClicked()
+    {
+        OnClicked?.Invoke(model);
     }
 
     public void RemoveSelf(VisualElement parent)

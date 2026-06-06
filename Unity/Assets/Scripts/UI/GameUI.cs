@@ -41,7 +41,7 @@ public class GameUI : MonoBehaviour
         {
             var el = racePowerButton.Instantiate();
             var controller = new RacePowerButtonController(el, tokenSprites);
-            controller.InitButton(rp);
+            controller.SetButtonRacePower(rp);
 
             area.Add(el);
             racePowerButtons.Add(controller);
@@ -49,17 +49,16 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    // TODO: This architecture sucks.
-    public void SetRacePowerButtons(List<SMRacePower> racePowers)
+    public void ReplaceRacePowerButton(int buttonIndex, SMRacePower newRacePower)
     {
-        var area = _doc.rootVisualElement.Q<VisualElement>("RPContainer");
-        foreach (var btn in racePowerButtons)
+        if (buttonIndex >= racePowerButtons.Count)
         {
-            btn.RemoveSelf(area);
+            Debug.LogError($"Index {buttonIndex} is out of range");
+            return;
         }
 
-        racePowerButtons.Clear();
-        InitRacePowerButtons(racePowers);
+        var controller = racePowerButtons[buttonIndex];
+        controller.SetButtonRacePower(newRacePower);
     }
 
     public void SetVPOnRacePowerButton(int buttonIndex, int count)
@@ -221,10 +220,16 @@ public class GameUI : MonoBehaviour
             SetGameHintText($"You have {evt.RacePower.AvailableTokenCount} left to deploy");
         });
 
+        hooks.Subscribe<AfterRedeployPhaseHook>(async (evt) =>
+        {
+            SetGameHintText($"{evt.Player.Name}'s turn is over");
+            await Task.Delay(1500);
+        });
+
         hooks.Subscribe<AfterScorePhaseHook>(async (evt) =>
         {
             SetGameStatusText("Score tallied");
-            SetGameHintText($"{evt.Player.Name} scored ${evt.VPScored} VP");
+            SetGameHintText($"{evt.Player.Name} scored {evt.VPScored} VP");
 
             await Task.Delay(1500);
         });
