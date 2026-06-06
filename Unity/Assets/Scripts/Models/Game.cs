@@ -77,13 +77,13 @@ namespace UnityModels
 
             Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
             {
+                // Update player button
                 Players[gameFlow.ActivePlayerIndex].UpdateButtonUI();
 
-                // Replace the selected race power button with a new one
+                // Update racepower button
                 GameUI.ReplaceRacePowerButton(evt.SelectedIndex, game.AvailableRacePowers[evt.SelectedIndex]);
 
-                // TODO: This is bad, get actual count
-                for (int i = 0; i < 6; ++i)
+                for (int i = 0; i < game.AvailableRacePowers.Count; ++i)
                 {
                     GameUI.SetVPOnRacePowerButton(i, gameFlow.GetVPOnRacePowerIndex(i));
                 }
