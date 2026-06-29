@@ -59,28 +59,6 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void ReplaceRacePowerButton(int buttonIndex, SMRacePower newRacePower)
-    {
-        if (buttonIndex >= racePowerButtons.Count)
-        {
-            Debug.LogError($"Index {buttonIndex} is out of range");
-            return;
-        }
-
-        var controller = racePowerButtons[buttonIndex];
-        controller.SetButtonRacePower(newRacePower);
-    }
-
-    public void SetVPOnRacePowerButton(int buttonIndex, int count)
-    {
-        if (buttonIndex >= racePowerButtons.Count)
-        {
-            Debug.LogError($"Index {buttonIndex} is out of range");
-            return;
-        }
-        racePowerButtons[buttonIndex].UpdateVPCountLabel(count);
-    }
-
     public void InitPlayerButtons(List<Player> players)
     {
         var container = _doc.rootVisualElement.Q<VisualElement>("PlayerContainer");
@@ -104,6 +82,28 @@ public class GameUI : MonoBehaviour
         }
     }
 
+    public void ReplaceRacePowerButton(int buttonIndex, SMRacePower newRacePower)
+    {
+        if (buttonIndex >= racePowerButtons.Count)
+        {
+            Debug.LogError($"Index {buttonIndex} is out of range");
+            return;
+        }
+
+        var controller = racePowerButtons[buttonIndex];
+        controller.SetButtonRacePower(newRacePower);
+    }
+
+    public void SetVPOnRacePowerButton(int buttonIndex, int count)
+    {
+        if (buttonIndex >= racePowerButtons.Count)
+        {
+            Debug.LogError($"Index {buttonIndex} is out of range");
+            return;
+        }
+        racePowerButtons[buttonIndex].UpdateVPCountLabel(count);
+    }
+
     public void UpdatePlayerButton(int index)
     {
         if (index >= playerButtons.Count)
@@ -113,34 +113,6 @@ public class GameUI : MonoBehaviour
         }
         playerButtons[index].UpdateButtonUI();
     }
-
-    public void UpdateRacePowerButton(int index, SMRacePower rp)
-    {
-        var container = _doc.rootVisualElement.Q<VisualElement>("RPListContainer");
-        var item = container.Q<VisualElement>($"RP{index + 1}");
-
-        if (item == null)
-        {
-            return;
-        }
-
-        item.style.display = DisplayStyle.Flex;
-
-        var button = item.Q<Button>("RPButton");
-        var raceLabel = item.Q<Label>("RaceLabel");
-        var powerLabel = item.Q<Label>("PowerLabel");
-
-        // Set text
-        raceLabel.text = rp.Race.Name;
-        powerLabel.text = rp.Power.Name;
-
-        // Clear previous handlers (important if reused)
-        button.clicked -= () => _OnRacePowerClicked(rp);
-
-        // Register click
-        button.clicked += () => _OnRacePowerClicked(rp);
-    }
-
 
     public void AddRacePowerButtonListener(Action<SMRacePower> listener)
     {
@@ -160,18 +132,6 @@ public class GameUI : MonoBehaviour
     public void RemovePlayerButtonListener(Action<SMPlayer> listener)
     {
         OnPlayerClicked -= listener;
-    }
-
-    private void _OnRacePowerClicked(SMRacePower rp)
-    {
-        Debug.Log($"Clicked {rp.Name}");
-        OnRacePowerClicked?.Invoke(rp);
-    }
-
-    private void _OnPlayerClicked(SMPlayer player)
-    {
-        Debug.Log($"Clicked {player.Name}");
-        OnPlayerClicked?.Invoke(player);
     }
 
     private void InitUIHooks()
