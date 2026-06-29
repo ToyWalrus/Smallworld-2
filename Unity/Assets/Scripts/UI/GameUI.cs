@@ -30,7 +30,16 @@ public class GameUI : MonoBehaviour
 
     public void SetRacePowerButtonsInteractable(bool interactable)
     {
-        _doc.rootVisualElement.Q<VisualElement>("RPContainer").SetEnabled(interactable);
+        var container = _doc.rootVisualElement.Q<VisualElement>("RPContainer");
+        container.SetEnabled(interactable);
+        if (interactable)
+        {
+            container.RemoveFromClassList("RPHidden");
+        }
+        else
+        {
+            container.AddToClassList("RPHidden");
+        }
     }
 
     public void InitRacePowerButtons(List<SMRacePower> racePowers)
@@ -91,16 +100,6 @@ public class GameUI : MonoBehaviour
 
             player.InitButton(item);
             var button = item.Q<Button>("PlayerButton");
-
-            // var playerName = item.Q<Label>("PlayerName");
-            // var activePlayerLabel = item.Q<Label>("ActiveLabel");
-            // var rpLabel = item.Q<Label>("RacePowerLabel");
-            // var tokenCountArea = item.Q<VisualElement>("TokenCountArea");
-
-            // playerName.text = player.Name ?? $"Player {i + 1}";
-            // activePlayerLabel.style.visibility = Visibility.Hidden;
-            // rpLabel.text = "";
-            // tokenCountArea.style.display = DisplayStyle.None;
 
             // Clear previous handlers (important if reused)
             button.clicked -= () => _OnPlayerClicked(player.GetModel());

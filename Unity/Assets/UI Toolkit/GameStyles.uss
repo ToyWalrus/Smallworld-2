@@ -13,8 +13,6 @@
     white-space: pre-wrap;
 }
 
-
-
 .CenterFlex {
     flex-grow: 1;
     align-items: center;
@@ -48,4 +46,12 @@
     margin-bottom: 24px;
     margin-left: 24px;
     align-items: stretch;
+    transition-property: left;
+    transition-duration: 500s;
+    transition-timing-function: ease-in-out;
+    left: 0%;
+}
+
+.RPHidden {
+    left: -75%;
 }
