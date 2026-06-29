@@ -1,5 +1,5 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Smallworld.Hooks;
@@ -13,6 +13,7 @@ namespace UnityModels
     public class Region : UnityModel<SMRegion>
     {
         public Rigidbody tilePrefab;
+        public Material mountainTileMat;
         [SerializeField] private Vector3 HoverTransformOffset = Vector3.up;
 
         [SerializeField] private RegionScriptableObject region;
@@ -31,6 +32,12 @@ namespace UnityModels
             if (GetModel().HasToken(Token.LostTribe))
             {
                 InstantiateTokens(1, Token.LostTribe);
+            }
+
+            if (GetModel().HasToken(Token.Mountain))
+            {
+                InstantiateTokens(1, Token.Mountain);
+                tiles[Token.Mountain][0].GetComponent<MeshRenderer>().material = mountainTileMat;
             }
         }
 
@@ -80,10 +87,14 @@ namespace UnityModels
 
         private void InstantiateTokens(int count, Token token)
         {
+            var meshFilter = tilePrefab.GetComponentInChildren<MeshFilter>();
+            var localSize = meshFilter != null ? meshFilter.sharedMesh.bounds.size : Vector3.one * 0.1f;
+            var tileSize = Vector3.Scale(localSize, tilePrefab.transform.localScale);
+
             for (int i = 0; i < count; ++i)
             {
                 var newTile = Instantiate(tilePrefab, transform);
-                newTile.position = transform.position + .1f * (i + 2) * Vector3.up + .015f * i * Vector3.right;
+                newTile.transform.localPosition = tileSize.y * (i + 2) * Vector3.up + tileSize.x * 0.15f * i * Vector3.right;
                 newTile.name = $"{token} {i + 1}";
 
                 if (!tiles.ContainsKey(token))
@@ -92,12 +103,20 @@ namespace UnityModels
                 }
 
                 tiles[token].Add(newTile);
+
+                StartCoroutine(FreezeTileWhenSettled(newTile));
             }
         }
 
         public void SetIsHovered(bool hovered)
         {
             isHovered = hovered;
+        }
+
+        private IEnumerator FreezeTileWhenSettled(Rigidbody rb)
+        {
+            yield return new WaitUntil(() => rb.IsSleeping());
+            rb.isKinematic = true;
         }
     }
 }
