@@ -58,27 +58,21 @@ namespace UnityModels
             Hooks.Subscribe<TurnStartHook>(async (evt) =>
             {
                 Debug.Log($"Turn start for {evt.Player.Name}");
-                var activePlayer = Players[gameFlow.ActivePlayerIndex];
-                activePlayer.SetIsCurrentPlayer(true);
-                activePlayer.UpdateButtonUI();
-
-                if (gameFlow.ActivePlayer.ActiveRacePower != null)
-                {
-                    // GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, gameFlow.ActivePlayer.ActiveRacePower.AvailableTokenCount);
-                }
+                var activePlayerIndex = gameFlow.ActivePlayerIndex;
+                Players[activePlayerIndex].SetIsCurrentPlayer(true);
+                GameUI.UpdatePlayerButton(activePlayerIndex);
             });
 
             Hooks.Subscribe<TurnEndHook>(async (evt) =>
             {
-                var activePlayer = Players[gameFlow.ActivePlayerIndex];
-                activePlayer.SetIsCurrentPlayer(false);
-                activePlayer.UpdateButtonUI();
+                var activePlayerIndex = gameFlow.ActivePlayerIndex;
+                Players[activePlayerIndex].SetIsCurrentPlayer(false);
+                GameUI.UpdatePlayerButton(activePlayerIndex);
             });
 
             Hooks.Subscribe<AfterRacePowerSelectionHook>(async (evt) =>
             {
-                // Update player button
-                Players[gameFlow.ActivePlayerIndex].UpdateButtonUI();
+                GameUI.UpdatePlayerButton(gameFlow.ActivePlayerIndex);
 
                 // Update racepower button
                 GameUI.ReplaceRacePowerButton(evt.SelectedIndex, game.AvailableRacePowers[evt.SelectedIndex]);
@@ -91,11 +85,10 @@ namespace UnityModels
 
             Hooks.Subscribe<AfterConquerRegionHook>(async (evt) =>
             {
-                foreach (var p in Players)
+                for (int i = 0; i < Players.Count; ++i)
                 {
-                    p.UpdateButtonUI();
+                    GameUI.UpdatePlayerButton(i);
                 }
-                // GameUI.UpdatePlayerTokenCount(gameFlow.ActivePlayerIndex, evt.RacePower.AvailableTokenCount);
             });
 
             // This probably belongs in the game logic

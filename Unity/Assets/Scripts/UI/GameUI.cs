@@ -20,6 +20,7 @@ public class GameUI : MonoBehaviour
 
     public VisualTreeAsset racePowerButton;
     private List<RacePowerButtonController> racePowerButtons = new();
+    private List<PlayerButtonController> playerButtons = new();
 
     void Awake()
     {
@@ -80,32 +81,18 @@ public class GameUI : MonoBehaviour
         racePowerButtons[buttonIndex].UpdateVPCountLabel(count);
     }
 
-    // TODO: move to Player script
     public void InitPlayerButtons(List<Player> players)
     {
-        var root = _doc.rootVisualElement;
-        var container = root.Q<VisualElement>("PlayerContainer");
-
+        var container = _doc.rootVisualElement.Q<VisualElement>("PlayerContainer");
 
         for (int i = 0; i < players.Count; ++i)
         {
-            var player = players[i];
             var item = container.Q<VisualElement>($"P{i + 1}");
+            if (item == null) continue;
 
-
-            if (item == null)
-                continue;
-
-            item.style.display = DisplayStyle.Flex;
-
-            player.InitButton(item);
-            var button = item.Q<Button>("PlayerButton");
-
-            // Clear previous handlers (important if reused)
-            button.clicked -= () => _OnPlayerClicked(player.GetModel());
-
-            // Register click
-            button.clicked += () => _OnPlayerClicked(player.GetModel());
+            var controller = new PlayerButtonController(item, players[i]);
+            playerButtons.Add(controller);
+            controller.OnClicked += (player) => OnPlayerClicked?.Invoke(player);
         }
 
         var extraCount = container.childCount - players.Count;
@@ -115,6 +102,16 @@ public class GameUI : MonoBehaviour
             item.style.display = DisplayStyle.None;
             extraCount--;
         }
+    }
+
+    public void UpdatePlayerButton(int index)
+    {
+        if (index >= playerButtons.Count)
+        {
+            Debug.LogError($"Index {index} is out of range");
+            return;
+        }
+        playerButtons[index].UpdateButtonUI();
     }
 
     public void UpdateRacePowerButton(int index, SMRacePower rp)
@@ -292,12 +289,4 @@ public class GameUI : MonoBehaviour
         label.text = text;
     }
 
-    public void UpdatePlayerTokenCount(int playerIndex, int count)
-    {
-        var playerElement = _doc.rootVisualElement.Q("PlayerContainer").Q($"P{playerIndex + 1}");
-        var tokenCount = playerElement.Q<Label>("TokenCount");
-
-        playerElement.Q("TokenCountArea").style.display = DisplayStyle.Flex;
-        tokenCount.text = count.ToString();
-    }
 }
