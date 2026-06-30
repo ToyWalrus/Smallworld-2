@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Smallworld.Hooks;
 using Smallworld.Models.Races;
 using Smallworld.Utils;
 
@@ -11,11 +12,13 @@ public enum InvalidConquerReason
     SeaOrLake,
     NotAdjacent,
     RegionImmune,
+    IsOwnedBySelf,
+    ProtectedByDiplomat,
 }
 
 public class Region
 {
-    public string Name { get; set; }
+    public string Name { get; private set; }
     public RegionType Type { get; private set; }
     public RegionAttribute Attribute { get; private set; }
     public RegionAttribute SecondAttribute { get; private set; }
@@ -27,21 +30,36 @@ public class Region
     public int NumRaceTokens => tokens.Count(t => t == Token.Race);
 
     private readonly List<Token> tokens;
+    private bool isImmune;
 
-    public Region(RegionType type, RegionAttribute attribute, bool isBorder, RegionAttribute secondAttr = RegionAttribute.None)
+    public Region(
+        string name,
+        RegionType type,
+        RegionAttribute attribute = RegionAttribute.None,
+        bool isBorder = false,
+        RegionAttribute secondAttr = RegionAttribute.None,
+        bool hasLostTribe = false
+    )
     {
+        Name = name;
         Type = type;
         Attribute = attribute;
         SecondAttribute = secondAttr;
         IsBorder = isBorder;
         OccupiedBy = null;
-        AdjacentTo = new();
 
+        AdjacentTo = new();
         tokens = new();
 
         if (type == RegionType.Mountain)
         {
+            // Not calling AddToken() in constructor since that calls the Hooks.Run which may not have been instantialized yet
             tokens.Add(Token.Mountain);
+        }
+
+        if (hasLostTribe)
+        {
+            tokens.Add(Token.LostTribe);
         }
     }
 
@@ -59,45 +77,33 @@ public class Region
         }
     }
 
-    public Token GetSpecialTokens(out int count)
+    public (Token, int) GetSpecialTokens()
     {
-        count = 1;
         if (HasToken(Token.Encampment))
         {
-            count = tokens.Count((t) => t == Token.Encampment);
-            return Token.Encampment;
+            return (Token.Encampment, tokens.Count((t) => t == Token.Encampment));
         }
         if (HasToken(Token.Fortress))
         {
-            count = tokens.Count((t) => t == Token.Fortress);
-            return Token.Fortress;
+            return (Token.Fortress, tokens.Count((t) => t == Token.Fortress));
         }
         if (HasToken(Token.TrollLair))
         {
-            return Token.TrollLair;
+            return (Token.TrollLair, 1);
         }
         if (HasToken(Token.Dragon))
         {
-            return Token.Dragon;
+            return (Token.Dragon, 1);
         }
         if (HasToken(Token.HoleInTheGround))
         {
-            return Token.HoleInTheGround;
+            return (Token.HoleInTheGround, 1);
         }
         if (HasToken(Token.Heroic))
         {
-            return Token.Heroic;
+            return (Token.Heroic, 1);
         }
-        count = 0;
-        return Token.None;
-    }
-
-    public bool IsImmune()
-    {
-        return tokens.Exists((token) =>
-            token == Token.Dragon ||
-            token == Token.HoleInTheGround ||
-            token == Token.Heroic);
+        return (Token.None, 0);
     }
 
     /// <summary>
@@ -113,12 +119,11 @@ public class Region
     }
 
     /// <summary>
-    /// Sets a new RacePower in control of this region. Calls the OnWasConquered for the previous occupier
-    /// and the OnNewRegionConquered for the new occupier.
+    /// Sets a new RacePower in control of this region. Calls the OnWasConquered for the previous occupier.
     /// </summary>
     /// <param name="racePower">the new occupying race</param>
     /// <param name="conqueringTokenCount">the amount of tokens used to conquer this region</param>
-    public void Conquer(RacePower racePower, int conqueringTokenCount)
+    public void WasConquered(RacePower racePower, int conqueringTokenCount)
     {
         if (OccupiedBy == racePower)
         {
@@ -130,7 +135,7 @@ public class Region
         {
             int troopReimbursement;
 
-            if (OccupiedBy.IsInDecline)
+            if (OccupiedBy.IsInDecline && OccupiedBy.Race is not Ghoul)
             {
                 troopReimbursement = 0;
             }
@@ -147,41 +152,41 @@ public class Region
         }
 
         OccupiedBy = racePower;
+        isImmune = false;
 
         RemoveAllTokensOfType(Token.LostTribe);
         RemoveAllTokensOfType(Token.Race);
-        tokens.AddRange(Enumerable.Repeat(Token.Race, conqueringTokenCount));
-
-        OccupiedBy.OnNewRegionConquered(this, conqueringTokenCount);
+        AddToken(Token.Race, conqueringTokenCount);
     }
 
     public void Reinforce(int numRaceTokens)
     {
-        for (int i = 0; i < numRaceTokens; ++i)
-        {
-            tokens.Add(Token.Race);
-        }
+        AddToken(Token.Race, numRaceTokens);
     }
 
     public void Abandon()
     {
         OccupiedBy = null;
-        tokens.Clear();
+        isImmune = false;
 
-        if (Type == RegionType.Mountain)
+        var unique = tokens.Distinct().Where(t => t != Token.Mountain);
+        foreach (var token in unique)
         {
-            tokens.Add(Token.Mountain);
+            RemoveAllTokensOfType(token);
         }
     }
 
     public void ClearExcessRaceTokens()
     {
         var excess = GetExcessRaceTokens();
+        var count = excess;
         while (excess > 0)
         {
             tokens.Remove(Token.Race);
             excess--;
         }
+
+        HooksService.Instance.Run(new RegionTokensRemovedHook { Region = this, Token = Token.Race, RemovedCount = count });
     }
 
     /// <summary>
@@ -190,18 +195,89 @@ public class Region
     /// </summary>    
     public int GetExcessRaceTokens() => System.Math.Max(0, NumRaceTokens - 1);
     public bool HasToken(Token token) => tokens.Exists((t) => t == token);
-    public void AddToken(Token token) => tokens.Add(token);
-    public void RemoveAllTokensOfType(Token tokenType) => tokens.RemoveAll((t) => t == tokenType);
+    public void SetImmune(bool immune) => isImmune = immune;
+
+    public void AddToken(Token token, int count = 1)
+    {
+        tokens.AddRange(Enumerable.Repeat(token, count));
+        HooksService.Instance.Run(new RegionTokensAddedHook { Region = this, Token = token, AddedCount = count });
+    }
+
+    public void RemoveAllTokensOfType(Token token)
+    {
+        var count = tokens.Count((t) => t == token);
+        if (count == 0) return;
+
+        tokens.RemoveAll((t) => t == token);
+        HooksService.Instance.Run(new RegionTokensRemovedHook { Region = this, Token = token, RemovedCount = count });
+    }
+
+    /// <summary>
+    /// Determines whether this region is able to be conquered by the provided RacePower.
+    /// </summary>
+    /// <param name="rp">The RacePower checking whether this region is conquerable.</param>
+    /// <returns>A tuple, boolean first and if it is false, the second item is the reason as a string</returns>
+    public (bool, string) IsValidConquerTarget(RacePower rp)
+    {
+        var restrictions = GetConquerRestrictions(rp.GetOwnedRegions());
+
+        rp.ModifyConquerRestrictions(restrictions, this);
+        OccupiedBy?.ModifyDefenseRestrictions(restrictions, rp, this);
+
+        if (!restrictions.Any())
+        {
+            if (rp.AvailableTokenCount < rp.EstimateRegionConquerCost(this))
+            {
+                return (false, "Not enough tokens");
+            }
+
+            return (true, "");
+        }
+
+        string reason = "| ";
+        foreach (var currentReason in restrictions)
+        {
+            switch (currentReason)
+            {
+                case InvalidConquerReason.IsOwnedBySelf:
+                    reason += "Region is already owned by player | ";
+                    break;
+                case InvalidConquerReason.NotAdjacent:
+                    reason += "Region is not adjacent to any owned regions | ";
+                    break;
+                case InvalidConquerReason.SeaOrLake:
+                    reason += "Region is a sea or lake | ";
+                    break;
+                case InvalidConquerReason.NotBorder:
+                    reason += "First conquest must happen on a border region | ";
+                    break;
+                case InvalidConquerReason.RegionImmune:
+                    reason += "Region is immune to conquest | ";
+                    break;
+                case InvalidConquerReason.ProtectedByDiplomat:
+                    reason += "Region is protected by a Diplomat | ";
+                    break;
+            }
+        }
+
+        return (false, reason.Trim());
+    }
 
     /// <summary>
     /// Returns the reasons why a region cannot be conquered. If the list is empty, the region can be conquered.
     /// </summary>
-    public List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> playerOwnedRegions)
+    private List<InvalidConquerReason> GetConquerRestrictions(List<Region> playerOwnedRegions)
     {
         var isFirstConquest = playerOwnedRegions.Count == 0;
         var reasons = new List<InvalidConquerReason>();
 
-        if (IsImmune())
+        if (playerOwnedRegions.Contains(this))
+        {
+            reasons.Add(InvalidConquerReason.IsOwnedBySelf);
+            return reasons;
+        }
+
+        if (isImmune)
         {
             reasons.Add(InvalidConquerReason.RegionImmune);
         }
@@ -255,9 +331,8 @@ public class Region
 
     override public string ToString()
     {
-        if (Name != null) return Name;
-
         var str = GetRegionAttributeString(Attribute) + GetRegionAttributeString(SecondAttribute);
+
         switch (Type)
         {
             case RegionType.Forest:
@@ -280,7 +355,49 @@ public class Region
                 break;
         }
 
-        return str.Trim();
+        if (Name == "")
+        {
+            return str.Trim();
+        }
+        if (str == "")
+        {
+            return Name;
+        }
+        return $"{Name} ({str.Trim()})";
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+
+        if (ReferenceEquals(this, obj))
+            return true;
+
+        var other = (Region)obj;
+        return Type == other.Type &&
+               Attribute == other.Attribute &&
+               SecondAttribute == other.SecondAttribute &&
+               Name == other.Name;
+    }
+
+    public override int GetHashCode()
+    {
+        return System.HashCode.Combine(Type, Attribute, SecondAttribute, Name);
+    }
+
+    public static bool operator ==(Region a, Region b)
+    {
+        if (ReferenceEquals(a, b)) return true;
+        if (a is null || b is null) return false;
+        return a.Equals(b);
+    }
+
+    public static bool operator !=(Region a, Region b)
+    {
+        if (ReferenceEquals(a, b)) return false;
+        if (a is null || b is null) return true;
+        return !a.Equals(b);
     }
 
     private static string GetRegionAttributeString(RegionAttribute attr)

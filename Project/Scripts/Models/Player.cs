@@ -8,6 +8,8 @@ public class Player
     public string Name { get; set; }
     public int Score { get; private set; }
     public List<RacePower> RacePowers => new(racePowers);
+    public bool HasActiveRace => ActiveRacePower != null;
+    public RacePower ActiveRacePower => racePowers.FirstOrDefault(rp => !rp.IsInDecline);
 
     private readonly List<RacePower> racePowers = new();
 
@@ -25,19 +27,18 @@ public class Player
     public void AddRacePower(RacePower racePower)
     {
         racePowers.Add(racePower);
+        racePower.SetOwner(this);
     }
 
     public void RemoveRacePower(RacePower racePower)
     {
         racePowers.Remove(racePower);
+        racePower.SetOwner(null);
     }
 
-    public void EnterDecline()
+    public void ClearDeclineRacePowers()
     {
-        var alreadyInDecline = racePowers.Where(rp => rp.IsInDecline);
-        racePowers.ForEach(rp => rp.EnterDecline());
-
-        foreach (var rp in alreadyInDecline)
+        foreach (var rp in racePowers.Where(rp => rp.IsInDecline))
         {
             rp.AbandonAllRegions();
             RemoveRacePower(rp);
@@ -47,5 +48,10 @@ public class Player
     public int TallyVP()
     {
         return racePowers.Sum(rp => rp.TallyVP());
+    }
+
+    public override string ToString()
+    {
+        return Name;
     }
 }

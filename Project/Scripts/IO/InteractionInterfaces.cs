@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using Smallworld.Models;
 
 namespace Smallworld.IO;
 
@@ -11,10 +12,12 @@ public interface IConfirmation
 
 public interface IRollDice
 {
-    Task<int> RollDiceAsync(IDice dice);
+    int GetMaxRollValue();
+    Task<int> RollDiceAsync();
 }
 
 public interface ISelection<T>
 {
-    Task<T> SelectAsync(List<T> items);
+    Task<T> SelectAsync(List<T> items, Func<T, string> unselectableReason);
+    Task<T> SelectAsync(List<T> items, Func<T, string> unselectableReason, CancellationToken cancellationToken);
 }

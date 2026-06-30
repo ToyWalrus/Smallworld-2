@@ -10,8 +10,13 @@ public class Berserk : Power
         StartingTokenCount = 4;
     }
 
+    public override int GetEstimatedConquerCostReduction(Region region)
+    {
+        return DiceRoller.GetMaxRollValue();
+    }
+
     public override Task<int> GetRegionConquerCostReduction(Region region)
     {
-        return DiceRoller.RollDiceAsync(CustomProbabilityDice.Reinforcement);
+        return DiceRoller.RollDiceAsync();
     }
 }

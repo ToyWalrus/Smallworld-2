@@ -11,6 +11,7 @@ public class Troll : Race
 
     public override void OnRegionConquered(Region region)
     {
+        base.OnRegionConquered(region);
         region.AddToken(Token.TrollLair);
     }
 }

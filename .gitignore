@@ -17,6 +17,6 @@ mono_crash.*.json
 # Visual Studio specific ignores
 **/.vscode
 **/.vs
-*/TestResults
-Tests/[Bb]in
-Tests/[Oo]bj
+
+**/[Bb]in
+**/[Oo]bj

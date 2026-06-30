@@ -9,21 +9,37 @@ public abstract class Race
     public int MaxTokens { get; protected set; }
     public int StartingTokenCount { get; protected set; }
     public bool IsInDecline { get; protected set; }
+    protected bool canEnterDecline = true;
 
     public Race()
     {
         IsInDecline = false;
     }
 
-    public virtual void OnTurnStart() { }
+    public virtual void OnTurnStart()
+    {
+        canEnterDecline = true;
+    }
     public virtual void OnTurnEnd() { }
-    public virtual void OnRegionConquered(Region region) { }
+    public virtual void OnRegionConquered(Region region)
+    {
+        canEnterDecline = false;
+    }
+
     public virtual int GetRegionConquerCostReduction(Region region) => 0;
     public virtual int TallyRaceBonusVP(List<Region> ownedRegions) => 0;
-    public virtual List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
-    {
-        return region.GetInvalidConquerReasons(ownedRegions);
-    }
+
+    /// <summary>
+    /// Called when this race is the attacker. Override to remove reasons from <paramref name="reasons"/>
+    /// to allow conquests that would otherwise be blocked.
+    /// </summary>
+    public virtual void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region) { }
+
+    /// <summary>
+    /// Called when this race occupies the region being attacked. Override to add reasons to <paramref name="reasons"/>
+    /// to block conquests that would otherwise be allowed.
+    /// </summary>
+    public virtual void ModifyDefenseRestrictions(List<InvalidConquerReason> reasons, RacePower attacker, Region region) { }
 
     public virtual List<Token> GetRedeploymentTokens(List<Region> ownedRegions)
     {
@@ -35,8 +51,11 @@ public abstract class Race
         return Enumerable.Repeat(Token.Race, length).ToList();
     }
 
+    public virtual bool CanEnterDecline() => canEnterDecline;
+
     public virtual void EnterDecline()
     {
+        canEnterDecline = false;
         IsInDecline = true;
     }
 }

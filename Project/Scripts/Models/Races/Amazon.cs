@@ -8,4 +8,10 @@ public class Amazon : Race
         StartingTokenCount = 6;
         MaxTokens = 15;
     }
+
+    public override int GetRegionConquerCostReduction(Region region)
+    {
+        // TODO: only gets 4 extra tokens for purposes of conquering, not redeploying
+        return 4;
+    }
 }

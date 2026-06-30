@@ -1,0 +1,18 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/GameStyles.uss?fileID=7433441132597879392&amp;guid=65da4ba4461bdd047898d97d618e8b80&amp;type=3#GameStyles"/>
+    <ui:Button text="" name="PlayerButton" class="RPButton" style="flex-grow: 0; flex-shrink: 1; flex-direction: row; justify-content: flex-end; align-items: center; background-color: rgb(175, 88, 209); background-image: url(&quot;project://database/Assets/Resources/UI-pack_Sprite_1.png?fileID=-5680990995697710469&amp;guid=7f9865cf6ac20f7468e13d5a5daff8ef&amp;type=3#InactivePlayerButtonBg&quot;); padding-left: 12px; min-width: 450px;">
+        <ui:Image source="project://database/Assets/Resources/racetokens.jpg?fileID=1625586068&amp;guid=283c43a1b19e42747a83d090334e00b5&amp;type=3#Token_Dwarf" name="RaceTokenImage" style="flex-shrink: 1; margin-right: 30px; margin-top: 0; margin-bottom: 0; margin-left: 0; visibility: visible;"/>
+        <ui:Label text="Power Race" name="RacePowerLabel" style="-unity-text-auto-size: best-fit 10px 80px; flex-shrink: 1; -unity-text-align: upper-left; max-width: 120px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 32px; white-space: pre-wrap; -unity-font-style: bold; -unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=48af136bb93de9b43a94e61c53b086ed&amp;type=3#NotInter-Regular&quot;); -unity-text-outline-width: 2px; -unity-text-outline-color: rgba(180, 137, 108, 0.34); color: rgb(238, 238, 238);"/>
+        <ui:VisualElement style="flex-grow: 1; align-items: flex-end; -unity-text-align: middle-right; flex-shrink: 0; max-width: 220px;">
+            <ui:Label text="Player 1" name="PlayerName" style="font-size: 32px; -unity-font-style: bold; color: rgb(233, 233, 233);">
+                <Bindings>
+                    <ui:DataBinding property="text" binding-mode="ToTarget"/>
+                </Bindings>
+            </ui:Label>
+            <ui:VisualElement name="TokenCountArea" style="flex-grow: 1; flex-direction: row;">
+                <ui:Label text="Remaining Tokens:" style="font-size: 20px; -unity-font-style: normal;"/>
+                <ui:Label text="0" name="TokenCount" style="font-size: 20px; -unity-font-style: italic; color: rgb(213, 253, 242);"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:Button>
+</ui:UXML>

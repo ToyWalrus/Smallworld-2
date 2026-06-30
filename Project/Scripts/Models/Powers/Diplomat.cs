@@ -1,40 +1,57 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Smallworld.Models.Powers;
 
 public class Diplomat : Power
 {
-    private readonly List<RacePower> _racesAttacked;
+    private readonly HashSet<RacePower> racesAttacked;
+    private RacePower protectedRacePower;
 
     public Diplomat()
     {
         Name = "Diplomatic";
         StartingTokenCount = 5;
-        _racesAttacked = new List<RacePower>();
+        racesAttacked = new();
     }
 
     public override void OnTurnStart()
     {
-        _racesAttacked.Clear();
+        base.OnTurnStart();
+        racesAttacked.Clear();
+        protectedRacePower = null;
     }
 
     public override void OnRegionConquered(Region region)
     {
-        if (region.IsOccupied)
+        base.OnRegionConquered(region);
+        if (region.OccupiedBy != null)
         {
-            _racesAttacked.Add(region.OccupiedBy);
+            racesAttacked.Add(region.OccupiedBy);
         }
-
     }
 
-    public override Task OnTurnEnd()
+    public override async Task OnTurnEnd()
     {
-        // TODO: Need to have a list of all players, then remove the races attacked from the list
-        // var selected = await PlayerSelection.SelectAsync(_racesAttacked);
+        if (GameRef == null) return;
 
-        // TODO: Also need a way to enforce the "no attacking" rule
+        // Eligible players: opponents whose active race was not attacked this turn
+        var eligiblePlayers = GameRef.Players
+            .Where(p => p != racePower.Owner && p.HasActiveRace && !racesAttacked.Contains(p.ActiveRacePower))
+            .ToList();
 
-        return Task.CompletedTask;
+        if (eligiblePlayers.Count == 0) return;
+
+        var selectedPlayer = await PlayerSelection.SelectAsync(eligiblePlayers, (player) => $"You attacked {player.Name} this turn");
+        protectedRacePower = selectedPlayer?.ActiveRacePower;
+    }
+
+    public override void ModifyDefenseRestrictions(List<InvalidConquerReason> reasons, RacePower attacker, Region region)
+    {
+        if (protectedRacePower != null && attacker == protectedRacePower && !attacker.IsInDecline)
+        {
+            reasons.Add(InvalidConquerReason.ProtectedByDiplomat);
+        }
     }
 }

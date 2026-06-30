@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Smallworld.Models.Races;
-using Smallworld.Models.Powers;
-using System.Linq;
-
-using Math = System.Math;
 using System.Threading.Tasks;
+using Smallworld.Models.Powers;
+using Smallworld.Models.Races;
+using Math = System.Math;
 
 namespace Smallworld.Models;
 
@@ -12,6 +10,7 @@ public class RacePower
 {
     public string Name => $"The {Power.Name} {Race.Name}";
 
+    public Player Owner { get; private set; }
     public Race Race { get; private set; }
     public Power Power { get; private set; }
     public int AvailableTokenCount { get; private set; }
@@ -29,6 +28,16 @@ public class RacePower
         Power.SetRacePower(this);
     }
 
+    public void SetOwner(Player owner)
+    {
+        Owner = owner;
+    }
+
+    public bool CanEnterDecline()
+    {
+        return Race.CanEnterDecline() || Power.CanEnterDecline();
+    }
+
     public void OnTurnStart()
     {
         Race.OnTurnStart();
@@ -41,11 +50,32 @@ public class RacePower
         await Power.OnTurnEnd();
     }
 
-    public void OnNewRegionConquered(Region region, int cost)
+    public void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, Region region)
     {
+        Race.ModifyConquerRestrictions(reasons, ownedRegions, region);
+        Power.ModifyConquerRestrictions(reasons, ownedRegions, region);
+    }
+
+    public void ModifyDefenseRestrictions(List<InvalidConquerReason> reasons, RacePower attacker, Region region)
+    {
+        Race.ModifyDefenseRestrictions(reasons, attacker, region);
+        Power.ModifyDefenseRestrictions(reasons, attacker, region);
+    }
+
+    public void SpendToken(int count)
+    {
+        AvailableTokenCount -= count;
+    }
+
+    public void ConquerRegion(Region region, int cost)
+    {
+        region.WasConquered(this, cost);
+
         Race.OnRegionConquered(region);
         Power.OnRegionConquered(region);
+
         AvailableTokenCount = Math.Max(0, AvailableTokenCount - cost);
+
         ownedRegions.Add(region);
     }
 
@@ -65,6 +95,13 @@ public class RacePower
         return raceVP + powerVP + ownedRegions.Count;
     }
 
+    public int EstimateRegionConquerCost(Region region)
+    {
+        int raceCostReduction = Race.GetRegionConquerCostReduction(region);
+        int powerCostReduction = Power.GetEstimatedConquerCostReduction(region);
+        return Math.Max(1, region.GetBaseConquerCost() - raceCostReduction - powerCostReduction);
+    }
+
     public async Task<int> GetFinalRegionConquerCost(Region region)
     {
         int raceCostReduction = Race.GetRegionConquerCostReduction(region);
@@ -77,6 +114,7 @@ public class RacePower
         Race.EnterDecline();
         Power.EnterDecline();
 
+        // Does this belong here...?
         if (IsInDecline)
         {
             AvailableTokenCount = 0;
@@ -94,47 +132,6 @@ public class RacePower
             region.Abandon();
         }
         ownedRegions.Clear();
-    }
-
-    public (bool, string) IsValidConquerRegion(Region region)
-    {
-
-        if (region.OccupiedBy == this)
-        {
-            return (false, "Region is already occupied by this RacePower");
-        }
-
-        var invalidRaceConquerReasons = Race.GetInvalidConquerReasons(ownedRegions, region);
-        var invalidPowerConquerReasons = Power.GetInvalidConquerReasons(ownedRegions, region);
-        var reasons = new HashSet<InvalidConquerReason>(invalidRaceConquerReasons.Concat(invalidPowerConquerReasons));
-
-        // If there are no invalid reasons, for either the race or power to conquer, then the conquest is valid
-        if (!reasons.Any())
-        {
-            return (true, "");
-        }
-
-        string reason = "| ";
-        foreach (var currentReason in reasons)
-        {
-            switch (currentReason)
-            {
-                case InvalidConquerReason.NotAdjacent:
-                    reason += "Region is not adjacent to any owned regions | ";
-                    break;
-                case InvalidConquerReason.SeaOrLake:
-                    reason += "Region is a sea or lake | ";
-                    break;
-                case InvalidConquerReason.NotBorder:
-                    reason += "First conquest must happen on a border region | ";
-                    break;
-                case InvalidConquerReason.RegionImmune:
-                    reason += "Region is immune to conquest | ";
-                    break;
-            }
-        }
-
-        return (false, reason.Trim());
     }
 
     public List<Region> GetOwnedRegions() => new(ownedRegions);

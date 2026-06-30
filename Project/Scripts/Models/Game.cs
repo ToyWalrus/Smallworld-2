@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Smallworld.Hooks;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;
 using Smallworld.Utils;
@@ -13,19 +14,22 @@ public interface IGame
     List<Player> Players { get; }
     List<Region> Regions { get; }
     List<RacePower> AvailableRacePowers { get; }
-    int NumRounds { get; }
+    int NumRounds { get; set; }
 
-    void AddPlayer(Player player);
+    void SetPlayers(List<Player> players);
     void SetRegions(List<Region> regions);
     void SetAvailableRacePowers(List<RacePower> racePowers);
+    /// <param name="racePower">The RacePower to replace</param>
+    /// <returns>The index of the racePower being replaced, or -1 if the racePower is not found.</returns>
+    int ReplaceRacePower(RacePower racePower);
 }
 
-public class Game : IGame
+public partial class Game : IGame
 {
     public List<Player> Players { get; private set; }
     public List<Region> Regions { get; private set; }
     public List<RacePower> AvailableRacePowers { get; private set; }
-    public int NumRounds { get; }
+    public int NumRounds { get; set; }
 
     private readonly HashSet<Type> usedPowers = new();
     private readonly HashSet<Type> usedRaces = new();
@@ -48,6 +52,11 @@ public class Game : IGame
         Players.Add(player);
     }
 
+    public void SetPlayers(List<Player> players)
+    {
+        Players = players;
+    }
+
     public void SetRegions(List<Region> regions)
     {
         Regions = regions;
@@ -56,6 +65,16 @@ public class Game : IGame
     public void SetAvailableRacePowers(List<RacePower> racePowers)
     {
         AvailableRacePowers = racePowers;
+    }
+
+    public int ReplaceRacePower(RacePower racePower)
+    {
+        var index = AvailableRacePowers.FindIndex(rp => rp.Equals(racePower));
+        if (index != -1)
+        {
+            AvailableRacePowers[index] = GenerateNewRacePower();
+        }
+        return index;
     }
 
     public RacePower GenerateNewRacePower(bool unused = true)
@@ -67,7 +86,8 @@ public class Game : IGame
 
     private Power GetRandomPower(bool unused)
     {
-        var powerFactory = serviceProvider.GetRequiredService<IModelFactory<Power>>();
+        var factory = serviceProvider.GetService<IModelFactory<Power>>();
+        var powerFactory = factory ?? new PowerFactory(serviceProvider);
         var powers = unused ? allPowers.Where(p => !usedPowers.Contains(p)) : allPowers;
 
         if (!powers.Any())
@@ -80,12 +100,15 @@ public class Game : IGame
 
         usedPowers.Add(randomPower);
 
-        return powerFactory.Create(randomPower);
+        var power = powerFactory.Create(randomPower);
+        power.GameRef = this;
+        return power;
     }
 
     private Race GetRandomRace(bool unused)
     {
-        var raceFactory = serviceProvider.GetRequiredService<IModelFactory<Race>>();
+        var factory = serviceProvider.GetService<IModelFactory<Race>>();
+        var raceFactory = factory ?? new RaceFactory(serviceProvider);
         var races = unused ? allRaces.Where(r => !usedRaces.Contains(r)) : allRaces;
 
         if (!races.Any())
@@ -113,6 +136,7 @@ public class Game : IGame
         allPowers = GetEnumerableOfType<Power>();
         allRaces = GetEnumerableOfType<Race>();
     }
+
     private static IEnumerable<Type> GetEnumerableOfType<T>() where T : class
     {
         var objects = new List<Type>();

@@ -10,10 +10,8 @@ public class Seafaring : Power
         StartingTokenCount = 5;
     }
 
-    public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
+    public override void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
     {
-        var reasons = region.GetInvalidConquerReasons(ownedRegions);
         reasons.Remove(InvalidConquerReason.SeaOrLake);
-        return reasons;
     }
 }

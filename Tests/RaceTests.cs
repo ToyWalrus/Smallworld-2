@@ -1,6 +1,6 @@
 using Smallworld.Models;
-using Smallworld.Models.Races;
 using Smallworld.Models.Powers;
+using Smallworld.Models.Races;
 
 namespace Tests;
 
@@ -16,8 +16,8 @@ public class RaceTests
         var region1 = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var region2 = new Region(RegionType.Farmland, RegionAttribute.None, false);
 
-        region1.Conquer(racepower, 3); // 2
-        region2.Conquer(racepower, 5); // 4
+        region1.WasConquered(racepower, 3); // 2
+        region2.WasConquered(racepower, 5); // 4
 
         Assert.AreEqual(race.GetRedeploymentTokens([region1, region2]).Count, 6);
     }
@@ -55,14 +55,19 @@ public class RaceTests
     }
 
     [TestMethod]
-    public void Halfling_GetInvalidConquerReasons_ReturnsTrueIfRegionIsNotBorderAndIsTheFirstConquest()
+    public void Halfling_ModifyConquerRestrictions_AllowsNotBorderForFirstConquer()
     {
         var halfling = new Halfling();
         var region = new Region(RegionType.Farmland, RegionAttribute.None, false);
         var unconnectedBorderRegion = new Region(RegionType.Farmland, RegionAttribute.None, true);
 
-        Assert.AreEqual(halfling.GetInvalidConquerReasons([], region).Count, 0);
-        Assert.AreNotEqual(halfling.GetInvalidConquerReasons([region], unconnectedBorderRegion).Count, 0); // Not first conquest, not connected
+        List<InvalidConquerReason> reasons = [InvalidConquerReason.NotBorder];
+        halfling.ModifyConquerRestrictions(reasons, [], region);
+        Assert.AreEqual(reasons.Count, 0); // No previously owned regions 
+
+        reasons = [InvalidConquerReason.NotBorder];
+        halfling.ModifyConquerRestrictions(reasons, [unconnectedBorderRegion], region);
+        Assert.AreNotEqual(reasons.Count, 1); // Does not remove NotBorder reason
     }
 
     [TestMethod]
@@ -145,14 +150,9 @@ public class RaceTests
 
         skeleton.OnTurnStart();
 
-        region1.Conquer(rp, 3);
-        skeleton.OnRegionConquered(region1);
-
-        region2.Conquer(rp, 3);
-        skeleton.OnRegionConquered(region2);
-
-        emptyRegion.Conquer(rp, 3);
-        skeleton.OnRegionConquered(emptyRegion);
+        region1.WasConquered(rp, 3);
+        region2.WasConquered(rp, 3);
+        emptyRegion.WasConquered(rp, 3);
 
         // Each region will give 2 token as base (6 total)
         // +1/2 for each non-empty region conquered this turn (2 regions, 1 extra token)

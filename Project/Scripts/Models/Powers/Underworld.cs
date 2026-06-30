@@ -12,14 +12,13 @@ public class Underworld : Power
         StartingTokenCount = 5;
     }
 
-    public override Task<int> GetRegionConquerCostReduction(Region region)
+    public override int GetEstimatedConquerCostReduction(Region region)
     {
-        return Task.FromResult(region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0);
+        return region.HasAttribute(RegionAttribute.Underworld) ? 1 : 0;
     }
 
-    public override List<InvalidConquerReason> GetInvalidConquerReasons(List<Region> ownedRegions, Region region)
+    public override void ModifyConquerRestrictions(List<InvalidConquerReason> reasons, List<Region> ownedRegions, Region region)
     {
-        var reasons = region.GetInvalidConquerReasons(ownedRegions);
         if (
             reasons.Contains(InvalidConquerReason.NotAdjacent) &&
             ownedRegions.Any(r => r.HasAttribute(RegionAttribute.Underworld)) &&
@@ -28,6 +27,5 @@ public class Underworld : Power
         {
             reasons.Remove(InvalidConquerReason.NotAdjacent);
         }
-        return reasons;
     }
 }

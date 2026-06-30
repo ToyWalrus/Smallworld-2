@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7b5a8e125caef4ba6a079736990c15, type: 3}
+  m_Name: Hill_5
+  m_EditorClassIdentifier: Assembly-CSharp::RegionScriptableObject
+  regionType: 1
+  attribute: 2
+  secondaryAttribute: 0
+  isBorder: 0
+  lostTribeRegion: 0
+  occupiedBy: {fileID: 0}
+  adjacentRegions:
+  - {fileID: 11400000, guid: 576584453c5fff343919315c3c0e99ad, type: 2}
+  - {fileID: 11400000, guid: 5973f0540cbbb6d47abb9e59f15f921c, type: 2}
+  - {fileID: 11400000, guid: 4b025d71e8506f644b964673fa7b6622, type: 2}
+  - {fileID: 11400000, guid: a9998179db9cbe447ab4d34d6fa94866, type: 2}
+  oldAdjacentRegions:
+  - {fileID: 11400000, guid: 576584453c5fff343919315c3c0e99ad, type: 2}
+  - {fileID: 11400000, guid: 5973f0540cbbb6d47abb9e59f15f921c, type: 2}
+  - {fileID: 11400000, guid: 4b025d71e8506f644b964673fa7b6622, type: 2}
