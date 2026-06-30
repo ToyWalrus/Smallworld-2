@@ -1,3 +1,10 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Addons
+addons/*
+!addons/gd-plug
+
+# GDPlug
+.plugged/
