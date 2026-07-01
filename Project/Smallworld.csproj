@@ -15,4 +15,11 @@
     <Copy SourceFiles="@(UnityPluginFiles)"
           DestinationFolder="$(MSBuildProjectDirectory)/../Unity/Assets/Plugins/Smallworld" />
   </Target>
+    <Target Name="CopyToGodot" AfterTargets="Build">
+    <ItemGroup>
+      <GodotPluginFiles Include="$(OutputPath)*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(GodotPluginFiles)"
+          DestinationFolder="$(MSBuildProjectDirectory)/../Godot/libraries" />
+  </Target>
 </Project>

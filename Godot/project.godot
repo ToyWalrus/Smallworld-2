@@ -15,8 +15,8 @@ curved_lines_2d/stroke_color=Color(1, 1, 1, 0)
 
 [application]
 
-config/name="Smallworld"
-config/features=PackedStringArray("4.7", "GL Compatibility")
+config/name="Smallworld.Godot"
+config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [display]
@@ -26,7 +26,7 @@ window/stretch/aspect="expand"
 
 [dotnet]
 
-project/assembly_name="Smallworld"
+project/assembly_name="Smallworld.Godot"
 
 [editor_plugins]
 

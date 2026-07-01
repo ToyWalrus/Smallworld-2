@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Region" format=3 uid="uid://drrpwssk7ug4b"]
+
+[ext_resource type="Script" uid="uid://bjg8qdf6mj7cl" path="res://scripts/resource_scripts/Region.cs" id="1_ndfk5"]
+
+[resource]
+script = ExtResource("1_ndfk5")
+IsBorder = true
+metadata/_custom_type_script = "uid://bjg8qdf6mj7cl"
