@@ -8,7 +8,7 @@ using SMRegion = Smallworld.Models.Region;
 namespace ResourceScripts;
 
 [Tool, GlobalClass]
-public partial class Region : Resource
+public partial class RegionResource : Resource
 {
 	private static bool _syncing;
 
@@ -70,7 +70,7 @@ public partial class Region : Resource
 	private bool _isLostTribeRegion = false;
 
 	[Export]
-	public Region[] AdjacentRegions
+	public RegionResource[] AdjacentRegions
 	{
 		get => _adjacentRegions;
 		set
@@ -79,13 +79,12 @@ public partial class Region : Resource
 			UpdateResource();
 		}
 	}
-	private Region[] _adjacentRegions = [];
+	private RegionResource[] _adjacentRegions = [];
 
-	private Region[] _oldAdjacentRegions = [];
+	private RegionResource[] _oldAdjacentRegions = [];
 
 	private void UpdateResource()
 	{
-		SyncAdjacency();
 		RebuildModel();
 	}
 
@@ -100,49 +99,6 @@ public partial class Region : Resource
 					.Where(r => r != null)
 					.Select(r => r.GetModel())]
 			);
-		}
-	}
-
-	private void SyncAdjacency()
-	{
-		if (_syncing) return;
-
-		try
-		{
-			_syncing = true;
-
-			_adjacentRegions ??= [];
-			_oldAdjacentRegions ??= [];
-
-			var current = new HashSet<Region>(_adjacentRegions.Where(r => r != null && r != this));
-			var previous = new HashSet<Region>(_oldAdjacentRegions.Where(r => r != null && r != this));
-
-			// Update neighbors
-			foreach (var added in current.Except(previous))
-			{
-				added._adjacentRegions ??= [];
-
-				if (!added._adjacentRegions.Contains(this))
-				{
-					added._adjacentRegions = [.. added._adjacentRegions, this];
-				}
-			}
-
-			// Remove neighbors
-			foreach (var removed in previous.Except(current))
-			{
-				if (removed._adjacentRegions != null && removed._adjacentRegions.Contains(this))
-				{
-					removed._adjacentRegions = [.. removed._adjacentRegions.Except([this])];
-				}
-			}
-
-			// Update snapshot
-			_oldAdjacentRegions = [.. _adjacentRegions];
-		}
-		finally
-		{
-			_syncing = false;
 		}
 	}
 

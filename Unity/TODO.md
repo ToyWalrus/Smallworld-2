@@ -10,4 +10,4 @@
 - Sound FX
 
 ## Bugs
-- Tiles have strange initial placement sometimes and fall off board
+- ~Tiles have strange initial placement sometimes and fall off board~
