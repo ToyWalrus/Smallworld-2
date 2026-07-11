@@ -59,16 +59,18 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
 
     private void HandleRegionHovering()
     {
-        var mouse = Mouse.current;
-        var ray = Camera.main.ScreenPointToRay(mouse.position.value);
+        var cam = Camera.main;
+        var mousePos = Mouse.current.position.ReadValue();
 
-        if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, LayerMask.GetMask("Region")))
+        var screenPos = new Vector3(mousePos.x, mousePos.y, -cam.transform.position.z);
+        var hitCollider = Physics2D.OverlapPoint(cam.ScreenToWorldPoint(screenPos), LayerMask.GetMask("Region"));
+        if (hitCollider == null)
         {
             ClearPreviouslyHovered();
             return;
         }
 
-        if (!hit.collider.TryGetComponent<Region>(out var region))
+        if (!hitCollider.TryGetComponent<Region>(out var region))
         {
             Debug.LogError("Detected a non-region component on the Region layer!");
             ClearPreviouslyHovered();

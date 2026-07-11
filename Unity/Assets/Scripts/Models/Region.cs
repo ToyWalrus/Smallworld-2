@@ -12,8 +12,7 @@ namespace UnityModels
 {
     public class Region : UnityModel<SMRegion>
     {
-        public Rigidbody tilePrefab;
-        public Material mountainTileMat;
+        // public Rigidbody tilePrefab;
         public RegionScriptableObject region;
 
         [SerializeField] private Vector3 HoverTransformOffset = Vector3.up;
@@ -38,7 +37,6 @@ namespace UnityModels
             if (GetModel().HasToken(Token.Mountain))
             {
                 InstantiateTokens(1, Token.Mountain);
-                tiles[Token.Mountain][0].GetComponent<MeshRenderer>().material = mountainTileMat;
             }
         }
 
@@ -88,25 +86,25 @@ namespace UnityModels
 
         private void InstantiateTokens(int count, Token token)
         {
-            var meshFilter = tilePrefab.GetComponentInChildren<MeshFilter>();
-            var localSize = meshFilter != null ? meshFilter.sharedMesh.bounds.size : Vector3.one * 0.1f;
-            var tileSize = Vector3.Scale(localSize, tilePrefab.transform.localScale);
+            // var meshFilter = tilePrefab.GetComponentInChildren<MeshFilter>();
+            // var localSize = meshFilter != null ? meshFilter.sharedMesh.bounds.size : Vector3.one * 0.1f;
+            // var tileSize = Vector3.Scale(localSize, tilePrefab.transform.localScale);
 
-            for (int i = 0; i < count; ++i)
-            {
-                var newTile = Instantiate(tilePrefab, transform);
-                newTile.transform.localPosition = tileSize.y * (i + 2) * Vector3.up + tileSize.x * 0.15f * i * Vector3.right;
-                newTile.name = $"{token} {i + 1}";
+            // for (int i = 0; i < count; ++i)
+            // {
+            //     var newTile = Instantiate(tilePrefab, transform);
+            //     newTile.transform.localPosition = tileSize.y * (i + 2) * Vector3.up + tileSize.x * 0.15f * i * Vector3.right;
+            //     newTile.name = $"{token} {i + 1}";
 
-                if (!tiles.ContainsKey(token))
-                {
-                    tiles.Add(token, new());
-                }
+            //     if (!tiles.ContainsKey(token))
+            //     {
+            //         tiles.Add(token, new());
+            //     }
 
-                tiles[token].Add(newTile);
+            //     tiles[token].Add(newTile);
 
-                StartCoroutine(FreezeTileWhenSettled(newTile));
-            }
+            //     StartCoroutine(FreezeTileWhenSettled(newTile));
+            // }
         }
 
         public void SetIsHovered(bool hovered)
