@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7b5a8e125caef4ba6a079736990c15, type: 3}
+  m_Name: Farmland_2
+  m_EditorClassIdentifier: Assembly-CSharp::RegionScriptableObject
+  regionType: 5
+  attribute: 2
+  secondaryAttribute: 0
+  isBorder: 1
+  lostTribeRegion: 0
+  adjacentRegions:
+  - {fileID: 11400000, guid: 2effd23cf3192194b80e09433afb293b, type: 2}
+  - {fileID: 11400000, guid: a2a7debe5a026a045a90a79b7fa1b205, type: 2}
+  - {fileID: 11400000, guid: a995ecc3db07a49408d62bbe2467e08c, type: 2}
+  - {fileID: 11400000, guid: b66e26295e05a6e4b9ee4f99d6880ead, type: 2}
+  - {fileID: 11400000, guid: 594ca6be93e989b429114919fc5cddfd, type: 2}
+  oldAdjacentRegions:
+  - {fileID: 11400000, guid: 2effd23cf3192194b80e09433afb293b, type: 2}
+  - {fileID: 11400000, guid: a2a7debe5a026a045a90a79b7fa1b205, type: 2}
+  - {fileID: 11400000, guid: a995ecc3db07a49408d62bbe2467e08c, type: 2}
+  - {fileID: 11400000, guid: b66e26295e05a6e4b9ee4f99d6880ead, type: 2}
+  - {fileID: 11400000, guid: 594ca6be93e989b429114919fc5cddfd, type: 2}

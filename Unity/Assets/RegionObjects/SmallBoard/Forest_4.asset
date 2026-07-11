@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7b5a8e125caef4ba6a079736990c15, type: 3}
+  m_Name: Forest_4
+  m_EditorClassIdentifier: Assembly-CSharp::RegionScriptableObject
+  regionType: 4
+  attribute: 1
+  secondaryAttribute: 0
+  isBorder: 1
+  lostTribeRegion: 1
+  adjacentRegions:
+  - {fileID: 11400000, guid: a1347335eb2cd8e40b2e2c765aa00712, type: 2}
+  - {fileID: 11400000, guid: a0b213ac9687d524d9bfba79680fbdb3, type: 2}
+  - {fileID: 11400000, guid: 70cf4cd398ae46144ab838b70f6522c5, type: 2}
+  - {fileID: 11400000, guid: fdbf1aea03227974f95aa9018142569d, type: 2}
+  - {fileID: 11400000, guid: eabd880bae8846244a13eec801fb3dde, type: 2}
+  oldAdjacentRegions:
+  - {fileID: 11400000, guid: a1347335eb2cd8e40b2e2c765aa00712, type: 2}
+  - {fileID: 11400000, guid: a0b213ac9687d524d9bfba79680fbdb3, type: 2}
+  - {fileID: 11400000, guid: 70cf4cd398ae46144ab838b70f6522c5, type: 2}
+  - {fileID: 11400000, guid: fdbf1aea03227974f95aa9018142569d, type: 2}
+  - {fileID: 11400000, guid: eabd880bae8846244a13eec801fb3dde, type: 2}
