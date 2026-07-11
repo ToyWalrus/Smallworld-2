@@ -22,4 +22,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: eabd880bae8846244a13eec801fb3dde, type: 2}
   - {fileID: 11400000, guid: f44140e7404b6534ba4685e4738c0fe9, type: 2}
   - {fileID: 11400000, guid: c013820f120358b4fa5b73c945aad9ca, type: 2}
-  oldAdjacentRegions: []
+  - {fileID: 11400000, guid: 594ca6be93e989b429114919fc5cddfd, type: 2}
+  oldAdjacentRegions:
+  - {fileID: 11400000, guid: fdbf1aea03227974f95aa9018142569d, type: 2}
+  - {fileID: 11400000, guid: eabd880bae8846244a13eec801fb3dde, type: 2}
+  - {fileID: 11400000, guid: f44140e7404b6534ba4685e4738c0fe9, type: 2}
+  - {fileID: 11400000, guid: c013820f120358b4fa5b73c945aad9ca, type: 2}
