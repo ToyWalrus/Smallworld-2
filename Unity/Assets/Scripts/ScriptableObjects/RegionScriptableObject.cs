@@ -104,4 +104,16 @@ public class RegionScriptableObject : ScriptableObject
         }
         return model;
     }
+
+    public void SetFields(string name, RegionType regionType, RegionAttribute attribute, RegionAttribute secondaryAttribute, bool isBorder, bool lostTribeRegion)
+    {
+        this.name = name;
+        this.regionType = regionType;
+        this.attribute = attribute;
+        this.secondaryAttribute = secondaryAttribute;
+        this.isBorder = isBorder;
+        this.lostTribeRegion = lostTribeRegion;
+
+        OnValidate();
+    }
 }

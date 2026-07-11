@@ -14,9 +14,10 @@ namespace UnityModels
     {
         public Rigidbody tilePrefab;
         public Material mountainTileMat;
+        public RegionScriptableObject region;
+
         [SerializeField] private Vector3 HoverTransformOffset = Vector3.up;
 
-        [SerializeField] private RegionScriptableObject region;
         override public SMRegion GetModel() => region.GetModel();
 
         private Dictionary<Token, List<Rigidbody>> tiles = new();
