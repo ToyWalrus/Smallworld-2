@@ -13,14 +13,69 @@ public static class ImportBoard
 {
     const string IMPORT_FOLDER = "Assets/AssetFiles/GeneratedBoards";
 
-    [MenuItem("Tools/Import SVG Board")]
-    public static void Import()
+    [MenuItem("Tools/Import SVG Board (Polygons)")]
+    public static void ImportPolygons()
     {
         var path = EditorUtility.OpenFilePanel("Choose SVG", "", "svg");
 
         if (string.IsNullOrEmpty(path))
         {
-            Debug.Log("Cancelled");
+            return;
+        }
+
+        var doc = XDocument.Load(path);
+        var board = new GameObject("Board");
+        var filename = path.Substring(path.LastIndexOf("/") + 1).Split(".")[0] ?? "Board";
+        var regions = new List<RegionDef>();
+        var idCounter = 0;
+
+        foreach (var polygonSVG in doc.Descendants().Where(el => el.Name.LocalName == "polygon"))
+        {
+            var pointStr = polygonSVG.Attribute("points")?.Value;
+            if (string.IsNullOrEmpty(pointStr))
+            {
+                continue;
+            }
+
+            var points = pointStr.Split(" ");
+            List<Vector2> vertices = new();
+            for (int i = 0; i < points.Length - 1; i += 2)
+            {
+                var x = float.Parse(points[i]);
+                var y = float.Parse(points[i + 1]);
+                vertices.Add(new Vector2(x, -y));
+            }
+
+            regions.Add(new()
+            {
+                id = polygonSVG.Attribute("id")?.Value ?? idCounter++.ToString(),
+                vertices = vertices
+            });
+        }
+
+        foreach (var def in regions)
+        {
+            var region = new GameObject(def.id);
+            region.transform.SetParent(board.transform);
+
+            var collider = region.AddComponent<PolygonCollider2D>();
+            collider.SetPath(0, def.vertices);
+        }
+
+        PrefabUtility.SaveAsPrefabAsset(board, $"{IMPORT_FOLDER}/{filename}.prefab");
+
+        Debug.Log($"Imported and saved to {IMPORT_FOLDER}/{filename}");
+
+        Object.DestroyImmediate(board);
+    }
+
+    [MenuItem("Tools/Import SVG Board (Paths)")]
+    public static void ImportPaths()
+    {
+        var path = EditorUtility.OpenFilePanel("Choose SVG", "", "svg");
+
+        if (string.IsNullOrEmpty(path))
+        {
             return;
         }
 
@@ -44,11 +99,11 @@ public static class ImportBoard
             var region = new GameObject($"{title}{regionNum}");
             region.transform.SetParent(board.transform, false);
 
-            var regionScriptableObj = CreateRegion(pathSVG, filename);
-            if (regionScriptableObj != null)
-            {
-                region.AddComponent<UnityRegion>().region = regionScriptableObj;
-            }
+            // var regionScriptableObj = CreateRegion(pathSVG, filename);
+            // if (regionScriptableObj != null)
+            // {
+            //     region.AddComponent<UnityRegion>().region = regionScriptableObj;
+            // }
 
             var collider = region.AddComponent<PolygonCollider2D>();
             collider.pathCount = paths.Count;
@@ -265,5 +320,11 @@ public static class ImportBoard
         AssetDatabase.SaveAssets();
 
         return region;
+    }
+
+    private struct RegionDef
+    {
+        public string id;
+        public List<Vector2> vertices;
     }
 }
