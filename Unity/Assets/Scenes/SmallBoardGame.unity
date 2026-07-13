@@ -783,10 +783,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2053412633476201376, guid: 29aabc0027a57044b97f0084d644bbe1, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3668370117910827880, guid: 29aabc0027a57044b97f0084d644bbe1, type: 3}
       propertyPath: m_Name
       value: SmallerBoard
