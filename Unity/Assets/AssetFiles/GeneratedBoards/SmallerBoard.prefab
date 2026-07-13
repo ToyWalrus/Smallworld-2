@@ -127,6 +127,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 98e06ec0900510d4d9e21a0b4ad73571, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &1100706400177947500
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,6 +245,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 02dac0f25d4e8cf469ed6aaadcc0a913, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &1353064706750861037
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,6 +389,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 652c9619d222d364a9ae187a88d0a6c5, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &1424178447013412809
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,6 +509,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 2900e76313eca7448aadb36bb8cd6a1b, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &1669394264293859220
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,6 +636,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 85e15452845e8d249a150888143e877e, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &2212581392264325416
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,6 +759,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 4ab5e2cb2406be74b83b54926cbc4a15, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &2465512224368512065
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,6 +882,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: b2aac5dbcfe372c4c920d243129adc73, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &2760856026294447153
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,6 +1006,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: f480e3a80aa36fb45a86d78f0c88fc1e, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &2822259443336837646
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,6 +1125,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: aa78645f001b0a643879a001b02ec8cf, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &3084893091292759799
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,6 +1248,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: accbe9679cc39c24783ece34ff977208, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &3358161111318113014
 GameObject:
   m_ObjectHideFlags: 0
@@ -1366,6 +1376,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 46fc2cac4ef938343b2174fd3889676c, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &3668370117910827880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,6 +1573,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: a99f9786f609c3c4d9913553180d7ecf, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &4181983597196228236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1682,6 +1694,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 384bedc401b52aa40901bbe271f87d2d, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &4424671926544785606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1813,6 +1826,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 26003c64fcb26494fa0e86303012fa90, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &4502994686172380511
 GameObject:
   m_ObjectHideFlags: 0
@@ -1942,6 +1956,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 80429af0b8b0d55478a89cd1a914073d, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &4876157333265412815
 GameObject:
   m_ObjectHideFlags: 0
@@ -2063,6 +2078,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 38b2d0f4dd89a7e41acc79624375978b, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &4908123623689789393
 GameObject:
   m_ObjectHideFlags: 0
@@ -2181,6 +2197,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 8a89778ae3f01b44d98ab947ec911d84, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &4910713945162927636
 GameObject:
   m_ObjectHideFlags: 0
@@ -2308,6 +2325,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 29d85e1be0350a144b1f1d3002ea22d6, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &5213689016216380137
 GameObject:
   m_ObjectHideFlags: 0
@@ -2428,6 +2446,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 3f23e44e4b9b80940becb2db3d209a9e, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &5515470515108843117
 GameObject:
   m_ObjectHideFlags: 0
@@ -2555,6 +2574,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: b703688b8e706b54e810eaaeaa6c8cdd, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &5591362553565378000
 GameObject:
   m_ObjectHideFlags: 0
@@ -2683,6 +2703,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 26a1b7c6915cc2648865a7969c0b6025, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &5786539744147825175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2760,8 +2781,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 613638839
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 950820a645ae3b04ca5ba25318cfdcc7, type: 3}
@@ -2895,6 +2916,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 8fec75d01eed51f4fb237ce7ea4aaec0, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &6870580538220995135
 GameObject:
   m_ObjectHideFlags: 0
@@ -3029,6 +3051,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: b5958435e4daf134198e320db5e96a77, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &6920869747791657902
 GameObject:
   m_ObjectHideFlags: 0
@@ -3151,6 +3174,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: a59c10212d579b84fa3b51a40d8d7b37, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &7370346366335799225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3280,6 +3304,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 47ad92e3ae8c5fe4c9e035154bc7a4ca, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &7916159670915983999
 GameObject:
   m_ObjectHideFlags: 0
@@ -3418,6 +3443,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: c9011c66676917c4a858b9bb73a631dc, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &8306519258932088002
 GameObject:
   m_ObjectHideFlags: 0
@@ -3534,6 +3560,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: ab4b151b81faeca438a87903dd2908ab, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &8377988814889291738
 GameObject:
   m_ObjectHideFlags: 0
@@ -3654,6 +3681,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: a7abaab4a6aeb6f44bc08a1aa8e335b2, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &8419889003940975964
 GameObject:
   m_ObjectHideFlags: 0
@@ -3775,6 +3803,7 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: f380b0cd297adf34ca4a464c5fa7b567, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}
 --- !u!1 &8936602447495311220
 GameObject:
   m_ObjectHideFlags: 0
@@ -3902,3 +3931,4 @@ MonoBehaviour:
   regionShape: {fileID: 3286163911610860551, guid: 3539a1c37a6e6aa4fa1621fd9dece755, type: 3}
   targetOverlayTransparency: 0.9
   overlayFadeSpeed: 6
+  whiteMaterial: {fileID: 2100000, guid: f96821bbefeea864b9b418af4b8615ac, type: 2}

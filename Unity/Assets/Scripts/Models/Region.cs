@@ -17,15 +17,17 @@ namespace UnityModels
         [SerializeField] private Sprite regionShape;
         [SerializeField] private float targetOverlayTransparency = .9f;
         [SerializeField] private float overlayFadeSpeed = 6f;
+        [SerializeField] private Material whiteMaterial;
 
 
         override public SMRegion GetModel() => region.GetModel();
 
-        private Dictionary<Token, List<Rigidbody>> tiles = new();
-        private SpriteRenderer overlayRenderer;
 
         private bool isHovered = false;
         private bool isHighlighted = false;
+        private SpriteRenderer overlayRenderer;
+        private Material ogMaterial;
+
 
         void Awake()
         {
@@ -50,6 +52,8 @@ namespace UnityModels
                 overlayRenderer.sprite = regionShape;
                 overlayRenderer.sortingLayerName = "RegionShapes";
                 overlayRenderer.color = new Color(1f, 1f, 1f, 0f);
+
+                ogMaterial = overlayRenderer.material;
 
                 RegionOverlayUtil.SnapOverlayToCollider(collider, overlayRenderer);
             }
@@ -138,6 +142,15 @@ namespace UnityModels
             var targetSpeed = isHovered ? 0 : overlayFadeSpeed;
             var newAlpha = Mathf.MoveTowards(overlayRenderer.color.a, targetAlpha, targetSpeed * Time.deltaTime);
             overlayRenderer.color = new Color(1f, 1f, 1f, newAlpha);
+
+            if (isHovered && whiteMaterial != null)
+            {
+                overlayRenderer.material = whiteMaterial;
+            }
+            else if (!isHovered)
+            {
+                overlayRenderer.material = ogMaterial;
+            }
         }
     }
 }
