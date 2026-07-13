@@ -783,6 +783,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2053412633476201376, guid: 29aabc0027a57044b97f0084d644bbe1, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3668370117910827880, guid: 29aabc0027a57044b97f0084d644bbe1, type: 3}
       propertyPath: m_Name
       value: SmallerBoard
@@ -921,7 +925,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 319.6
+  orthographic size: 313.86
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -946,7 +950,7 @@ Transform:
   m_GameObject: {fileID: 1132835354}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 435, y: -260, z: -298}
+  m_LocalPosition: {x: 544, y: -260, z: -298}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

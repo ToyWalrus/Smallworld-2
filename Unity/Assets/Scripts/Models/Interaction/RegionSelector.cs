@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Smallworld.IO;
@@ -35,6 +36,7 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
         getUnselectableReason = getReason;
         tsc = new(TaskCreationOptions.RunContinuationsAsynchronously);
         validItems = items;
+        UpdateSelectableRegionHighlights(items, true);
 
         try
         {
@@ -45,6 +47,7 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
         }
         finally
         {
+            UpdateSelectableRegionHighlights(items, false);
             GameUI.SetGameHintText("");
             getUnselectableReason = null;
             validItems = null;
@@ -126,6 +129,19 @@ public class RegionSelector : MonoBehaviour, ISelection<SMRegion>
         {
             previouslyHovered.SetIsHovered(false);
             previouslyHovered = null;
+        }
+    }
+
+    private void UpdateSelectableRegionHighlights(List<SMRegion> regions, bool isHighlighted)
+    {
+        var regionObjects = GameObject
+            .FindGameObjectsWithTag("Region")
+                .Select(obj => obj.GetComponent<Region>())
+                .Where(obj => obj != null && regions.Contains(obj.GetModel()));
+
+        foreach (var region in regionObjects)
+        {
+            region.SetIsHighlighted(isHighlighted);
         }
     }
 }

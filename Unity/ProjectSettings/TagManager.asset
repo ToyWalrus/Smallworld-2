@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Region
   layers:
   - Default
   - TransparentFX
@@ -40,6 +41,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Board
+    uniqueID: 613638839
+    locked: 0
+  - name: RegionShapes
+    uniqueID: 1303795513
+    locked: 0
+  - name: RegionOverlays
+    uniqueID: 589897363
     locked: 0
   m_RenderingLayers:
   - Default

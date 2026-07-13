@@ -14,20 +14,23 @@ namespace UnityModels
     {
         // public Rigidbody tilePrefab;
         public RegionScriptableObject region;
+        [SerializeField] private Sprite regionShape;
+        [SerializeField] private float targetOverlayTransparency = .9f;
+        [SerializeField] private float overlayFadeSpeed = 6f;
 
-        [SerializeField] private Vector3 HoverTransformOffset = Vector3.up;
 
         override public SMRegion GetModel() => region.GetModel();
 
         private Dictionary<Token, List<Rigidbody>> tiles = new();
+        private SpriteRenderer overlayRenderer;
+
         private bool isHovered = false;
-        private Vector3 restingPosition;
+        private bool isHighlighted = false;
 
         void Awake()
         {
             HooksService.Instance.Subscribe<RegionTokensAddedHook>(AddTokens);
             HooksService.Instance.Subscribe<RegionTokensRemovedHook>(RemoveTokens);
-            restingPosition = transform.localPosition;
 
             if (GetModel().HasToken(Token.LostTribe))
             {
@@ -37,6 +40,18 @@ namespace UnityModels
             if (GetModel().HasToken(Token.Mountain))
             {
                 InstantiateTokens(1, Token.Mountain);
+            }
+
+            if (regionShape != null && TryGetComponent<PolygonCollider2D>(out var collider))
+            {
+                var shapeChild = new GameObject($"{name}_Shape");
+
+                overlayRenderer = shapeChild.AddComponent<SpriteRenderer>();
+                overlayRenderer.sprite = regionShape;
+                overlayRenderer.sortingLayerName = "RegionShapes";
+                overlayRenderer.color = new Color(1f, 1f, 1f, 0f);
+
+                RegionOverlayUtil.SnapOverlayToCollider(collider, overlayRenderer);
             }
         }
 
@@ -48,16 +63,7 @@ namespace UnityModels
 
         void Update()
         {
-            var targetPosition = restingPosition + HoverTransformOffset;
-            var threshold = 0.001f;
-            if (isHovered && Vector3.Distance(transform.localPosition, targetPosition) > threshold)
-            {
-                transform.localPosition = targetPosition;
-            }
-            else if (!isHovered && Vector3.Distance(transform.localPosition, restingPosition) > threshold)
-            {
-                transform.localPosition = restingPosition;
-            }
+            UpdateOverlayRenderer();
         }
 
         async Task AddTokens(RegionTokensAddedHook evt)
@@ -69,19 +75,7 @@ namespace UnityModels
         async Task RemoveTokens(RegionTokensRemovedHook evt)
         {
             if (evt.Region != GetModel()) return;
-
-            if (!tiles.ContainsKey(evt.Token))
-            {
-                Debug.LogError($"Tried removing ${evt.Token} from region, but no tokens of that type are registered there!");
-                return;
-            }
-
-            foreach (var tile in tiles[evt.Token].Take(evt.RemovedCount))
-            {
-                Destroy(tile);
-            }
-
-            tiles[evt.Token].RemoveRange(0, evt.RemovedCount);
+            DestroyTokens(evt.RemovedCount, evt.Token);
         }
 
         private void InstantiateTokens(int count, Token token)
@@ -107,15 +101,43 @@ namespace UnityModels
             // }
         }
 
+        private void DestroyTokens(int count, Token token)
+        {
+            // if (!tiles.ContainsKey(token))
+            // {
+            //     Debug.LogError($"Tried removing {token} from region, but no tokens of that type are registered there!");
+            //     return;
+            // }
+
+            // foreach (var tile in tiles[token].Take(count))
+            // {
+            //     Destroy(tile);
+            // }
+
+            // tiles[token].RemoveRange(0, count);
+        }
+
         public void SetIsHovered(bool hovered)
         {
             isHovered = hovered;
         }
 
-        private IEnumerator FreezeTileWhenSettled(Rigidbody rb)
+        public void SetIsHighlighted(bool highlighted)
         {
-            yield return new WaitUntil(() => rb.IsSleeping());
-            rb.isKinematic = true;
+            isHighlighted = highlighted;
+        }
+
+        private void UpdateOverlayRenderer()
+        {
+            if (overlayRenderer == null)
+            {
+                return;
+            }
+
+            var targetAlpha = isHighlighted || isHovered ? targetOverlayTransparency : 0f;
+            var targetSpeed = isHovered ? 0 : overlayFadeSpeed;
+            var newAlpha = Mathf.MoveTowards(overlayRenderer.color.a, targetAlpha, targetSpeed * Time.deltaTime);
+            overlayRenderer.color = new Color(1f, 1f, 1f, newAlpha);
         }
     }
 }
