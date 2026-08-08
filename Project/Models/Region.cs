@@ -176,7 +176,7 @@ public class Region
         }
     }
 
-    public void ClearExcessRaceTokens()
+    public int ClearExcessRaceTokens()
     {
         var excess = GetExcessRaceTokens();
         var count = excess;
@@ -187,6 +187,7 @@ public class Region
         }
 
         HooksService.Instance.Run(new RegionTokensRemovedHook { Region = this, Token = Token.Race, RemovedCount = count });
+        return count;
     }
 
     /// <summary>

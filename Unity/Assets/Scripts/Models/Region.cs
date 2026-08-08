@@ -63,7 +63,7 @@ namespace UnityModels
                 if (textPrefab != null)
                 {
                     text = Instantiate(textPrefab, GameObject.FindWithTag("TextOverlayParent").transform);
-                    text.name = name;
+                    text.name = name + "_TextOverlay";
                     RegionOverlayUtil.SnapTransformToCollider(collider, text.transform);
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Smallworld.Models.Powers;
 using Smallworld.Models.Races;
@@ -42,6 +43,7 @@ public class RacePower
     {
         Race.OnTurnStart();
         Power.OnTurnStart();
+        GatherAvailableTokens();
     }
 
     public async Task OnTurnEnd()
@@ -135,6 +137,12 @@ public class RacePower
     }
 
     public List<Region> GetOwnedRegions() => new(ownedRegions);
+
+    private void GatherAvailableTokens()
+    {
+        if (ownedRegions.Count == 0) return;
+        AvailableTokenCount = ownedRegions.Sum(region => region.ClearExcessRaceTokens());
+    }
 
     public static bool operator ==(RacePower left, RacePower right)
     {
