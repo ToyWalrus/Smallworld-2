@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Smallworld.Hooks;
 using Smallworld.Models;
@@ -14,20 +11,22 @@ namespace UnityModels
     {
         // public Rigidbody tilePrefab;
         public RegionScriptableObject region;
+        [SerializeField] private RegionText textPrefab;
+
         [SerializeField] private Sprite regionShape;
         [SerializeField] private float targetOverlayTransparency = .9f;
         [SerializeField] private float overlayFadeSpeed = 6f;
         [SerializeField] private Material whiteMaterial;
 
-
         override public SMRegion GetModel() => region.GetModel();
-
 
         private bool isHovered = false;
         private bool isHighlighted = false;
         private SpriteRenderer overlayRenderer;
         private Material ogMaterial;
+        private RegionText text;
 
+        private int tokenCount = 0;
 
         void Awake()
         {
@@ -44,18 +43,29 @@ namespace UnityModels
                 InstantiateTokens(1, Token.Mountain);
             }
 
-            if (regionShape != null && TryGetComponent<PolygonCollider2D>(out var collider))
+            if (TryGetComponent<PolygonCollider2D>(out var collider))
             {
-                var shapeChild = new GameObject($"{name}_Shape");
 
-                overlayRenderer = shapeChild.AddComponent<SpriteRenderer>();
-                overlayRenderer.sprite = regionShape;
-                overlayRenderer.sortingLayerName = "RegionShapes";
-                overlayRenderer.color = new Color(1f, 1f, 1f, 0f);
+                if (regionShape != null)
+                {
+                    var shapeChild = new GameObject($"{name}_Shape");
 
-                ogMaterial = overlayRenderer.material;
+                    overlayRenderer = shapeChild.AddComponent<SpriteRenderer>();
+                    overlayRenderer.sprite = regionShape;
+                    overlayRenderer.sortingLayerName = "RegionShapes";
+                    overlayRenderer.color = new Color(1f, 1f, 1f, 0f);
 
-                RegionOverlayUtil.SnapOverlayToCollider(collider, overlayRenderer);
+                    ogMaterial = overlayRenderer.material;
+
+                    RegionOverlayUtil.SnapOverlayToCollider(collider, overlayRenderer);
+                }
+
+                if (textPrefab != null)
+                {
+                    text = Instantiate(textPrefab, GameObject.FindWithTag("TextOverlayParent").transform);
+                    text.name = name;
+                    RegionOverlayUtil.SnapTransformToCollider(collider, text.transform);
+                }
             }
         }
 
@@ -68,6 +78,7 @@ namespace UnityModels
         void Update()
         {
             UpdateOverlayRenderer();
+            UpdateTextRenderer();
         }
 
         async Task AddTokens(RegionTokensAddedHook evt)
@@ -84,6 +95,7 @@ namespace UnityModels
 
         private void InstantiateTokens(int count, Token token)
         {
+            tokenCount += count;
             // var meshFilter = tilePrefab.GetComponentInChildren<MeshFilter>();
             // var localSize = meshFilter != null ? meshFilter.sharedMesh.bounds.size : Vector3.one * 0.1f;
             // var tileSize = Vector3.Scale(localSize, tilePrefab.transform.localScale);
@@ -107,6 +119,7 @@ namespace UnityModels
 
         private void DestroyTokens(int count, Token token)
         {
+            tokenCount -= count;
             // if (!tiles.ContainsKey(token))
             // {
             //     Debug.LogError($"Tried removing {token} from region, but no tokens of that type are registered there!");
@@ -151,6 +164,16 @@ namespace UnityModels
             {
                 overlayRenderer.material = ogMaterial;
             }
+        }
+
+        private void UpdateTextRenderer()
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            text.SetText(tokenCount.ToString());
         }
     }
 }

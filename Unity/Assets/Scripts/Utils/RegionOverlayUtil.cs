@@ -26,6 +26,15 @@ public static class RegionOverlayUtil
         );
     }
 
+    public static void SnapTransformToCollider(PolygonCollider2D col, Transform transform)
+    {
+        if (col == null || transform == null) return;
+
+        Bounds colBounds = GetLocalBounds(col);
+
+        transform.position = col.transform.parent.position + colBounds.center;
+    }
+
     private static Bounds GetLocalBounds(PolygonCollider2D col)
     {
         var pts = col.GetPath(0);
