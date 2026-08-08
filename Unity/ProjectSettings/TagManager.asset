@@ -51,6 +51,9 @@ TagManager:
   - name: RegionOverlays
     uniqueID: 589897363
     locked: 0
+  - name: TextOverlays
+    uniqueID: 3460465271
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1
